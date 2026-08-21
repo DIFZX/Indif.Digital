@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Google Maps</title>
+  <defs>
+    <mask id="map-cutout">
+      <rect width="64" height="64" fill="black" />
+      <rect x="7" y="14" width="42" height="42" rx="4" fill="white" />
+      <path d="M9 50 29 30l9 9 10-10v12L38 51l-9-9-12 12H9Z" fill="black" />
+      <text x="13" y="31" fill="black" font-family="Arial, sans-serif" font-size="16" font-weight="700">G</text>
+    </mask>
+  </defs>
+  <rect x="7" y="14" width="42" height="42" rx="4" fill="#dec89e" mask="url(#map-cutout)" />
+  <path fill="#dec89e" fill-rule="evenodd" d="M43 4c-8.28 0-15 6.72-15 15 0 11.25 15 34 15 34s15-22.75 15-34c0-8.28-6.72-15-15-15Zm0 9a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" />
+</svg>

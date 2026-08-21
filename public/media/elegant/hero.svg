@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#82917d"/><stop offset="1" stop-color="#273b31"/></linearGradient>
+    <radialGradient id="light"><stop stop-color="#f4e5c2" stop-opacity=".72"/><stop offset="1" stop-color="#f4e5c2" stop-opacity="0"/></radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#bg)"/>
+  <circle cx="800" cy="420" r="430" fill="url(#light)" filter="url(#blur)"/>
+  <path d="M430 1200V535C430 280 595 120 800 120s370 160 370 415v665" fill="none" stroke="#e8d7b6" stroke-opacity=".55" stroke-width="5"/>
+  <path d="M0 260C180 170 245 360 390 230S615 35 700 0H0Z" fill="#1e3229" fill-opacity=".68"/>
+  <path d="M1600 155c-210-80-285 135-420 25s-265-105-365-180h785Z" fill="#1e3229" fill-opacity=".55"/>
+  <g fill="none" stroke="#d6bc88" stroke-width="7" stroke-linecap="round" opacity=".7">
+    <path d="M80 1130c110-205 215-330 390-425M1530 1120c-100-220-225-350-400-455"/>
+    <path d="M170 995c-5-75 25-120 80-145M250 900c15-65 55-100 110-110M1330 975c10-75-20-120-75-150M1240 875c-15-65-55-100-110-115"/>
+  </g>
+  <g fill="#d8c28f" opacity=".65">
+    <ellipse cx="175" cy="975" rx="35" ry="82" transform="rotate(-35 175 975)"/><ellipse cx="280" cy="855" rx="32" ry="75" transform="rotate(-45 280 855)"/>
+    <ellipse cx="1420" cy="970" rx="35" ry="82" transform="rotate(35 1420 970)"/><ellipse cx="1315" cy="845" rx="32" ry="75" transform="rotate(45 1315 845)"/>
+  </g>
+</svg>
+

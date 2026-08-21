@@ -1,0 +1,15 @@
+.next/
+node_modules/
+.npm-cache/
+.tools/
+.vercel/
+.dev-logs/
+supabase/.temp/
+# Provisioning admin utama bersifat lokal dan memuat identitas akun pribadi.
+supabase/migrations/20260820183007_provision_primary_admin.sql
+Contoh Website/
+.env*
+!.env.example
+npm-debug.log*
+*.tsbuildinfo
+.next-test-*.log
