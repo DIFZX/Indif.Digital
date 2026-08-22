@@ -58,11 +58,32 @@ export const demoInvitation: Invitation = {
   closing_greeting: "Wassalamu'alaikum Wr. Wb",
   template: {
     id: "00000000-0000-0000-0000-000000000001",
-    slug: "elegant-sage",
-    name: "Elegant Sage",
+    slug: "greeny-flowers",
+    name: "Greeny Flowers",
     theme: { primary: "#30493b", accent: "#b8915d", background: "#f5f1e8" },
   },
 };
+
+export const pinkVibesDemoInvitation: Invitation = {
+  ...demoInvitation,
+  id: "00000000-0000-0000-0000-000000000102",
+  slug: "pink-vibes",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000002",
+    slug: "pink-vibes",
+    name: "Pink Vibes",
+    theme: {
+      primary: "#6f334c",
+      accent: "#d986a5",
+      background: "#fff7f8",
+      deep: "#59283e",
+      soft: "#f2c4d2",
+    },
+  },
+};
+
+export const demoInvitations = [demoInvitation, pinkVibesDemoInvitation];
 
 export const demoGreetings: Greeting[] = [
   {

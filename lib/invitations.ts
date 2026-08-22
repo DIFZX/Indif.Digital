@@ -1,4 +1,4 @@
-import { demoGreetings, demoInvitation } from "@/lib/demo";
+import { demoGreetings, demoInvitation, demoInvitations } from "@/lib/demo";
 import { getSupabase } from "@/lib/supabase";
 import type { Greeting, Invitation } from "@/lib/types";
 
@@ -13,7 +13,7 @@ const invitationSelect = `
 
 export async function getInvitation(slug: string): Promise<Invitation | null> {
   const supabase = getSupabase();
-  if (!supabase) return slug === demoInvitation.slug ? demoInvitation : null;
+  if (!supabase) return demoInvitations.find((invitation) => invitation.slug === slug) ?? null;
 
   const { data, error } = await supabase
     .from("invitations")

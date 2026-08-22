@@ -13,6 +13,22 @@ Alur data publik: route `/{slug}` membaca undangan `published` dan template akti
 
 Tanpa `.env.local`, undangan contoh tetap tampil dalam mode demo; pengiriman form dinonaktifkan karena tidak ada database tujuan.
 
+## Membuat undangan pelanggan baru
+
+Jalankan generator interaktif dari terminal project:
+
+    npm run create-invitation
+
+Masukkan password akun admin Supabase saat diminta. Password ditampilkan sebagai tanda bintang dan tidak disimpan. Generator akan:
+
+1. Memastikan akun yang login terdaftar di `admin_profiles`.
+2. Menduplikasi data dari undangan sumber, misalnya `intan-dan-difa`.
+3. Meminta slug, nama mempelai, orang tua, tanggal, waktu, dan lokasi pelanggan baru.
+4. Menyalin media ke `public/media/invitations/<slug-baru>` agar file setiap pelanggan terpisah.
+5. Menyimpan undangan baru sebagai `draft` agar belum dapat dibuka publik sebelum media diperiksa.
+
+Setelah generator selesai, ganti media di folder pelanggan, commit dan push ke GitHub, tunggu deployment Vercel selesai, kemudian ubah status undangan menjadi `published` melalui Supabase Dashboard.
+
 ## Persiapan migrasi media ke Cloudflare R2
 
 Seluruh media melewati resolver di `lib/media.ts`. Selama `NEXT_PUBLIC_MEDIA_BASE_URL` kosong, path `/media/...` tetap dibaca dari folder `public` sehingga cara kerja lokal dan Vercel tidak berubah.
@@ -28,4 +44,4 @@ Path yang disimpan di Supabase tetap `/media/...`; jangan simpan domain Vercel a
 
 ## Batas keamanan saat ini
 
-Tidak ada login klien. RLS hanya membuka undangan berstatus `published`, template aktif, dan ucapan yang telah disetujui. Pengunjung dapat menambahkan RSVP dan ucapan, tetapi ucapan baru selalu masuk sebagai `is_approved = false`. Pengelolaan data untuk tahap ini dilakukan melalui Supabase Dashboard.
+Tidak ada login klien. RLS hanya membuka undangan berstatus `published`, template aktif, dan ucapan yang telah disetujui. Pengunjung dapat menambahkan RSVP dan ucapan; ucapan baru langsung disetujui sesuai konfigurasi saat ini. Pembuatan undangan melalui generator hanya diizinkan untuk akun yang terdaftar di `admin_profiles`.

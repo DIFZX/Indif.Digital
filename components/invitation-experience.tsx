@@ -10,10 +10,12 @@ type Props = {
   guestName: string | null;
   musicPath: string | null;
   initiallyOpened?: boolean;
+  themeClassName?: string;
+  themeStyle?: CSSProperties;
   children: ReactNode;
 };
 
-export function InvitationExperience({ coupleNames, coverPath, profilePath, guestName, musicPath, initiallyOpened = false, children }: Props) {
+export function InvitationExperience({ coupleNames, coverPath, profilePath, guestName, musicPath, initiallyOpened = false, themeClassName, themeStyle, children }: Props) {
   const [opened, setOpened] = useState(initiallyOpened);
   const [playing, setPlaying] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
@@ -72,8 +74,14 @@ export function InvitationExperience({ coupleNames, coverPath, profilePath, gues
   }
 
   return (
-    <>
-      <div className={`invitation-cover ${opened ? "is-open" : ""}`} aria-hidden={opened}>
+    <div className={themeClassName} style={themeStyle}>
+      <div
+        className={`invitation-cover ${opened ? "is-open" : ""}`}
+        role="dialog"
+        aria-modal={!opened}
+        aria-label={`Buka undangan ${coupleNames}`}
+        aria-hidden={opened}
+      >
         <Image src={coverPath} alt="" fill priority className="cover-image" />
         <div className="cover-overlay" />
         <div className="cover-content">
@@ -108,7 +116,13 @@ export function InvitationExperience({ coupleNames, coverPath, profilePath, gues
           <span>♪</span>
         </button>
       )}
-      <div className={`invitation-stage ${opened ? "is-open" : ""}`}>{children}</div>
-    </>
+      <div
+        className={`invitation-stage ${opened ? "is-open" : ""}`}
+        aria-hidden={!opened}
+        inert={!opened}
+      >
+        {children}
+      </div>
+    </div>
   );
 }

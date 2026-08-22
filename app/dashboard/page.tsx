@@ -15,19 +15,31 @@ export const dynamic = "force-dynamic";
 
 type CatalogTemplate = {
   id: string;
+  slug: string;
   name: string;
   description: string;
   thumbnail_path: string | null;
   preview_path: string | null;
 };
 
-const fallbackTemplate: CatalogTemplate = {
-  id: "00000000-0000-0000-0000-000000000001",
-  name: "Greeny Flowers",
-  description: "Nuansa hijau yang lembut, detail bunga yang hangat, dan susunan elegan untuk kisah yang terasa dekat dan personal.",
-  thumbnail_path: "/media/elegant/gallery-couple-v2.png",
-  preview_path: "/intan-dan-difa?to=Tamu%20Undangan",
-};
+const fallbackTemplates: CatalogTemplate[] = [
+  {
+    id: "00000000-0000-0000-0000-000000000001",
+    slug: "greeny-flowers",
+    name: "Greeny Flowers",
+    description: "Nuansa hijau yang lembut, detail bunga yang hangat, dan susunan elegan untuk kisah yang terasa dekat dan personal.",
+    thumbnail_path: "/media/elegant/gallery-couple-v2.png",
+    preview_path: "/intan-dan-difa?to=Tamu%20Undangan",
+  },
+  {
+    id: "00000000-0000-0000-0000-000000000002",
+    slug: "pink-vibes",
+    name: "Pink Vibes",
+    description: "Nuansa dusty pink yang romantis, bunga-bunga lembut, dan komposisi modern untuk perayaan yang hangat dan manis.",
+    thumbnail_path: "/media/elegant/profile-main-v1.jpeg",
+    preview_path: "/pink-vibes?to=Tamu%20Undangan",
+  },
+];
 
 const whatsappUrl = "https://wa.me/6281776396965";
 
@@ -38,16 +50,16 @@ function orderUrl(templateName: string) {
 
 async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
   const supabase = getSupabase();
-  if (!supabase) return [fallbackTemplate];
+  if (!supabase) return fallbackTemplates;
 
   const { data, error } = await supabase
     .from("templates")
-    .select("id, name, description, thumbnail_path, preview_path")
+    .select("id, slug, name, description, thumbnail_path, preview_path")
     .eq("is_active", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  if (error) return [fallbackTemplate];
+  if (error) return fallbackTemplates;
   return data;
 }
 
@@ -121,7 +133,7 @@ export default async function DashboardPage() {
         <div className={styles.templateGrid}>
           {templates.map((template, index) => (
             <article className={styles.templateCard} key={template.id}>
-              <div className={styles.templateImage}>
+              <div className={`${styles.templateImage} ${template.slug === "pink-vibes" ? styles.pinkTemplateImage : ""}`}>
                 <Image
                   src={resolveMediaUrl(template.thumbnail_path ?? "/media/elegant/gallery-couple-v2.png")}
                   alt={`Preview template ${template.name}`}

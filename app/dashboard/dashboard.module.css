@@ -282,6 +282,19 @@
   background: #24372b;
 }
 
+.pinkTemplateImage {
+  background: #b85e80;
+}
+
+.pinkTemplateImage::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(255, 235, 241, 0.08), rgba(139, 55, 88, 0.34));
+  content: "";
+  pointer-events: none;
+}
+
 .templateImage img {
   transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -292,6 +305,7 @@
 
 .templateIndex {
   position: absolute;
+  z-index: 2;
   top: 1.5rem;
   left: 1.5rem;
   display: grid;

@@ -6,9 +6,17 @@ import { GiftCard } from "@/components/gift-card";
 import { Guestbook } from "@/components/guestbook";
 import { InvitationExperience } from "@/components/invitation-experience";
 import { Reveal } from "@/components/reveal";
+import { PinkVibesInvitationView } from "@/components/templates/pink-vibes/pink-vibes-invitation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
+
+type InvitationViewProps = {
+  invitation: Invitation;
+  greetings: Greeting[];
+  guestName: string | null;
+  initiallyOpened?: boolean;
+};
 
 const BRIDE_FLOWER_PATH = "/media/elegant/decor/flower-bride-right-v1.png";
 const GROOM_FLOWER_PATH = "/media/elegant/decor/flower-groom-left-v1.png";
@@ -73,7 +81,7 @@ function FlyingBirds() {
   );
 }
 
-export function InvitationView({ invitation, greetings, guestName, initiallyOpened = false }: { invitation: Invitation; greetings: Greeting[]; guestName: string | null; initiallyOpened?: boolean }) {
+function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpened = false }: InvitationViewProps) {
   const theme = { ...invitation.template.theme, ...invitation.theme_overrides };
   const style = {
     "--primary": theme.primary ?? "#30493b",
@@ -255,4 +263,12 @@ export function InvitationView({ invitation, greetings, guestName, initiallyOpen
       </div>
     </InvitationExperience>
   );
+}
+
+export function InvitationView(props: InvitationViewProps) {
+  if (props.invitation.template.slug === "pink-vibes") {
+    return <PinkVibesInvitationView {...props} />;
+  }
+
+  return <GreenyInvitationView {...props} />;
 }
