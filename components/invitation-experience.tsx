@@ -1,7 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 type Props = {
   coupleNames: string;
@@ -14,6 +22,12 @@ type Props = {
   themeStyle?: CSSProperties;
   children: ReactNode;
 };
+
+const InvitationOpenedContext = createContext(false);
+
+export function useInvitationOpened() {
+  return useContext(InvitationOpenedContext);
+}
 
 export function InvitationExperience({ coupleNames, coverPath, profilePath, guestName, musicPath, initiallyOpened = false, themeClassName, themeStyle, children }: Props) {
   const [opened, setOpened] = useState(initiallyOpened);
@@ -74,7 +88,8 @@ export function InvitationExperience({ coupleNames, coverPath, profilePath, gues
   }
 
   return (
-    <div className={themeClassName} style={themeStyle}>
+    <InvitationOpenedContext.Provider value={opened}>
+      <div className={themeClassName} style={themeStyle}>
       <div
         className={`invitation-cover ${opened ? "is-open" : ""}`}
         role="dialog"
@@ -123,6 +138,7 @@ export function InvitationExperience({ coupleNames, coverPath, profilePath, gues
       >
         {children}
       </div>
-    </div>
+      </div>
+    </InvitationOpenedContext.Provider>
   );
 }

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Countdown } from "@/components/countdown";
-import { FloatingNav } from "@/components/floating-nav";
 import { Gallery } from "@/components/gallery";
 import { GiftCard } from "@/components/gift-card";
 import { Guestbook } from "@/components/guestbook";
@@ -9,8 +8,10 @@ import { Reveal } from "@/components/reveal";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
+import { PinkOpeningHero } from "./pink-opening-hero";
 import styles from "./pink-vibes.module.css";
 
+const OPENING_VIDEO_PATH = "/media/pink-vibes/decor/Video-Opening.mp4";
 const FLORAL_SPRAY_PATH = "/media/pink-vibes/decor/floral-spray-blush-v1.png";
 const FLORAL_CRESCENT_PATH = "/media/pink-vibes/decor/floral-crescent-blush-v1.png";
 
@@ -49,16 +50,6 @@ function calendarUrl(invitation: Invitation) {
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-function PinkDivider({ flip = false }: { flip?: boolean }) {
-  return (
-    <div className={`${styles.divider} ${flip ? styles.dividerFlip : ""}`} aria-hidden="true">
-      <svg viewBox="0 0 1440 130" preserveAspectRatio="none">
-        <path d="M0 44c185 54 351 55 519 10 224-60 422-53 594 7 113 39 222 47 327 24v45H0Z" />
-      </svg>
-    </div>
-  );
-}
-
 export function PinkVibesInvitationView({
   invitation,
   greetings,
@@ -82,6 +73,7 @@ export function PinkVibesInvitationView({
   const storyImagePath =
     resolveMediaUrl(invitation.story_image_path) ?? galleryPaths[0] ?? coverPath;
   const musicPath = resolveMediaUrl(invitation.music_path);
+  const openingVideoPath = resolveMediaUrl(OPENING_VIDEO_PATH);
   const floralSprayPath = resolveMediaUrl(FLORAL_SPRAY_PATH);
   const floralCrescentPath = resolveMediaUrl(FLORAL_CRESCENT_PATH);
   const showcaseImages = [coverPath, ...galleryPaths].slice(0, 4);
@@ -136,50 +128,14 @@ export function PinkVibesInvitationView({
 
         <div className={styles.panel}>
           <main className={styles.invitation}>
-            <section className={styles.hero} id="home">
-              <Image
-                className={styles.heroImage}
-                src={coverPath}
-                alt={`Pernikahan ${coupleNames}`}
-                fill
-                priority
-                sizes="(max-width: 900px) 100vw, 500px"
-              />
-              <div className={styles.heroShade} />
-              <Image
-                className={styles.heroFlowers}
-                src={floralSprayPath}
-                alt=""
-                width={1224}
-                height={1285}
-                sizes="340px"
-                aria-hidden="true"
-              />
-              <div className={styles.heroContent}>
-                <p className={styles.kicker}>The Wedding of</p>
-                <div className={styles.heroMonogram} aria-hidden="true">
-                  {invitation.bride_short_name.charAt(0)}
-                  <span>&</span>
-                  {invitation.groom_short_name.charAt(0)}
-                </div>
-                <h1>
-                  {invitation.bride_short_name}
-                  <span>&</span>
-                  {invitation.groom_short_name}
-                </h1>
-                <p className={styles.heroDate}>{formatEventDate(invitation.event_date)}</p>
-                {guestName && (
-                  <div className={styles.heroGuest}>
-                    <small>Kepada Yth.</small>
-                    <strong>{guestName}</strong>
-                  </div>
-                )}
-                <a className={styles.scrollCue} href="#mempelai" aria-label="Lihat isi undangan">
-                  <i />
-                  <span>Scroll</span>
-                </a>
-              </div>
-            </section>
+            <PinkOpeningHero
+              videoPath={openingVideoPath}
+              posterPath={coverPath}
+              brideName={invitation.bride_short_name}
+              groomName={invitation.groom_short_name}
+              eventDateLabel={formatEventDate(invitation.event_date)}
+              guestName={guestName}
+            />
 
             <section className={styles.verseSection}>
               <Reveal className={styles.decorReveal} direction="scale">
@@ -268,8 +224,6 @@ export function PinkVibesInvitationView({
               </div>
             </section>
 
-            <PinkDivider />
-
             <section className={styles.eventSection} id="acara">
               <Reveal>
                 <p className={styles.lightKicker}>Save the date</p>
@@ -314,8 +268,6 @@ export function PinkVibesInvitationView({
                 </div>
               </Reveal>
             </section>
-
-            <PinkDivider flip />
 
             <section className={styles.storySection}>
               <Reveal>
@@ -406,7 +358,6 @@ export function PinkVibesInvitationView({
               </Reveal>
             </footer>
           </main>
-          <FloatingNav />
         </div>
       </div>
     </InvitationExperience>
