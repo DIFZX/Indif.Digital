@@ -529,6 +529,7 @@
 .portrait {
   position: relative;
   z-index: 1;
+  isolation: isolate;
   width: 226px;
   height: 276px;
   overflow: hidden;
@@ -542,6 +543,8 @@
   object-fit: cover;
   object-position: center 30%;
   transform: scale(1.22);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .portraitFlowers {
@@ -551,30 +554,27 @@
   left: -5.2rem;
   width: 310px;
   height: auto;
-  opacity: 0;
-  filter: blur(5px) drop-shadow(0 15px 18px rgba(86, 34, 59, 0.14));
-  transform: translate3d(-34px, 28px, 0) rotate(8deg) scale(0.72);
-  transition:
-    opacity 1.75s 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1.95s 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 1.6s 0.55s ease;
+  opacity: 0.96;
+  transform: rotate(8deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   pointer-events: none;
 }
 
 .groomCard .portraitFlowers {
-  right: -5.2rem;
+  top: 0.75rem;
+  right: -5.75rem;
   left: auto;
-  transform: translate3d(34px, 28px, 0) rotate(-8deg) scale(-0.72, 0.72);
+  transform: none;
 }
 
 .experience :global(.reveal.is-visible) .portraitFlowers {
   opacity: 0.96;
-  filter: blur(0) drop-shadow(0 15px 18px rgba(86, 34, 59, 0.14));
-  transform: translate3d(0, 0, 0) rotate(8deg) scale(1);
+  transform: rotate(8deg);
 }
 
 .experience :global(.reveal.is-visible) .groomCard .portraitFlowers {
-  transform: translate3d(0, 0, 0) rotate(-8deg) scale(-1, 1);
+  transform: none;
 }
 
 .personRole {
@@ -605,6 +605,9 @@
 }
 
 .eventSection {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: 5rem 1.7rem 6rem;
   background:
     radial-gradient(circle at 50% 12%, rgba(242, 174, 200, 0.18), transparent 28%),
@@ -741,9 +744,44 @@
 }
 
 .storySection {
+  isolation: isolate;
+  overflow: hidden;
   background:
     linear-gradient(rgba(255, 247, 248, 0.93), rgba(255, 247, 248, 0.93)),
     radial-gradient(circle at 10% 10%, #efb8ca, transparent 44%);
+}
+
+.eventSection::before,
+.storySection::before,
+.featureReveal :global(.gift-section)::before,
+.featureReveal :global(.guest-section)::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background-image: url("/media/pink-vibes/decor/swan-floral-ornament-v1.png");
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.eventSection::before {
+  background-position: right -9rem bottom -4.5rem;
+  background-size: 430px auto;
+  opacity: 0.13;
+}
+
+.storySection::before {
+  background-position: left -10rem top 2rem;
+  background-size: 420px auto;
+  opacity: 0.1;
+}
+
+.eventSection > *,
+.storySection > *,
+.featureReveal :global(.gift-section) > *,
+.featureReveal :global(.guest-section) > * {
+  position: relative;
+  z-index: 1;
 }
 
 .storyImage {
@@ -883,11 +921,18 @@
 
 .featureReveal :global(.gift-section) {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   background:
     radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.75), transparent 24%),
     linear-gradient(145deg, #efbbcc, #d98ba8);
   color: var(--primary);
+}
+
+.featureReveal :global(.gift-section)::before {
+  background-position: right -10rem bottom -5rem;
+  background-size: 440px auto;
+  opacity: 0.14;
 }
 
 .featureReveal :global(.gift-section .eyebrow),
@@ -924,12 +969,21 @@
 }
 
 .featureReveal :global(.guest-section) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: grid;
   gap: 3.2rem;
   background:
     radial-gradient(circle at 15% 4%, rgba(235, 170, 193, 0.17), transparent 25%),
     var(--paper);
   color: var(--primary);
+}
+
+.featureReveal :global(.guest-section)::before {
+  background-position: left -11rem top 3rem;
+  background-size: 430px auto;
+  opacity: 0.08;
 }
 
 .featureReveal :global(.guest-section form) {
@@ -1174,7 +1228,8 @@
   }
 
   .groomCard .portraitFlowers {
-    right: -5rem;
+    top: 0.75rem;
+    right: -5.5rem;
   }
 
   .eventSection {
@@ -1261,6 +1316,16 @@
   }
 }
 
+/* Safari iOS can corrupt large transparent layers while their parent uses
+   blur + 3D transforms. Keep the couple reveal to opacity only on WebKit. */
+@supports (-webkit-touch-callout: none) {
+  .coupleStack :global(.reveal),
+  .coupleStack :global(.reveal.is-visible) {
+    filter: none;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .showcaseSlide,
   .showcaseSlide img,
@@ -1286,6 +1351,6 @@
   }
 
   .groomCard .portraitFlowers {
-    transform: rotate(-8deg) scaleX(-1);
+    transform: none;
   }
 }
