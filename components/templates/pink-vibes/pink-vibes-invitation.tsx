@@ -14,8 +14,7 @@ import styles from "./pink-vibes.module.css";
 const OPENING_VIDEO_PATH = "/media/pink-vibes/decor/Video-Opening.mp4";
 const FLORAL_SPRAY_PATH = "/media/pink-vibes/decor/floral-spray-blush-v1.png";
 const FLORAL_CRESCENT_PATH = "/media/pink-vibes/decor/floral-crescent-blush-v1.png";
-const FLORAL_CRESCENT_MIRRORED_PATH =
-  "/media/pink-vibes/decor/floral-crescent-blush-mirrored-v1.png";
+const PROFILE_ORNAMENT_PATH = "/media/pink-vibes/decor/swan-floral-profile-v1.png";
 
 type PinkVibesInvitationProps = {
   invitation: Invitation;
@@ -78,7 +77,7 @@ export function PinkVibesInvitationView({
   const openingVideoPath = resolveMediaUrl(OPENING_VIDEO_PATH);
   const floralSprayPath = resolveMediaUrl(FLORAL_SPRAY_PATH);
   const floralCrescentPath = resolveMediaUrl(FLORAL_CRESCENT_PATH);
-  const floralCrescentMirroredPath = resolveMediaUrl(FLORAL_CRESCENT_MIRRORED_PATH);
+  const profileOrnamentPath = resolveMediaUrl(PROFILE_ORNAMENT_PATH);
   const showcaseImages = [coverPath, ...galleryPaths].slice(0, 4);
 
   return (
@@ -182,11 +181,11 @@ export function PinkVibesInvitationView({
                       </div>
                       <Image
                         className={styles.portraitFlowers}
-                        src={floralCrescentPath}
+                        src={profileOrnamentPath}
                         alt=""
-                        width={1224}
-                        height={1285}
-                        sizes="270px"
+                        width={1536}
+                        height={1024}
+                        sizes="122px"
                         aria-hidden="true"
                       />
                     </div>
@@ -211,11 +210,11 @@ export function PinkVibesInvitationView({
                       </div>
                       <Image
                         className={styles.portraitFlowers}
-                        src={floralCrescentMirroredPath}
+                        src={profileOrnamentPath}
                         alt=""
-                        width={1224}
-                        height={1285}
-                        sizes="270px"
+                        width={1536}
+                        height={1024}
+                        sizes="122px"
                         aria-hidden="true"
                       />
                     </div>

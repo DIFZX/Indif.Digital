@@ -550,27 +550,27 @@
 .portraitFlowers {
   position: absolute;
   z-index: 2;
-  top: -1.25rem;
-  left: -5.2rem;
-  width: 310px;
+  right: auto;
+  bottom: -1.4rem;
+  left: -2.1rem;
+  width: 122px;
   height: auto;
-  opacity: 0.96;
-  transform: rotate(8deg);
+  opacity: 1;
+  transform: none;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   pointer-events: none;
 }
 
 .groomCard .portraitFlowers {
-  top: 0.75rem;
-  right: -5.75rem;
+  right: -2.1rem;
   left: auto;
   transform: none;
 }
 
 .experience :global(.reveal.is-visible) .portraitFlowers {
-  opacity: 0.96;
-  transform: rotate(8deg);
+  opacity: 1;
+  transform: none;
 }
 
 .experience :global(.reveal.is-visible) .groomCard .portraitFlowers {
@@ -1223,13 +1223,13 @@
   }
 
   .portraitFlowers {
-    left: -5rem;
-    width: 292px;
+    bottom: -1.25rem;
+    left: -1.85rem;
+    width: 116px;
   }
 
   .groomCard .portraitFlowers {
-    top: 0.75rem;
-    right: -5.5rem;
+    right: -1.85rem;
   }
 
   .eventSection {
@@ -1344,9 +1344,9 @@
   }
 
   .portraitFlowers {
-    opacity: 0.96;
+    opacity: 1;
     filter: none;
-    transform: rotate(8deg);
+    transform: none;
     transition: none;
   }
 
