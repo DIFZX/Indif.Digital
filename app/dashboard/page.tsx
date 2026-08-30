@@ -39,6 +39,14 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/elegant/profile-main-v1.jpeg",
     preview_path: "/pink-vibes?to=Tamu%20Undangan",
   },
+  {
+    id: "00000000-0000-0000-0000-000000000003",
+    slug: "blue-garden",
+    name: "Blue Garden",
+    description: "Nuansa biru vintage, detail bunga berlapis, serta aksen emas yang anggun untuk perayaan yang klasik dan berkelas.",
+    thumbnail_path: "/media/blue-garden/backgrounds/blue-garden-paper-v1.png",
+    preview_path: "/blue-garden?to=Tamu%20Undangan",
+  },
 ];
 
 const whatsappUrl = "https://wa.me/6281776396965";

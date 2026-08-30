@@ -83,7 +83,26 @@ export const pinkVibesDemoInvitation: Invitation = {
   },
 };
 
-export const demoInvitations = [demoInvitation, pinkVibesDemoInvitation];
+export const blueGardenDemoInvitation: Invitation = {
+  ...demoInvitation,
+  id: "00000000-0000-0000-0000-000000000103",
+  slug: "blue-garden",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000003",
+    slug: "blue-garden",
+    name: "Blue Garden",
+    theme: {
+      primary: "#456482",
+      accent: "#b89c7a",
+      background: "#f6f3ec",
+      deep: "#304b66",
+      soft: "#d9e5ef",
+    },
+  },
+};
+
+export const demoInvitations = [demoInvitation, pinkVibesDemoInvitation, blueGardenDemoInvitation];
 
 export const demoGreetings: Greeting[] = [
   {

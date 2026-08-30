@@ -6,6 +6,7 @@ import { GiftCard } from "@/components/gift-card";
 import { Guestbook } from "@/components/guestbook";
 import { InvitationExperience } from "@/components/invitation-experience";
 import { Reveal } from "@/components/reveal";
+import { BlueGardenInvitationView } from "@/components/templates/blue-garden/blue-garden-invitation";
 import { PinkVibesInvitationView } from "@/components/templates/pink-vibes/pink-vibes-invitation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
@@ -266,6 +267,10 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
 }
 
 export function InvitationView(props: InvitationViewProps) {
+  if (props.invitation.template.slug === "blue-garden") {
+    return <BlueGardenInvitationView {...props} />;
+  }
+
   if (props.invitation.template.slug === "pink-vibes") {
     return <PinkVibesInvitationView {...props} />;
   }
