@@ -286,16 +286,6 @@
   object-position: center;
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  z-index: -2;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(20, 42, 62, 0.2), rgba(21, 43, 63, 0.1) 40%, rgba(17, 36, 54, 0.64)),
-    radial-gradient(circle at 50% 44%, transparent 8%, rgba(21, 43, 63, 0.14) 68%);
-  pointer-events: none;
-}
 
 .quoteFlower,
 .coupleFlowerLeft,
@@ -333,9 +323,9 @@
 
 .heroKicker {
   display: block;
-  color: #f3dba8;
-  font: 400 1.3rem var(--font-blue-script), cursive;
-  text-shadow: 0 5px 22px rgba(10, 28, 45, 0.72);
+  color: #a07838;
+  font: 400 1.45rem var(--font-blue-script), cursive;
+  text-shadow: 0 1px 2px rgba(160, 120, 56, 0.15);
 }
 
 .heroMonogram {
@@ -345,18 +335,19 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   margin: 0.75rem auto 0.65rem;
-  border: 1px solid rgba(239, 217, 174, 0.68);
+  border: 1.5px solid rgba(160, 120, 56, 0.5);
   border-radius: 50%;
-  background: rgba(25, 49, 72, 0.34);
+  background: rgba(255, 255, 255, 0.65);
   box-shadow:
-    inset 0 0 0 5px rgba(255, 255, 255, 0.05),
-    0 12px 32px rgba(10, 28, 45, 0.2);
-  backdrop-filter: blur(4px);
-  font: 600 1rem var(--font-blue-serif), Georgia, serif;
+    inset 0 0 0 4px rgba(255, 255, 255, 0.8),
+    0 8px 24px rgba(32, 56, 80, 0.12);
+  backdrop-filter: blur(6px);
+  color: #1a3248;
+  font: 600 1.05rem var(--font-blue-serif), Georgia, serif;
 }
 
 .heroMonogram i {
-  color: var(--accent);
+  color: #a07838;
   font-style: normal;
 }
 
@@ -364,10 +355,10 @@
   display: grid;
   justify-items: center;
   margin: 0;
-  color: #fffaf0;
+  color: #162c40;
   font: italic 600 clamp(2.8rem, 11vw, 4.45rem) / 0.78 var(--font-blue-serif), Georgia, serif;
   letter-spacing: -0.055em;
-  text-shadow: 0 8px 28px rgba(8, 25, 42, 0.68);
+  text-shadow: 0 2px 10px rgba(22, 44, 64, 0.08);
 }
 
 .hero h1 > span {
@@ -378,18 +369,17 @@
 
 .hero h1 > i {
   margin: 0.18rem 0;
-  color: #edcf91;
+  color: #ab823e;
   font: 400 0.58em / 0.72 var(--font-blue-script), cursive;
   letter-spacing: 0;
 }
 
 .heroDate {
   margin: 0.95rem 0 0;
-  color: rgba(255, 250, 240, 0.9);
-  font-size: 0.64rem;
-  font-weight: 600;
-  letter-spacing: 0.17em;
-  text-shadow: 0 4px 16px rgba(8, 25, 42, 0.7);
+  color: #324c65;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
   text-transform: uppercase;
 }
 
@@ -398,23 +388,25 @@
   gap: 0.35rem;
   width: min(280px, 100%);
   margin: 1.2rem auto 0;
-  padding: 0.72rem 0.75rem;
-  border-block: 1px solid rgba(239, 217, 174, 0.48);
-  background: rgba(22, 45, 66, 0.2);
-  text-shadow: 0 3px 14px rgba(8, 25, 42, 0.72);
-  backdrop-filter: blur(3px);
+  padding: 0.75rem 0.85rem;
+  border-block: 1px solid rgba(160, 120, 56, 0.42);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(26, 50, 72, 0.06);
+  backdrop-filter: blur(6px);
 }
 
 .heroGuest small {
-  color: rgba(255, 250, 240, 0.74);
-  font-size: 0.54rem;
-  letter-spacing: 0.13em;
+  color: #687e94;
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .heroGuest strong {
-  color: #fffaf0;
-  font: 600 1.05rem var(--font-blue-serif), Georgia, serif;
+  color: #162c40;
+  font: 600 1.08rem var(--font-blue-serif), Georgia, serif;
 }
 
 .scrollCue {
@@ -423,7 +415,7 @@
   justify-items: center;
   gap: 0.36rem;
   margin: 1rem auto 0;
-  color: rgba(255, 250, 240, 0.86);
+  color: #3b536b;
   text-decoration: none;
 }
 
@@ -432,8 +424,9 @@
   display: block;
   width: 24px;
   height: 38px;
-  border: 1px solid rgba(255, 250, 240, 0.72);
+  border: 1.5px solid rgba(59, 83, 107, 0.5);
   border-radius: 99px;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .scrollCue i::after {
@@ -444,13 +437,14 @@
   width: 3px;
   height: 7px;
   border-radius: 9px;
-  background: #edcf91;
+  background: #ab823e;
   transform: translateX(-50%);
   animation: scrollDot 1.9s ease-in-out infinite;
 }
 
 .scrollCue span {
-  font-size: 0.5rem;
+  font-size: 0.52rem;
+  font-weight: 600;
   letter-spacing: 0.19em;
   text-transform: uppercase;
 }
