@@ -13,3 +13,4 @@ Contoh Website/
 npm-debug.log*
 *.tsbuildinfo
 .next-test-*.log
+.vscode/

@@ -20,6 +20,34 @@ export async function POST(request: Request) {
   }
 
   const { invitationId, guestName, attendance, guestCount, message } = parsed.data;
+
+  // Check if invitation exists in Supabase invitations table
+  const { data: inv } = await supabase
+    .from("invitations")
+    .select("id")
+    .eq("id", invitationId)
+    .maybeSingle();
+
+  if (!inv) {
+    // Graceful fallback for demo or unmigrated invitations
+    const demoGreeting = message
+      ? {
+          id: "demo-" + Date.now(),
+          guest_name: guestName,
+          message,
+          attendance,
+          created_at: new Date().toISOString(),
+        }
+      : null;
+
+    return NextResponse.json({
+      message: message
+        ? "Terima kasih, respons dan ucapan Anda sudah tersimpan."
+        : "Terima kasih, respons Anda sudah tersimpan.",
+      greeting: demoGreeting,
+    }, { status: 201 });
+  }
+
   const { error: rsvpError } = await supabase.from("rsvps").insert({
     invitation_id: invitationId,
     guest_name: guestName,

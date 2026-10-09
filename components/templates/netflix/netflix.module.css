@@ -1,0 +1,2092 @@
+/* ─── Netflix Theme: Mobile-First Cinematic Streaming Experience ─── */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.experience {
+  --nf-red: #e50914;
+  --nf-red-hover: #b81d24;
+  --nf-red-glow: rgba(229, 9, 20, 0.4);
+  --nf-bg: #141414;
+  --nf-bg-card: #1c1c1c;
+  --nf-bg-card-hover: #242424;
+  --nf-bg-elevated: #282828;
+  --nf-text: #ffffff;
+  --nf-text-secondary: #e5e5e5;
+  --nf-text-muted: #999999;
+  --nf-border: rgba(255, 255, 255, 0.1);
+  --nf-border-red: rgba(229, 9, 20, 0.35);
+  --nf-green: #46d369;
+  --nf-gold: #e3c16f;
+
+  background-color: #0d0c0c;
+  color: var(--nf-text);
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── DESKTOP SPLIT LAYOUT (LIKE BLUE GARDEN) ─── */
+
+.layout {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  background-color: #0d0c0c;
+}
+
+/* LEFT COLUMN: DESKTOP SHOWCASE (Sticky 100vh Wallpaper) */
+.showcase {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0d0c0c;
+  color: #fff;
+  isolation: isolate;
+}
+
+.showcaseSlides,
+.showcaseSlide,
+.showcaseShade {
+  position: absolute;
+  inset: 0;
+}
+
+.showcaseSlide {
+  opacity: 0;
+  animation: showcaseFade 28s linear infinite;
+}
+
+.showcaseSlide:first-child {
+  opacity: 1;
+}
+
+.showcaseSlide img {
+  object-fit: cover;
+  object-position: center 30%;
+  animation: showcaseZoom 28s linear infinite;
+  image-rendering: auto;
+}
+
+@keyframes showcaseFade {
+  0% { opacity: 0; }
+  3% { opacity: 1; }
+  25% { opacity: 1; }
+  28% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes showcaseZoom {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.showcaseShade {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(13, 12, 12, 0.15) 0%, rgba(13, 12, 12, 0.45) 55%, rgba(13, 12, 12, 0.9) 100%),
+    linear-gradient(90deg, transparent 65%, rgba(13, 12, 12, 0.75) 100%);
+}
+
+.showcaseFrame {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: min(520px, 82%);
+  padding: 3rem 2.4rem 2.8rem;
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  border-radius: 16px;
+  background: rgba(20, 20, 20, 0.8);
+  text-align: center;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(229, 9, 20, 0.15);
+}
+
+.showcaseBadgePill {
+  display: inline-block;
+  background-color: var(--nf-red);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 0.3rem 0.85rem;
+  border-radius: 3px;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
+
+.showcaseLogo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.4rem;
+  letter-spacing: 0.1em;
+  color: var(--nf-red);
+  margin: 0 0 0.4rem;
+  line-height: 1;
+  text-shadow: 0 0 20px var(--nf-red-glow);
+}
+
+.showcaseSub {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #a0a0a0;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+}
+
+.showcaseCoupleTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.2rem, 5vw, 4.4rem);
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  margin: 0 0 0.6rem;
+  line-height: 1;
+}
+
+.showcaseDivider {
+  width: 48px;
+  height: 2px;
+  background-color: var(--nf-red);
+  margin: 0 auto 0.8rem;
+}
+
+.showcaseEpisodeTag {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--nf-gold);
+  margin: 0 0 0.5rem;
+}
+
+.showcaseDate {
+  display: block;
+  font-size: 0.75rem;
+  color: #c0c0c0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.showcaseMetaSpecs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  color: #999;
+}
+
+.showcaseBrand {
+  position: absolute;
+  z-index: 4;
+  bottom: 1.6rem;
+  left: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
+/* RIGHT COLUMN: MOBILE FOCUSED PANEL */
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  min-height: 100vh;
+  background-color: var(--nf-bg);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.8);
+  overflow-x: hidden;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    display: block;
+    width: 100%;
+    background-color: var(--nf-bg);
+  }
+
+  .showcase {
+    display: none !important;
+  }
+
+  .panel {
+    max-width: 100%;
+    border-left: none;
+    box-shadow: none;
+  }
+}
+
+/* ─── COVER SCREEN (BUKA UNDANGAN) INSIDE PANEL ─── */
+
+.coverModal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 460px;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 100;
+  background-color: var(--nf-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 2rem 1.4rem;
+  transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.75s ease;
+}
+
+@media (max-width: 900px) {
+  .coverModal {
+    left: 0;
+    width: 100%;
+  }
+}
+
+.coverModalOpened {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-100%);
+}
+
+.coverBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.coverBackdrop img {
+  image-rendering: auto;
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+.coverGradient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(15, 15, 15, 0.25) 0%, rgba(15, 15, 15, 0.65) 45%, #141414 90%);
+}
+
+.coverContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.coverBrandWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.netflixBadgePill {
+  display: inline-block;
+  background: var(--nf-red);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.coverNetflixLogo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 0.1em;
+  color: var(--nf-red);
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 0 20px var(--nf-red-glow);
+}
+
+.coverSubTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #b0b0b0;
+  margin: 0 0 0.4rem;
+  text-transform: uppercase;
+}
+
+.coverCoupleTitle {
+  font-family: 'Bebas Neue', 'Plus Jakarta Sans', sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0 0 0.6rem;
+  line-height: 1.05;
+}
+
+.coverMetaRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: #aaaaaa;
+  margin-bottom: 1.6rem;
+  flex-wrap: wrap;
+}
+
+.matchBadge {
+  color: var(--nf-green);
+  font-weight: 800;
+}
+
+.metaDivider {
+  color: #555;
+}
+
+.ageBadge {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.guestCard {
+  background: rgba(28, 28, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 1.2rem;
+  width: 100%;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.guestDearLabel {
+  font-size: 0.78rem;
+  color: #999;
+  margin: 0 0 0.6rem;
+}
+
+.guestNameWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.guestAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--nf-red);
+  flex-shrink: 0;
+}
+
+.guestNameText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.guestApology {
+  font-size: 0.7rem;
+  color: #777;
+  margin: 0;
+  font-style: italic;
+}
+
+.coverButtonWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.openInvitationButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background-color: var(--nf-red);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.85rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 18px var(--nf-red-glow);
+}
+
+.openInvitationButton:hover {
+  background-color: var(--nf-red-hover);
+  transform: translateY(-2px);
+}
+
+.openButtonIcon {
+  display: flex;
+  align-items: center;
+}
+
+.audioHint {
+  font-size: 0.72rem;
+  color: #888;
+}
+
+/* ─── MAIN MOBILE EXPERIENCE CONTENT ─── */
+
+.mainExperience {
+  position: relative;
+  width: 100%;
+  padding-bottom: 5rem;
+  background-color: var(--nf-bg);
+}
+
+/* Sticky Header inside Panel */
+.topNavbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: rgba(20, 20, 20, 0.96);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 1.2rem;
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navLogo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.9rem;
+  color: var(--nf-red);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 12px var(--nf-red-glow);
+}
+
+.navSoundButton {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.navSoundButton:hover {
+  background: var(--nf-red);
+  border-color: var(--nf-red);
+}
+
+.equalizerBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+
+.equalizerBars span {
+  width: 2.5px;
+  background-color: var(--nf-red);
+  border-radius: 1px;
+  animation: eqBounce 1s ease-in-out infinite alternate;
+}
+
+.equalizerBars span:nth-child(1) { height: 12px; animation-delay: 0.1s; }
+.equalizerBars span:nth-child(2) { height: 6px; animation-delay: 0.4s; }
+.equalizerBars span:nth-child(3) { height: 14px; animation-delay: 0.25s; }
+
+@keyframes eqBounce {
+  0% { height: 4px; }
+  100% { height: 14px; }
+}
+
+/* Floating Bottom Nav (Visible on Mobile) */
+.bottomNavMobile {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(18, 17, 17, 0.96);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.45rem 0.2rem max(0.45rem, env(safe-area-inset-bottom));
+  justify-content: space-around;
+  align-items: center;
+}
+
+.bottomNavMobile a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: #777;
+  text-decoration: none;
+  font-size: 0.62rem;
+  font-weight: 600;
+  transition: color 0.2s;
+  padding: 0.2rem 0.3rem;
+}
+
+.bottomNavMobile a.bottomNavActive,
+.bottomNavMobile a:hover {
+  color: var(--nf-red);
+}
+
+@media (min-width: 901px) {
+  .bottomNavMobile {
+    display: none;
+  }
+}
+
+/* ─── 1. HERO BANNER ─── */
+
+.heroSection {
+  position: relative;
+  min-height: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2.5rem 1.2rem 2.2rem;
+  overflow: hidden;
+}
+
+.heroBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.heroBackdrop img {
+  image-rendering: auto;
+}
+
+.heroShadeBottom {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.05) 0%, rgba(20, 20, 20, 0.4) 50%, #141414 92%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.heroBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.redBadge {
+  background-color: var(--nf-red);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.topTenBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+}
+
+.topTenBadge svg {
+  color: var(--nf-red);
+}
+
+.heroTitle {
+  font-family: 'Bebas Neue', 'Plus Jakarta Sans', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  margin: 0 0 0.6rem;
+  line-height: 1.05;
+}
+
+.heroMetaSpecs {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #cccccc;
+}
+
+.matchScore {
+  color: var(--nf-green);
+  font-weight: 800;
+}
+
+.specYear, .specDuration {
+  color: #e5e5e5;
+}
+
+.ratingBadge {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 0.05rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.qualityBadge {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.05rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.comingSoonBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(229, 9, 20, 0.15);
+  border-left: 3px solid var(--nf-red);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.comingSoonPulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--nf-red);
+  box-shadow: 0 0 8px var(--nf-red);
+}
+
+.heroSynopsis {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #cccccc;
+  margin: 0 0 1rem;
+}
+
+.heroQuoteBox {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.heroQuoteText {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #c0c0c0;
+  margin: 0 0 0.3rem;
+  font-style: italic;
+}
+
+.heroQuoteSource {
+  font-size: 0.75rem;
+  color: var(--nf-gold);
+  font-weight: 700;
+  display: block;
+}
+
+/* Countdown */
+.countdownContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: rgba(24, 24, 24, 0.92);
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.countdownItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 44px;
+}
+
+.countdownNumber {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+.countdownLabel {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--nf-red);
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.countdownColon {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: #666;
+  line-height: 1;
+  padding-bottom: 0.4rem;
+}
+
+/* Action Buttons */
+.heroActionButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.heroPlayButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background-color: #ffffff;
+  color: #121111;
+  padding: 0.65rem 1.1rem;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.heroPlayButton:hover {
+  background-color: #e6e6e6;
+}
+
+.heroInfoButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(109, 109, 110, 0.7);
+  color: #ffffff;
+  padding: 0.65rem 1rem;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.heroInfoButton:hover {
+  background: rgba(109, 109, 110, 0.9);
+}
+
+.heroMyListButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.65rem 0.9rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.heroMyListButton:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── SHARED SECTION STYLES ─── */
+
+.sectionRow {
+  padding: 3rem 1.2rem 1.5rem;
+  width: 100%;
+}
+
+.sectionHeader {
+  margin-bottom: 1.6rem;
+}
+
+.sectionCategoryTag {
+  display: inline-block;
+  background-color: var(--nf-red);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  padding: 0.2rem 0.65rem;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.sectionTitle {
+  font-family: 'Bebas Neue', 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.95rem;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  margin: 0 0 0.3rem;
+  line-height: 1.1;
+}
+
+.sectionSubtitle {
+  font-size: 0.85rem;
+  color: var(--nf-text-muted);
+  margin: 0;
+}
+
+/* ─── 2. LEAD ACTOR (CAST GRID) ─── */
+
+.castGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.castCard {
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.castCard:hover {
+  border-color: var(--nf-border-red);
+}
+
+.castImageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.castImageContainer img {
+  image-rendering: auto;
+}
+
+.castImageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(28, 28, 28, 0.95) 100%);
+  z-index: 1;
+}
+
+.castRolePill {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  z-index: 2;
+  background: rgba(18, 17, 17, 0.85);
+  border: 1px solid var(--nf-red);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+}
+
+.castDetails {
+  padding: 1.2rem;
+  background: var(--nf-bg-card);
+}
+
+.castActorName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.3rem;
+}
+
+.castParents {
+  font-size: 0.82rem;
+  color: var(--nf-text-muted);
+  line-height: 1.45;
+  margin: 0 0 1rem;
+}
+
+.castSocialAction {
+  margin-top: auto;
+}
+
+.instagramButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 0.5rem 0.9rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.instagramButton:hover {
+  background: linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%);
+  border-color: transparent;
+}
+
+/* ─── 3. ON SCHEDULE (EPISODES LIST) ─── */
+
+.episodesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.episodeCard {
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.episodeThumbnailWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.episodeThumbnailWrapper img {
+  image-rendering: auto;
+}
+
+.episodeProgressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 2;
+}
+
+.episodeProgressFill {
+  height: 100%;
+  background-color: var(--nf-red);
+}
+
+.episodeNumberBadge {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 2;
+  background: rgba(18, 17, 17, 0.85);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+}
+
+.episodeInfo {
+  padding: 1.2rem;
+}
+
+.episodeTopBadgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.episodeBadge {
+  color: var(--nf-red);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.episodeTimeTag {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+.episodeMainTitle {
+  font-family: 'Bebas Neue', 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  margin: 0 0 0.2rem;
+}
+
+.episodeDate {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--nf-gold);
+  margin: 0 0 0.4rem;
+}
+
+.episodeVenue {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--nf-text-muted);
+  margin: 0 0 1rem;
+}
+
+.episodeVenue strong {
+  color: #ffffff;
+}
+
+.episodeButtonRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.episodeMapButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--nf-red);
+  color: #ffffff;
+  padding: 0.55rem 1rem;
+  border-radius: 5px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.episodeMapButton:hover {
+  background-color: var(--nf-red-hover);
+}
+
+.episodeCalendarButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 0.55rem 1rem;
+  border-radius: 5px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.episodeCalendarButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Live Streaming Card */
+.liveStreamCard {
+  background: linear-gradient(135deg, rgba(229, 9, 20, 0.12) 0%, var(--nf-bg-card) 60%);
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.liveStreamThumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.liveStreamThumbnail img {
+  image-rendering: auto;
+}
+
+.liveStreamBadgeRow {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 2;
+}
+
+.liveRedPill {
+  background-color: var(--nf-red);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+}
+
+.centerPlayCircle {
+  position: relative;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(229, 9, 20, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px var(--nf-red-glow);
+}
+
+.liveStreamInfo {
+  padding: 1.2rem;
+}
+
+.liveStreamTitle {
+  font-family: 'Bebas Neue', 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  color: #fff;
+  margin: 0.2rem 0 0.1rem;
+}
+
+.liveStreamSub {
+  font-size: 0.8rem;
+  color: var(--nf-gold);
+  margin: 0 0 0.6rem;
+}
+
+.liveStreamDesc {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #bbb;
+  margin: 0 0 1rem;
+}
+
+.liveStreamWatchButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background-color: var(--nf-red);
+  color: #fff;
+  padding: 0.6rem 1.1rem;
+  border-radius: 5px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ─── 4. ORIGINAL SERIES (LOVE STORY) ─── */
+
+.storyEpisodesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.storyCard {
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.storyCard:hover {
+  border-color: var(--nf-border-red);
+}
+
+.storyThumbnailWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.storyThumbnailWrapper img {
+  image-rendering: auto;
+}
+
+.storyPlayIconCircle {
+  position: relative;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.storyCard:hover .storyPlayIconCircle {
+  transform: scale(1.1);
+  background: var(--nf-red);
+  border-color: var(--nf-red);
+}
+
+.storyEpBadge {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 2;
+  background: rgba(18, 17, 17, 0.85);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+}
+
+.storyCardBody {
+  padding: 1.2rem;
+}
+
+.storyHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.storyEpNum {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--nf-red);
+}
+
+.storyTitleBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.storyCardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.1rem;
+}
+
+.storyYearBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--nf-gold);
+}
+
+.storyText {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #c0c0c0;
+  margin: 0;
+}
+
+/* ─── 5. CINEMATIC GALLERY ─── */
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.galleryCard {
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.galleryCard:hover {
+  transform: scale(1.03);
+  border-color: var(--nf-red);
+}
+
+.galleryImageInner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+}
+
+.galleryImageInner img {
+  image-rendering: auto;
+}
+
+.galleryCardHover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(18, 17, 17, 0.85) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.6rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.galleryCard:hover .galleryCardHover {
+  opacity: 1;
+}
+
+.galleryCardTag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Lightbox */
+.lightboxModal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+}
+
+.lightboxDialog {
+  position: relative;
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightboxCloseBtn {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightboxImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lightboxFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.8rem;
+  color: #bbb;
+  font-size: 0.82rem;
+}
+
+.lightboxNavButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.lightboxNavButtons button {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.35rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ─── 6. DIGITAL ENVELOPE (WEDDING GIFT) ─── */
+
+.giftToggleWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+}
+
+.giftToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--nf-red);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.giftToggleBtn:hover {
+  background-color: var(--nf-red-hover);
+}
+
+.giftCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.bankAtmCard {
+  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.4rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 170px;
+}
+
+.bankCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.bankBrandName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  color: #fff;
+}
+
+.chipSim {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #aaa;
+}
+
+.bankCardNumber {
+  font-family: monospace;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  margin-bottom: 1.2rem;
+}
+
+.bankCardFooter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.bankHolderLabel {
+  font-size: 0.62rem;
+  color: #888;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 1px;
+}
+
+.bankHolderName {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  margin: 0;
+}
+
+.copyBtn {
+  background: var(--nf-red);
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.85rem;
+  border-radius: 5px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.copyBtn:hover {
+  background: var(--nf-red-hover);
+}
+
+.physicalGiftCard {
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  border-radius: 12px;
+  padding: 1.4rem;
+}
+
+.physicalGiftIcon {
+  color: var(--nf-red);
+  margin-bottom: 0.6rem;
+}
+
+.physicalGiftTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.6rem;
+}
+
+.physicalGiftText {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #c0c0c0;
+  margin: 0 0 1rem;
+}
+
+.copyAddressBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 0.55rem 1rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ─── 7. WISHES & RSVP ─── */
+
+.rsvpStatsRow {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+
+.rsvpStatItem {
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  border-radius: 8px;
+  padding: 0.9rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.rsvpStatNum {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+  color: #fff;
+}
+
+.rsvpStatLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.statHadir .rsvpStatNum { color: var(--nf-green); }
+.statTidakHadir .rsvpStatNum { color: var(--nf-red); }
+
+.rsvpFormCard {
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  border-radius: 10px;
+  padding: 1.4rem;
+  margin-bottom: 2rem;
+}
+
+.rsvpForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.formGroup label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  background: #222;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 0.75rem 0.9rem;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 0.88rem;
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--nf-red);
+}
+
+.radioPills {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.radioPill {
+  flex: 1;
+  background: #222;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #aaa;
+  padding: 0.65rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.radioPillActiveGreen {
+  background: rgba(70, 211, 105, 0.15);
+  border-color: var(--nf-green);
+  color: #fff;
+}
+
+.radioPillActiveRed {
+  background: rgba(229, 9, 20, 0.15);
+  border-color: var(--nf-red);
+  color: #fff;
+}
+
+.formButtonRow {
+  display: flex;
+  gap: 0.6rem;
+  flex-direction: column;
+  margin-top: 0.2rem;
+}
+
+.submitWishBtn {
+  background: var(--nf-red);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.4rem;
+  border-radius: 5px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submitWishBtn:hover {
+  background: var(--nf-red-hover);
+}
+
+.submitWishBtn:disabled {
+  opacity: 0.6;
+}
+
+.sendWaBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: #25d366;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.4rem;
+  border-radius: 5px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.formStatusMessage {
+  padding: 0.65rem 0.8rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.statusSuccess {
+  background: rgba(70, 211, 105, 0.15);
+  border: 1px solid var(--nf-green);
+  color: var(--nf-green);
+}
+
+.statusError {
+  background: rgba(229, 9, 20, 0.15);
+  border: 1px solid var(--nf-red);
+  color: var(--nf-red);
+}
+
+/* Wishes Feed */
+.wishesFeedContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.wishesFeedTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.wishesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.emptyWishes {
+  padding: 1.5rem;
+  text-align: center;
+  color: #888;
+  background: var(--nf-bg-card);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.wishItemCard {
+  background: var(--nf-bg-card);
+  border: 1px solid var(--nf-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.wishCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.wishAvatarBox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.wishAvatarEmoji {
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.wishGuestName {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.wishTime {
+  font-size: 0.68rem;
+  color: #777;
+}
+
+.wishBadgeHadir {
+  background: rgba(70, 211, 105, 0.15);
+  color: var(--nf-green);
+  border: 1px solid var(--nf-green);
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.wishBadgeTidakHadir {
+  background: rgba(229, 9, 20, 0.15);
+  color: var(--nf-red);
+  border: 1px solid var(--nf-red);
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.wishMessageText {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #ccc;
+  margin: 0;
+  font-style: italic;
+}
+
+/* ─── 8. DO'A UNTUK PENGANTIN ─── */
+
+.prayerCard {
+  background: linear-gradient(135deg, rgba(229, 9, 20, 0.08) 0%, var(--nf-bg-card) 100%);
+  border: 1px solid rgba(229, 9, 20, 0.25);
+  border-radius: 10px;
+  padding: 2rem 1.4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prayerArabic {
+  font-family: 'Amiri', serif, system-ui;
+  font-size: 1.45rem;
+  line-height: 1.9;
+  color: #ffffff;
+  margin: 0.8rem 0 0.6rem;
+  direction: rtl;
+}
+
+.prayerLatin {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--nf-gold);
+  margin: 0 0 0.5rem;
+  font-style: italic;
+}
+
+.prayerTranslation {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #bbb;
+  margin: 0;
+}
+
+/* ─── 9. FOOTER ─── */
+
+.footerSection {
+  padding: 3.5rem 1.2rem 3rem;
+  text-align: center;
+  background: linear-gradient(180deg, transparent 0%, #0a0a0a 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footerInner {
+  width: 100%;
+}
+
+.footerThanksTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  letter-spacing: 0.08em;
+  color: var(--nf-red);
+  margin: 0 0 0.3rem;
+  text-shadow: 0 0 15px var(--nf-red-glow);
+}
+
+.footerThanksSub {
+  font-size: 0.95rem;
+  color: #fff;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.footerClosing {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #999;
+  margin: 0 0 1.2rem;
+}
+
+.footerWithLove {
+  font-size: 0.8rem;
+  color: #777;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 0.3rem;
+}
+
+.footerCoupleSignature {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+  margin: 0 0 2rem;
+}
+
+.footerBrandRow {
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.footerNetflixLogo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.1em;
+  color: var(--nf-red);
+}
+
+.footerCopyright {
+  font-size: 0.75rem;
+  color: #666;
+  margin: 0;
+}
+
+.footerSupported {
+  font-size: 0.72rem;
+  color: #555;
+  margin: 0;
+}
+
+.footerSupported strong {
+  color: #888;
+}
+
+/* ─── NETFLIX REVEAL ANIMATIONS (LIKE BLUE GARDEN) ─── */
+.experience :global(.reveal) {
+  filter: none !important; /* CRITICAL: Never blur photos or content */
+  transition-duration: 0.9s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  width: 100%;
+}
+
+.experience :global(.reveal.is-visible) {
+  filter: none !important;
+}
+
+/* Ensure flex/grid items with reveal behave properly */
+.castGrid > :global(.reveal),
+.episodesList > :global(.reveal),
+.storyEpisodesGrid > :global(.reveal),
+.wishesList > :global(.reveal),
+.giftCardsContainer > :global(.reveal) {
+  width: 100%;
+}
+
+.galleryGrid > :global(.reveal) {
+  width: 100%;
+  height: 100%;
+}
+
+/* Floating Music Control */
+.floatingMusicBtn {
+  position: fixed;
+  z-index: 95;
+  right: 2rem;
+  bottom: 2.2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(18, 17, 17, 0.94);
+  border: 1.5px solid rgba(229, 9, 20, 0.65);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(229, 9, 20, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.floatingMusicBtn:hover {
+  transform: scale(1.08);
+  border-color: var(--nf-red);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.85), 0 0 22px rgba(229, 9, 20, 0.6);
+}
+
+.floatingMusicBtn:active {
+  transform: scale(0.95);
+}
+
+.floatingMusicPlaying {
+  border-color: var(--nf-red);
+  animation: floatingMusicPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes floatingMusicPulse {
+  0% {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 12px rgba(229, 9, 20, 0.3);
+  }
+  100% {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 24px rgba(229, 9, 20, 0.75);
+  }
+}
+
+.navSeriesTag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--nf-red);
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .floatingMusicBtn {
+    right: 1.1rem;
+    bottom: 5.3rem; /* Floats directly above mobile bottom nav */
+    width: 45px;
+    height: 45px;
+  }
+}
+

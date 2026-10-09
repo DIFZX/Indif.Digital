@@ -22,13 +22,18 @@ export async function getInvitation(slug: string): Promise<Invitation | null> {
     .eq("status", "published")
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+    return demoInvitations.find((invitation) => invitation.slug === slug) ?? null;
+  }
   return data as unknown as Invitation;
 }
 
 export async function getGreetings(invitationId: string): Promise<Greeting[]> {
   const supabase = getSupabase();
-  if (!supabase) return invitationId === demoInvitation.id ? demoGreetings : [];
+  if (!supabase) {
+    const isDemo = demoInvitations.some((inv) => inv.id === invitationId);
+    return isDemo ? demoGreetings : [];
+  }
 
   const { data } = await supabase
     .from("greetings")

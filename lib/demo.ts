@@ -102,7 +102,78 @@ export const blueGardenDemoInvitation: Invitation = {
   },
 };
 
-export const demoInvitations = [demoInvitation, pinkVibesDemoInvitation, blueGardenDemoInvitation];
+export const netflixDemoInvitation: Invitation = {
+  ...demoInvitation,
+  id: "00000000-0000-0000-0000-000000000104",
+  slug: "netflix",
+  bride_name: "Dita Maharani Putri",
+  bride_short_name: "Dita",
+  bride_parents: "Putri Pertama dari Bapak & Ibu",
+  bride_photo_path: "/media/netflix/The Bride.jpg",
+  groom_name: "Fajar Sidik",
+  groom_short_name: "Fajar",
+  groom_parents: "Putra Pertama dari Bapak & Ibu",
+  groom_photo_path: "/media/netflix/The Groom.jpg",
+  event_date: "2026-12-12",
+  ceremony_time: "09.00 - 09.30 WIB",
+  reception_time: "10.00 - 14.00 WIB",
+  venue_name: "Waroeng Djoglo Grand Ballroom",
+  venue_address: "Jl. Joglo Raya No. 45, Kembangan, Jakarta Barat",
+  maps_url: "https://maps.google.com/?q=Waroeng+Djoglo",
+  opening_text:
+    "Setelah Dita & Fajar dipertemukan dalam situasi yang tepat, di mana keduanya telah siap untuk memulai hubungan bersama, tibalah mereka di awal perjalanan baru menuju pernikahan.",
+  quote_text:
+    "Segala sesuatu kami ciptakan berpasang-pasangan agar kamu mengingat (kebesaran Allah).",
+  quote_source: "(Q.S Az-Zariyat: 49)",
+  story: [
+    {
+      year: "2022",
+      title: "Awal Perkenalan",
+      text: "Bukan karena bertemu lalu berjodoh, karena berjodohlah maka kita berdua dipertemukan. Berawal dari tidak sengaja berkenalan di instagram, karena ternyata kita berdua tinggal di kota yang sama, Ehime Japan. Selang beberapa waktu kita memutuskan untuk bertemu dan menjalin hubungan.",
+    },
+    {
+      year: "2024",
+      title: "Lamaran",
+      text: "Singkat cerita setelah pertemuan dan perkenalan di tahun 2022. Akhirnya kita berdua memutuskan untuk berkomitmen melanjutkan hubungan ini ke jenjang yang lebih serius, dengan melangkah satu langkah lebih dekat. Fajar datang bersama keluarga besarnya untuk melamar Dita. Lamaran diterima dengan baik oleh keluarga Dita dan di hari itu kami sekeluarga menentukan tanggal pernikahan kita berdua.",
+    },
+    {
+      year: "2026",
+      title: "Menikah",
+      text: "Bismillah tepat pada 12 Desember 2026 kita berdua akan membuka cerita baru dengan status yang baru juga yaitu sepasang Suami Istri. Perjalanan cerita kita akhirnya bermuara di jenjang pernikahan semoga Allah memberikan kelancaran dan menjadikan kami keluarga yang Sakinah Mawaddah Warahmah. Aamiin.",
+    },
+  ],
+  story_image_path: "/media/netflix/5.jpg",
+  cover_path: "/media/netflix/1.jpg",
+  profile_path: "/media/netflix/2.jpg",
+  gallery_paths: [
+    "/media/netflix/1.jpg",
+    "/media/netflix/2.jpg",
+    "/media/netflix/3.jpg",
+    "/media/netflix/4.jpg",
+    "/media/netflix/5.jpg",
+  ],
+  music_path: "/media/elegant/Bergema Selamanya.mp4",
+  gift_info: {
+    bank: "BCA",
+    account_number: "7125091428",
+    account_name: "Fajar Sidik",
+  },
+  closing_text:
+    "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.",
+  closing_greeting: "With Love, Dita & Fajar",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000004",
+    slug: "netflix",
+    name: "Netflix",
+    theme: {
+      primary: "#e50914",
+      background: "#121111",
+    },
+  },
+};
+
+export const demoInvitations = [demoInvitation, pinkVibesDemoInvitation, blueGardenDemoInvitation, netflixDemoInvitation];
 
 export const demoGreetings: Greeting[] = [
   {

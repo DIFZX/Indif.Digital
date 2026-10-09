@@ -47,6 +47,14 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/blue-garden/backgrounds/blue-garden-paper-v1.png",
     preview_path: "/blue-garden?to=Tamu%20Undangan",
   },
+  {
+    id: "00000000-0000-0000-0000-000000000004",
+    slug: "netflix",
+    name: "Netflix",
+    description: "Template undangan digital unik dengan tema aplikasi streaming film kesayangan Anda. Unik, modern, dan sangat berkesan.",
+    thumbnail_path: "/media/elegant/gallery-couple-v2.png",
+    preview_path: "/netflix?to=Tamu%20Undangan",
+  },
 ];
 
 const whatsappUrl = "https://wa.me/6281776396965";
