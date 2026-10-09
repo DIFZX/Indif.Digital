@@ -6,10 +6,14 @@
 }
 html {
   scroll-behavior: smooth;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
 }
 body {
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
   background: #17251d;
   color: #263a2f;
   font-family:
@@ -541,6 +545,16 @@ footer h2 {
 .reveal-right {
   --reveal-x: 78px;
   --reveal-y: 0;
+}
+@media (max-width: 768px) {
+  .reveal-left {
+    --reveal-x: -20px;
+    --reveal-y: 16px;
+  }
+  .reveal-right {
+    --reveal-x: 20px;
+    --reveal-y: 16px;
+  }
 }
 .reveal-scale {
   --reveal-y: 38px;

@@ -93,6 +93,19 @@ export function NetflixClientApp({
     } catch {}
   }, [invitation.id]);
 
+  // Prevent iOS Safari gesture/pinch zoom glitches
+  useEffect(() => {
+    const handleGesture = (e: Event) => {
+      e.preventDefault();
+    };
+    document.addEventListener("gesturestart", handleGesture);
+    document.addEventListener("gesturechange", handleGesture);
+    return () => {
+      document.removeEventListener("gesturestart", handleGesture);
+      document.removeEventListener("gesturechange", handleGesture);
+    };
+  }, []);
+
   const audioRef = useRef<HTMLAudioElement>(null);
   const displayGuestName = guestName || "Tamu Undangan";
 
