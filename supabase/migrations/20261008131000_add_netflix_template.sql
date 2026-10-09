@@ -1,4 +1,5 @@
 insert into public.templates (
+  id,
   slug,
   name,
   theme,
@@ -9,6 +10,7 @@ insert into public.templates (
   sort_order
 )
 values (
+  '00000000-0000-0000-0000-000000000004'::uuid,
   'netflix',
   'Netflix',
   '{"primary":"#e50914","background":"#121111"}'::jsonb,
@@ -29,6 +31,7 @@ set
   sort_order = excluded.sort_order;
 
 insert into public.invitations (
+  id,
   template_id,
   slug,
   status,
@@ -61,6 +64,7 @@ insert into public.invitations (
   closing_greeting
 )
 select
+  '00000000-0000-0000-0000-000000000104'::uuid,
   netflix_template.id,
   'netflix',
   'published'::public.invitation_status,

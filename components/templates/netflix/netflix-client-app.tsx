@@ -71,6 +71,28 @@ export function NetflixClientApp({
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  // Restore any wishes saved locally across page refreshes
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(`nikahfix_wishes_${invitation.id}`);
+      if (stored) {
+        const parsed = JSON.parse(stored) as Greeting[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setGreetings((prev) => {
+            const map = new Map<string, Greeting>();
+            prev.forEach((g) => map.set(g.id || g.message, g));
+            parsed.forEach((g) => {
+              if (!map.has(g.id || g.message)) {
+                map.set(g.id || g.message, g);
+              }
+            });
+            return Array.from(map.values());
+          });
+        }
+      }
+    } catch {}
+  }, [invitation.id]);
+
   const audioRef = useRef<HTMLAudioElement>(null);
   const displayGuestName = guestName || "Tamu Undangan";
 
@@ -229,20 +251,34 @@ export function NetflixClientApp({
 
       if (res.ok) {
         const data = await res.json();
-        if (data.greeting) {
-          setGreetings((prev) => [data.greeting, ...prev]);
-        } else {
-          setGreetings((prev) => [newGreeting, ...prev]);
-        }
+        const greetingToAdd: Greeting = data.greeting || newGreeting;
+        setGreetings((prev) => {
+          const next = [greetingToAdd, ...prev.filter((g) => g.id !== greetingToAdd.id)];
+          try {
+            localStorage.setItem(`nikahfix_wishes_${invitation.id}`, JSON.stringify(next.slice(0, 50)));
+          } catch {}
+          return next;
+        });
         setStatusMessage({ type: "success", text: "Terima kasih! Konfirmasi & ucapan Anda telah tersimpan." });
       } else {
-        // Fallback for demo mode
-        setGreetings((prev) => [newGreeting, ...prev]);
-        setStatusMessage({ type: "success", text: "Ucapan Anda berhasil dikirim (Mode Demo)." });
+        setGreetings((prev) => {
+          const next = [newGreeting, ...prev.filter((g) => g.id !== newGreeting.id)];
+          try {
+            localStorage.setItem(`nikahfix_wishes_${invitation.id}`, JSON.stringify(next.slice(0, 50)));
+          } catch {}
+          return next;
+        });
+        setStatusMessage({ type: "success", text: "Ucapan Anda berhasil dikirim." });
       }
       setRsvpMessage("");
     } catch {
-      setGreetings((prev) => [newGreeting, ...prev]);
+      setGreetings((prev) => {
+        const next = [newGreeting, ...prev.filter((g) => g.id !== newGreeting.id)];
+        try {
+          localStorage.setItem(`nikahfix_wishes_${invitation.id}`, JSON.stringify(next.slice(0, 50)));
+        } catch {}
+        return next;
+      });
       setStatusMessage({ type: "success", text: "Ucapan Anda berhasil ditampilkan." });
       setRsvpMessage("");
     } finally {
