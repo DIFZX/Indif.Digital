@@ -531,116 +531,104 @@ export function NetflixClientApp({
               <div className={styles.heroShadeBottom} />
 
               <div className={styles.heroContent}>
-                <Reveal direction="up" delay={60}>
-                  <div className={styles.heroBadgeRow}>
-                    <span className={styles.redBadge}>DOCUMENTER</span>
-                    <span className={styles.topTenBadge}>
-                      <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                      TOP 1 DI HATI KAMI
-                    </span>
-                  </div>
-                </Reveal>
+                <div className={styles.heroBadgeRow}>
+                  <span className={styles.redBadge}>DOCUMENTER</span>
+                  <span className={styles.topTenBadge}>
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                    TOP 1 DI HATI KAMI
+                  </span>
+                </div>
 
-                <Reveal direction="up" delay={120}>
-                  <h1 className={styles.heroTitle}>{coupleNames}</h1>
-                </Reveal>
+                <h1 className={styles.heroTitle}>{coupleNames}</h1>
 
                 {/* Match & Specs */}
-                <Reveal direction="up" delay={180}>
-                  <div className={styles.heroMetaSpecs}>
-                    <span className={styles.matchScore}>99% Match</span>
-                    <span className={styles.specYear}>{eventYear}</span>
-                    <span className={styles.ratingBadge}>SU</span>
-                    <span className={styles.specDuration}>1 Season</span>
-                    <span className={styles.qualityBadge}>Ultra HD 4K</span>
-                  </div>
+                <div className={styles.heroMetaSpecs}>
+                  <span className={styles.matchScore}>99% Match</span>
+                  <span className={styles.specYear}>{eventYear}</span>
+                  <span className={styles.ratingBadge}>SU</span>
+                  <span className={styles.specDuration}>1 Season</span>
+                  <span className={styles.qualityBadge}>Ultra HD 4K</span>
+                </div>
 
-                  {/* Coming Soon Highlight */}
-                  <div className={styles.comingSoonBanner}>
-                    <span className={styles.comingSoonPulse} />
-                    <span>Coming Soon on {formatEventDate(invitation.event_date)}</span>
-                  </div>
-                </Reveal>
+                {/* Coming Soon Highlight */}
+                <div className={styles.comingSoonBanner}>
+                  <span className={styles.comingSoonPulse} />
+                  <span>Coming Soon on {formatEventDate(invitation.event_date)}</span>
+                </div>
 
                 {/* Synopsis */}
-                <Reveal direction="up" delay={240}>
-                  <p className={styles.heroSynopsis}>
-                    {invitation.opening_text ||
-                      `Setelah ${coupleNames} dipertemukan dalam situasi yang tepat, di mana keduanya telah siap untuk memulai hubungan bersama, tibalah mereka di awal perjalanan baru menuju pernikahan.`}
-                  </p>
+                <p className={styles.heroSynopsis}>
+                  {invitation.opening_text ||
+                    `Setelah ${coupleNames} dipertemukan dalam situasi yang tepat, di mana keduanya telah siap untuk memulai hubungan bersama, tibalah mereka di awal perjalanan baru menuju pernikahan.`}
+                </p>
 
-                  {/* Holy Verse / Quote */}
-                  <div className={styles.heroQuoteBox}>
-                    <p className={styles.heroQuoteText}>
-                      &ldquo;{invitation.quote_text}&rdquo;
-                    </p>
-                    <span className={styles.heroQuoteSource}>{invitation.quote_source}</span>
-                  </div>
-                </Reveal>
+                {/* Holy Verse / Quote */}
+                <div className={styles.heroQuoteBox}>
+                  <p className={styles.heroQuoteText}>
+                    &ldquo;{invitation.quote_text}&rdquo;
+                  </p>
+                  <span className={styles.heroQuoteSource}>{invitation.quote_source}</span>
+                </div>
 
                 {/* Countdown Timer */}
-                <Reveal direction="scale" delay={300}>
-                  <div className={styles.countdownContainer}>
-                    <div className={styles.countdownItem}>
-                      <span className={styles.countdownNumber}>
-                        {String(timeLeft.days).padStart(2, "0")}
-                      </span>
-                      <span className={styles.countdownLabel}>Days</span>
-                    </div>
-                    <div className={styles.countdownColon}>:</div>
-                    <div className={styles.countdownItem}>
-                      <span className={styles.countdownNumber}>
-                        {String(timeLeft.hours).padStart(2, "0")}
-                      </span>
-                      <span className={styles.countdownLabel}>Hours</span>
-                    </div>
-                    <div className={styles.countdownColon}>:</div>
-                    <div className={styles.countdownItem}>
-                      <span className={styles.countdownNumber}>
-                        {String(timeLeft.minutes).padStart(2, "0")}
-                      </span>
-                      <span className={styles.countdownLabel}>Min</span>
-                    </div>
-                    <div className={styles.countdownColon}>:</div>
-                    <div className={styles.countdownItem}>
-                      <span className={styles.countdownNumber}>
-                        {String(timeLeft.seconds).padStart(2, "0")}
-                      </span>
-                      <span className={styles.countdownLabel}>Sec</span>
-                    </div>
+                <div className={styles.countdownContainer}>
+                  <div className={styles.countdownItem}>
+                    <span className={styles.countdownNumber}>
+                      {String(timeLeft.days).padStart(2, "0")}
+                    </span>
+                    <span className={styles.countdownLabel}>Days</span>
                   </div>
-                </Reveal>
+                  <div className={styles.countdownColon}>:</div>
+                  <div className={styles.countdownItem}>
+                    <span className={styles.countdownNumber}>
+                      {String(timeLeft.hours).padStart(2, "0")}
+                    </span>
+                    <span className={styles.countdownLabel}>Hours</span>
+                  </div>
+                  <div className={styles.countdownColon}>:</div>
+                  <div className={styles.countdownItem}>
+                    <span className={styles.countdownNumber}>
+                      {String(timeLeft.minutes).padStart(2, "0")}
+                    </span>
+                    <span className={styles.countdownLabel}>Min</span>
+                  </div>
+                  <div className={styles.countdownColon}>:</div>
+                  <div className={styles.countdownItem}>
+                    <span className={styles.countdownNumber}>
+                      {String(timeLeft.seconds).padStart(2, "0")}
+                    </span>
+                    <span className={styles.countdownLabel}>Sec</span>
+                  </div>
+                </div>
 
                 {/* Action Buttons */}
-                <Reveal direction="up" delay={360}>
-                  <div className={styles.heroActionButtons}>
-                    <a href="#jadwal" className={styles.heroPlayButton}>
-                      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                      Putar Acara
-                    </a>
-                    <a href="#pemeran" className={styles.heroInfoButton}>
-                      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                        <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                      </svg>
-                      Info Detail
-                    </a>
-                    <a
-                      href={calendarUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={styles.heroMyListButton}
-                    >
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-                      </svg>
-                      Simpan Kalender
-                    </a>
-                  </div>
-                </Reveal>
+                <div className={styles.heroActionButtons}>
+                  <a href="#jadwal" className={styles.heroPlayButton}>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Putar Acara
+                  </a>
+                  <a href="#pemeran" className={styles.heroInfoButton}>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                      <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                    </svg>
+                    Info Detail
+                  </a>
+                  <a
+                    href={calendarUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.heroMyListButton}
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    Simpan Kalender
+                  </a>
+                </div>
               </div>
             </section>
 
