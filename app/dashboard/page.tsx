@@ -51,8 +51,8 @@ const fallbackTemplates: CatalogTemplate[] = [
     id: "00000000-0000-0000-0000-000000000004",
     slug: "netflix",
     name: "Netflix",
-    description: "Template undangan digital unik dengan tema aplikasi streaming film kesayangan Anda. Unik, modern, dan sangat berkesan.",
-    thumbnail_path: "/media/elegant/gallery-couple-v2.png",
+    description: "Template cinematic bertema serial Netflix dengan pemutar lagu melayang, format trailer & cerita per-episode, dan desain mobile portrait modern.",
+    thumbnail_path: "/media/netflix/1.jpg",
     preview_path: "/netflix?to=Tamu%20Undangan",
   },
 ];
@@ -66,17 +66,40 @@ function orderUrl(templateName: string) {
 
 async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
   const supabase = getSupabase();
-  if (!supabase) return fallbackTemplates;
+  let dbTemplates: CatalogTemplate[] = [];
 
-  const { data, error } = await supabase
-    .from("templates")
-    .select("id, slug, name, description, thumbnail_path, preview_path")
-    .eq("is_active", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
+  if (supabase) {
+    const { data, error } = await supabase
+      .from("templates")
+      .select("id, slug, name, description, thumbnail_path, preview_path")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
 
-  if (error) return fallbackTemplates;
-  return data;
+    if (!error && data) {
+      dbTemplates = data;
+    }
+  }
+
+  if (dbTemplates.length === 0) return fallbackTemplates;
+
+  // Merge so all supported templates (including Netflix) always appear
+  const combined = [...dbTemplates];
+  for (const fallback of fallbackTemplates) {
+    const idx = combined.findIndex((t) => t.slug === fallback.slug);
+    if (idx === -1) {
+      combined.push(fallback);
+    } else {
+      combined[idx] = {
+        ...fallback,
+        ...combined[idx],
+        thumbnail_path: combined[idx].thumbnail_path || fallback.thumbnail_path,
+        preview_path: combined[idx].preview_path || fallback.preview_path,
+      };
+    }
+  }
+
+  return combined;
 }
 
 export default async function DashboardPage() {
@@ -149,18 +172,34 @@ export default async function DashboardPage() {
         <div className={styles.templateGrid}>
           {templates.map((template, index) => (
             <article className={styles.templateCard} key={template.id}>
-              <div className={`${styles.templateImage} ${template.slug === "pink-vibes" ? styles.pinkTemplateImage : ""}`}>
+              <div
+                className={`${styles.templateImage} ${
+                  template.slug === "pink-vibes"
+                    ? styles.pinkTemplateImage
+                    : template.slug === "netflix"
+                    ? styles.netflixTemplateImage
+                    : ""
+                }`}
+              >
                 <Image
-                  src={resolveMediaUrl(template.thumbnail_path ?? "/media/elegant/gallery-couple-v2.png")}
+                  src={resolveMediaUrl(
+                    template.thumbnail_path ??
+                      (template.slug === "netflix" ? "/media/netflix/1.jpg" : "/media/elegant/gallery-couple-v2.png")
+                  )}
                   alt={`Preview template ${template.name}`}
                   fill
                   sizes="(max-width: 900px) 100vw, 46vw"
                 />
                 <span className={styles.templateIndex}>{String(index + 1).padStart(2, "0")}</span>
+                {template.slug === "netflix" && (
+                  <span className={styles.netflixBadge}>Cinematic</span>
+                )}
               </div>
 
               <div className={styles.templateInfo}>
-                <p className={styles.templateType}>Wedding invitation</p>
+                <p className={styles.templateType}>
+                  {template.slug === "netflix" ? "Cinematic wedding invitation" : "Wedding invitation"}
+                </p>
                 <h3>{template.name}</h3>
                 <p className={styles.description}>{template.description || "Undangan digital elegan dari InDif Digital."}</p>
                 <div className={styles.cardActions}>
