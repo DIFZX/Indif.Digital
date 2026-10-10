@@ -1,0 +1,1658 @@
+/* ─── Mustard Black: Luxury Minimalist Botanical Wedding Experience ─── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Pinyon+Script&display=swap');
+
+.experience {
+  --mb-bg: #141211;
+  --mb-bg-card: #1c1918;
+  --mb-bg-card-hover: #25211f;
+  --mb-bg-elevated: #282320;
+  --mb-mustard: #d4a359;
+  --mb-mustard-light: #eec88b;
+  --mb-mustard-glow: rgba(212, 163, 89, 0.35);
+  --mb-gold-border: rgba(212, 163, 89, 0.3);
+  --mb-gold-border-bright: rgba(212, 163, 89, 0.65);
+  --mb-bronze: #9a7448;
+  --mb-ivory: #fcf8f2;
+  --mb-text-sec: #ded7ce;
+  --mb-text-muted: #9e9488;
+  --mb-dark-border: rgba(255, 255, 255, 0.08);
+
+  background-color: var(--mb-bg);
+  color: var(--mb-ivory);
+  min-height: 100vh;
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  overflow-x: clip;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── DESKTOP SPLIT LAYOUT ─── */
+
+.layout {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  background-color: var(--mb-bg);
+  overflow-x: clip;
+}
+
+/* LEFT COLUMN: DESKTOP SHOWCASE WALLPAPER (Sticky 100vh) */
+.showcase {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0f0e0d;
+  color: #fff;
+  isolation: isolate;
+}
+
+.showcaseSlides,
+.showcaseSlide,
+.showcaseShade {
+  position: absolute;
+  inset: 0;
+}
+
+.showcaseSlide {
+  opacity: 0;
+  animation: showcaseFade 28s linear infinite;
+}
+
+.showcaseSlide:first-child {
+  opacity: 1;
+}
+
+.showcaseSlide img {
+  object-fit: cover;
+  object-position: center 30%;
+  animation: showcaseZoom 28s linear infinite;
+  image-rendering: auto;
+}
+
+@keyframes showcaseFade {
+  0% { opacity: 0; }
+  3% { opacity: 1; }
+  25% { opacity: 1; }
+  28% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes showcaseZoom {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.showcaseShade {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(20, 18, 17, 0.2) 0%, rgba(20, 18, 17, 0.6) 55%, rgba(20, 18, 17, 0.95) 100%),
+    linear-gradient(90deg, transparent 65%, rgba(20, 18, 17, 0.85) 100%);
+}
+
+.showcaseFlower {
+  position: absolute;
+  z-index: 2;
+  bottom: -40px;
+  left: -30px;
+  width: 280px;
+  height: 380px;
+  opacity: 0.35;
+  pointer-events: none;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.7));
+}
+
+.showcaseFrame {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: min(520px, 82%);
+  padding: 3.2rem 2.4rem 3rem;
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 180px 180px 24px 24px;
+  background: rgba(28, 25, 24, 0.45);
+  text-align: center;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(212, 163, 89, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.showcaseSub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--mb-mustard);
+  margin: 0 0 0.8rem;
+  text-transform: uppercase;
+}
+
+.showcaseCoupleTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 3.4rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--mb-ivory);
+  margin: 0 0 1rem;
+  line-height: 1.1;
+}
+
+.showcaseCoupleTitle span {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 2.8rem;
+  color: var(--mb-mustard-light);
+  display: block;
+  margin: -0.4rem 0;
+}
+
+.showcaseDivider {
+  width: 70px;
+  height: 1.5px;
+  background: var(--mb-mustard);
+  margin: 1.4rem auto;
+  opacity: 0.8;
+}
+
+.showcaseDate {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--mb-text-sec);
+  text-transform: uppercase;
+}
+
+.showcaseBrand {
+  position: absolute;
+  z-index: 3;
+  bottom: 2rem;
+  left: 2.5rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* RIGHT COLUMN: MOBILE PANEL */
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  min-height: 100vh;
+  background-color: var(--mb-bg);
+  border-left: 1px solid var(--mb-dark-border);
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.8);
+  overflow-x: clip;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    display: block;
+    width: 100%;
+    background-color: var(--mb-bg);
+  }
+
+  .showcase {
+    display: none !important;
+  }
+
+  .panel {
+    max-width: 100%;
+    border-left: none;
+    box-shadow: none;
+  }
+}
+
+/* ─── COVER SCREEN (BUKA UNDANGAN) ─── */
+
+.coverModal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 460px;
+  height: 100vh;
+  height: 100svh;
+  z-index: 100;
+  background-color: var(--mb-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 2.4rem 1.4rem;
+  transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.75s ease, visibility 0.85s;
+}
+
+@media (max-width: 900px) {
+  .coverModal {
+    left: 0;
+    width: 100%;
+  }
+}
+
+.coverModalOpened {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transform: translateY(-100%);
+}
+
+.coverBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.coverBackdrop img {
+  image-rendering: auto;
+  object-fit: cover;
+  object-position: center 25%;
+  filter: brightness(0.65);
+}
+
+.coverGradient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(20, 18, 17, 0.3) 0%, rgba(20, 18, 17, 0.85) 70%, #141211 100%),
+    linear-gradient(180deg, rgba(20, 18, 17, 0.2) 0%, rgba(20, 18, 17, 0.7) 50%, #141211 95%);
+}
+
+.coverContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.coverArchFrame {
+  position: relative;
+  width: 180px;
+  height: 240px;
+  border-radius: 90px 90px 12px 12px;
+  border: 2px solid var(--mb-mustard);
+  padding: 6px;
+  margin-bottom: 1.8rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 25px var(--mb-mustard-glow);
+}
+
+.coverArchInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 84px 84px 8px 8px;
+  overflow: hidden;
+}
+
+.coverArchFlower {
+  position: absolute;
+  bottom: -25px;
+  right: -30px;
+  width: 110px;
+  height: 140px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.8));
+}
+
+.coverKicker {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--mb-mustard);
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.coverCoupleTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--mb-ivory);
+  margin: 0 0 0.8rem;
+  line-height: 1.15;
+}
+
+.coverDate {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--mb-text-sec);
+  text-transform: uppercase;
+  margin-bottom: 1.8rem;
+}
+
+.coverGuestCard {
+  width: 100%;
+  max-width: 320px;
+  background: rgba(28, 25, 24, 0.75);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 16px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.8rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.coverGuestPrefix {
+  font-size: 0.72rem;
+  color: var(--mb-text-muted);
+  letter-spacing: 0.08em;
+  margin: 0 0 0.35rem;
+}
+
+.coverGuestName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--mb-ivory);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.openInvitationButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  max-width: 300px;
+  background: linear-gradient(135deg, var(--mb-mustard) 0%, var(--mb-bronze) 100%);
+  color: #141211;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--mb-mustard-light);
+  border-radius: 999px;
+  padding: 0.95rem 1.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px var(--mb-mustard-glow);
+}
+
+.openInvitationButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px var(--mb-mustard-glow);
+  filter: brightness(1.08);
+}
+
+.openInvitationButton:active {
+  transform: scale(0.98);
+}
+
+.openButtonIcon {
+  display: flex;
+  align-items: center;
+}
+
+/* ─── FLOATING MUSIC BUTTON ─── */
+
+.floatingMusicBtn {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.2rem;
+  z-index: 60;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(28, 25, 24, 0.92);
+  border: 1.5px solid var(--mb-mustard);
+  color: var(--mb-mustard);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 15px var(--mb-mustard-glow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.floatingMusicBtn:hover {
+  transform: scale(1.08);
+  background: var(--mb-mustard);
+  color: #141211;
+}
+
+.equalizerBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 16px;
+}
+
+.equalizerBars span {
+  width: 2.5px;
+  background-color: currentColor;
+  border-radius: 1px;
+  animation: eqBounce 1s ease-in-out infinite alternate;
+}
+
+.equalizerBars span:nth-child(1) { height: 14px; animation-delay: 0.1s; }
+.equalizerBars span:nth-child(2) { height: 7px; animation-delay: 0.35s; }
+.equalizerBars span:nth-child(3) { height: 15px; animation-delay: 0.2s; }
+
+@keyframes eqBounce {
+  0% { height: 4px; }
+  100% { height: 16px; }
+}
+
+/* ─── FLOATING BOTTOM NAV (MOBILE) ─── */
+
+.bottomNavMobile {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(20, 18, 17, 0.96);
+  border-top: 1px solid var(--mb-dark-border);
+  padding: 0.45rem 0.2rem max(0.45rem, env(safe-area-inset-bottom));
+  justify-content: space-around;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.bottomNavMobile a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--mb-text-muted);
+  text-decoration: none;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+  padding: 0.2rem 0.3rem;
+}
+
+.bottomNavMobile a.bottomNavActive,
+.bottomNavMobile a:hover {
+  color: var(--mb-mustard);
+}
+
+@media (min-width: 901px) {
+  .bottomNavMobile {
+    display: none;
+  }
+}
+
+/* ─── MAIN EXPERIENCE ─── */
+
+.mainExperience {
+  position: relative;
+  width: 100%;
+  padding-bottom: 5.5rem;
+  background-color: var(--mb-bg);
+  overflow-x: clip;
+}
+
+/* ─── 1. HERO SECTION ─── */
+
+.heroSection {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.4rem calc(4rem + env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
+  text-align: center;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.heroBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.heroBackdrop img {
+  image-rendering: auto;
+  object-fit: cover;
+  object-position: center 25%;
+  filter: brightness(0.5);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.heroGradient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(20, 18, 17, 0.4) 0%, rgba(20, 18, 17, 0.85) 75%, #141211 100%),
+    linear-gradient(180deg, rgba(20, 18, 17, 0.3) 0%, rgba(20, 18, 17, 0.7) 60%, #141211 98%);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heroArchWrapper {
+  position: relative;
+  width: 170px;
+  height: 230px;
+  border-radius: 85px 85px 12px 12px;
+  border: 1.5px solid var(--mb-mustard);
+  padding: 5px;
+  margin-bottom: 1.4rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px var(--mb-mustard-glow);
+}
+
+.heroArchInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 80px 80px 8px 8px;
+  overflow: hidden;
+}
+
+.heroArchLily {
+  position: absolute;
+  bottom: -20px;
+  right: -25px;
+  width: 100px;
+  height: 130px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.8));
+}
+
+.heroKicker {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--mb-mustard);
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.heroCoupleTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 3rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--mb-ivory);
+  margin: 0 0 0.8rem;
+  line-height: 1.1;
+}
+
+.heroCoupleTitle span {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 2.6rem;
+  color: var(--mb-mustard-light);
+  display: inline-block;
+  margin: 0 0.35rem;
+}
+
+.heroDateBadge {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--mb-text-sec);
+  border-top: 1px solid var(--mb-gold-border);
+  border-bottom: 1px solid var(--mb-gold-border);
+  padding: 0.4rem 1.4rem;
+  text-transform: uppercase;
+}
+
+/* ─── SHARED SECTION STYLES ─── */
+
+.sectionRow {
+  position: relative;
+  padding: 3.8rem 1.3rem 2rem;
+  width: 100%;
+  overflow-x: clip;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 2.2rem;
+}
+
+.sectionTag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: var(--mb-mustard);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.sectionTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 500;
+  color: var(--mb-ivory);
+  margin: 0 0 0.6rem;
+  line-height: 1.15;
+}
+
+.sectionSubtitle {
+  font-size: 0.82rem;
+  color: var(--mb-text-sec);
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.mustardDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0.8rem auto 1.4rem;
+}
+
+.mustardDivider span {
+  width: 40px;
+  height: 1px;
+  background: var(--mb-mustard);
+  opacity: 0.6;
+}
+
+.mustardDivider i {
+  color: var(--mb-mustard);
+  font-size: 0.65rem;
+}
+
+/* ─── 2. AYAT / QUOTE SECTION ─── */
+
+.quoteSection {
+  background: linear-gradient(180deg, #141211 0%, #1a1716 50%, #141211 100%);
+  text-align: center;
+}
+
+.quoteCard {
+  position: relative;
+  background: rgba(28, 25, 24, 0.7);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 18px;
+  padding: 2.2rem 1.6rem 2rem;
+  max-width: 390px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.quoteCardArchBg {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.quoteText {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--mb-ivory);
+  font-style: italic;
+  margin: 0 0 1.2rem;
+}
+
+.quoteSurah {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--mb-mustard);
+  text-transform: uppercase;
+}
+
+/* ─── 3. MEMPELAI (GROOM & BRIDE) SECTION ─── */
+
+.coupleIntro {
+  text-align: center;
+  max-width: 380px;
+  margin: 0 auto 2.4rem;
+}
+
+.greetingArabic {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--mb-mustard-light);
+  margin: 0 0 0.6rem;
+}
+
+.greetingText {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--mb-text-sec);
+  margin: 0;
+}
+
+.coupleCardsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+.personCard {
+  background: var(--mb-bg-card);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+}
+
+.personArchContainer {
+  position: relative;
+  width: 160px;
+  height: 215px;
+  margin: 0 auto 1.4rem;
+  border-radius: 80px 80px 10px 10px;
+  border: 1.5px solid var(--mb-mustard);
+  padding: 5px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px var(--mb-mustard-glow);
+}
+
+.personArchPhoto {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 75px 75px 6px 6px;
+  overflow: hidden;
+}
+
+.personArchLily {
+  position: absolute;
+  bottom: -15px;
+  right: -20px;
+  width: 85px;
+  height: 110px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.8));
+}
+
+.personRoleBadge {
+  display: inline-block;
+  background: rgba(212, 163, 89, 0.15);
+  border: 1px solid var(--mb-gold-border);
+  color: var(--mb-mustard);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.personFullName {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--mb-ivory);
+  margin: 0 0 0.5rem;
+  line-height: 1.15;
+}
+
+.personParents {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--mb-text-sec);
+  margin: 0 0 1.2rem;
+}
+
+.instagramBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--mb-gold-border);
+  color: var(--mb-ivory);
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.instagramBtn:hover {
+  background: var(--mb-mustard);
+  color: #141211;
+  border-color: var(--mb-mustard);
+}
+
+.coupleDividerAmpersand {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 3.5rem;
+  color: var(--mb-mustard);
+  text-align: center;
+  line-height: 0.8;
+  margin: -0.5rem 0;
+}
+
+/* ─── 4. ACARA / TIMELINE SECTION ─── */
+
+.eventsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+.eventCard {
+  background: var(--mb-bg-card);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 18px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.eventCardBadge {
+  display: inline-block;
+  background: var(--mb-mustard);
+  color: #141211;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 0.3rem 0.9rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.eventTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: var(--mb-ivory);
+  margin: 0 0 0.8rem;
+}
+
+.eventDate {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--mb-mustard-light);
+  margin: 0 0 0.4rem;
+}
+
+.eventTime {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--mb-text-sec);
+  margin: 0 0 1.2rem;
+}
+
+.eventVenueLabel {
+  font-size: 0.7rem;
+  color: var(--mb-mustard);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin: 0 0 0.2rem;
+}
+
+.eventVenueName {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--mb-ivory);
+  margin: 0 0 0.4rem;
+}
+
+.eventVenueAddress {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--mb-text-muted);
+  margin: 0 0 1.4rem;
+}
+
+.mapsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid var(--mb-mustard);
+  color: var(--mb-mustard);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.4rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.mapsButton:hover {
+  background: var(--mb-mustard);
+  color: #141211;
+  box-shadow: 0 4px 15px var(--mb-mustard-glow);
+}
+
+/* ─── 5. SAVE THE DATE & COUNTDOWN ─── */
+
+.countdownSection {
+  background: linear-gradient(180deg, #141211 0%, #1e1b19 50%, #141211 100%);
+  text-align: center;
+}
+
+.countdownGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  max-width: 380px;
+  margin: 0 auto 1.8rem;
+}
+
+.countdownUnit {
+  background: var(--mb-bg-card);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 14px;
+  padding: 1.1rem 0.4rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.countdownDigit {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--mb-mustard-light);
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.countdownLabel {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--mb-text-sec);
+  text-transform: uppercase;
+}
+
+.calendarActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--mb-mustard);
+  color: #141211;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px var(--mb-mustard-glow);
+}
+
+.calendarActionBtn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* ─── 6. LOVE STORY SECTION ─── */
+
+.storyTimeline {
+  position: relative;
+  max-width: 390px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+}
+
+.storyTimeline::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 6px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--mb-mustard) 0%, rgba(212, 163, 89, 0.2) 100%);
+}
+
+.storyItem {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.storyItem:last-child {
+  margin-bottom: 0;
+}
+
+.storyDot {
+  position: absolute;
+  left: -1.5rem;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--mb-mustard);
+  border: 3px solid var(--mb-bg);
+  box-shadow: 0 0 10px var(--mb-mustard);
+}
+
+.storyCard {
+  background: var(--mb-bg-card);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 16px;
+  padding: 1.4rem 1.3rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.storyHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.storyTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--mb-mustard-light);
+  margin: 0;
+}
+
+.storyYearBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--mb-text-muted);
+  letter-spacing: 0.1em;
+}
+
+.storyText {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--mb-text-sec);
+  margin: 0;
+}
+
+/* ─── 7. GALERI FOTO ─── */
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.galleryCard {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--mb-gold-border);
+  background: var(--mb-bg-card);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.galleryCard:first-child {
+  grid-column: span 2;
+  aspect-ratio: 16 / 10;
+}
+
+.galleryCard img {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.galleryCard:hover img {
+  transform: scale(1.05);
+}
+
+.galleryOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(20, 18, 17, 0.6) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.galleryCard:hover .galleryOverlay {
+  opacity: 1;
+}
+
+/* ─── 8. LIVE STREAMING ─── */
+
+.streamingCard {
+  background: var(--mb-bg-card);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 18px;
+  padding: 2rem 1.4rem;
+  text-align: center;
+  max-width: 390px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.streamingTimeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(212, 163, 89, 0.15);
+  border: 1px solid var(--mb-gold-border);
+  color: var(--mb-mustard);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 1.2rem;
+}
+
+.streamingTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--mb-ivory);
+  margin: 0 0 0.5rem;
+}
+
+.streamingDesc {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--mb-text-sec);
+  margin: 0 0 1.4rem;
+}
+
+.streamingButtonRow {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.streamBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--mb-gold-border);
+  color: var(--mb-ivory);
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.streamBtn:hover {
+  background: var(--mb-mustard);
+  color: #141211;
+  border-color: var(--mb-mustard);
+}
+
+/* ─── 9. AMPLOP DIGITAL & HADIAH ─── */
+
+.giftCard {
+  background: linear-gradient(145deg, #24201e 0%, #1c1918 100%);
+  border: 1px solid var(--mb-gold-border-bright);
+  border-radius: 20px;
+  padding: 1.8rem 1.5rem;
+  max-width: 390px;
+  margin: 0 auto 1.6rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(212, 163, 89, 0.08);
+}
+
+.giftCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+}
+
+.bankLogoWrapper {
+  position: relative;
+  width: 90px;
+  height: 32px;
+}
+
+.bankChipWrapper {
+  position: relative;
+  width: 42px;
+  height: 32px;
+}
+
+.giftCardNumberRow {
+  margin-bottom: 1.2rem;
+}
+
+.giftCardNumberLabel {
+  font-size: 0.65rem;
+  color: var(--mb-text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 0.2rem;
+}
+
+.giftCardNumber {
+  font-family: 'Montserrat', monospace, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--mb-mustard-light);
+  margin: 0;
+}
+
+.giftCardHolder {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--mb-ivory);
+  text-transform: uppercase;
+  margin: 0 0 1.2rem;
+}
+
+.copyAccountButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  background: var(--mb-mustard);
+  color: #141211;
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1.2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.copyAccountButton:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.giftAddressBox {
+  background: var(--mb-bg-card);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 18px;
+  padding: 1.8rem 1.4rem;
+  max-width: 390px;
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.giftAddressTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--mb-ivory);
+  margin: 0 0 0.5rem;
+}
+
+.giftAddressText {
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--mb-text-sec);
+  margin: 0 0 1.2rem;
+}
+
+/* ─── 10. RSVP & UCAPAN ─── */
+
+.rsvpCard {
+  background: var(--mb-bg-card);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  max-width: 390px;
+  margin: 0 auto 2.2rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+}
+
+.rsvpForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
+.formGroup label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--mb-text-sec);
+}
+
+.formInput,
+.formSelect,
+.formTextarea {
+  background: #24201e;
+  border: 1px solid var(--mb-gold-border);
+  color: var(--mb-ivory);
+  padding: 0.75rem 0.95rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--mb-mustard);
+  box-shadow: 0 0 10px var(--mb-mustard-glow);
+}
+
+.radioRow {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.radioBtn {
+  flex: 1;
+  background: #24201e;
+  border: 1px solid var(--mb-gold-border);
+  color: var(--mb-text-sec);
+  padding: 0.7rem 0.4rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.radioBtnActive {
+  background: var(--mb-mustard);
+  border-color: var(--mb-mustard);
+  color: #141211;
+  font-weight: 700;
+}
+
+.submitBtn {
+  background: var(--mb-mustard);
+  color: #141211;
+  border: none;
+  border-radius: 999px;
+  padding: 0.85rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px var(--mb-mustard-glow);
+  margin-top: 0.4rem;
+}
+
+.submitBtn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.statusToast {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.statusToastSuccess {
+  background: rgba(46, 125, 50, 0.25);
+  border: 1px solid #4caf50;
+  color: #a5d6a7;
+}
+
+.statusToastError {
+  background: rgba(198, 40, 40, 0.25);
+  border: 1px solid #ef5350;
+  color: #ef9a9a;
+}
+
+/* WISHES LIST */
+.wishesContainer {
+  max-width: 390px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.wishCard {
+  background: var(--mb-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.2rem;
+  text-align: left;
+}
+
+.wishHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.wishAuthor {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--mb-ivory);
+}
+
+.attendanceBadge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.attendanceBadgeHadir {
+  background: rgba(46, 125, 50, 0.2);
+  color: #81c784;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.attendanceBadgeTidakHadir {
+  background: rgba(198, 40, 40, 0.2);
+  color: #e57373;
+  border: 1px solid rgba(239, 83, 80, 0.4);
+}
+
+.wishMessage {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--mb-text-sec);
+  margin: 0 0 0.5rem;
+}
+
+.wishTime {
+  font-size: 0.68rem;
+  color: var(--mb-text-muted);
+}
+
+/* ─── 11. CLOSING SECTION ─── */
+
+.closingSection {
+  background: linear-gradient(180deg, #141211 0%, #1e1b19 50%, #141211 100%);
+  text-align: center;
+  padding: 4rem 1.4rem 3rem;
+}
+
+.closingCard {
+  background: rgba(28, 25, 24, 0.8);
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 20px;
+  padding: 2.4rem 1.6rem 2.2rem;
+  max-width: 390px;
+  margin: 0 auto;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.closingText {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--mb-text-sec);
+  margin: 0 0 1.6rem;
+}
+
+.closingGreeting {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--mb-mustard);
+  text-transform: uppercase;
+  margin: 0 0 0.6rem;
+}
+
+.closingCoupleNames {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.8rem;
+  font-weight: 500;
+  color: var(--mb-ivory);
+  margin: 0 0 1.6rem;
+}
+
+.brandSignature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1.2rem;
+}
+
+.brandSignature span {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--mb-text-muted);
+  text-transform: uppercase;
+}
+
+/* ─── LIGHTBOX MODAL ─── */
+
+.lightboxModal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(10, 9, 8, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.lightboxImageWrapper {
+  position: relative;
+  max-width: 90vw;
+  max-height: 80vh;
+  width: 440px;
+  height: 580px;
+}
+
+.lightboxImageWrapper img {
+  object-fit: contain;
+}
+
+.lightboxCloseButton {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

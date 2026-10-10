@@ -55,6 +55,14 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/netflix/1.jpg",
     preview_path: "/netflix?to=Tamu%20Undangan",
   },
+  {
+    id: "00000000-0000-0000-0000-000000000005",
+    slug: "mustard-black",
+    name: "Mustard Black",
+    description: "Template mewah bernuansa matte black & mustard gold dengan bingkai arch lengkung botanis, animasi scroll anggun, dan fitur digital lengkap.",
+    thumbnail_path: "/media/mustard-black/1.jpg",
+    preview_path: "/mustard-black?to=Tamu%20Undangan",
+  },
 ];
 
 const whatsappUrl = "https://wa.me/6281776396965";

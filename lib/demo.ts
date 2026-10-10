@@ -173,7 +173,84 @@ export const netflixDemoInvitation: Invitation = {
   },
 };
 
-export const demoInvitations = [demoInvitation, pinkVibesDemoInvitation, blueGardenDemoInvitation, netflixDemoInvitation];
+export const mustardBlackDemoInvitation: Invitation = {
+  ...demoInvitation,
+  id: "00000000-0000-0000-0000-000000000105",
+  slug: "mustard-black",
+  bride_name: "Dita Maharani Putri",
+  bride_short_name: "Dita",
+  bride_parents: "Putri Pertama dari Bapak Anas Rifai & Ibu Kholifah",
+  bride_photo_path: "/media/mustard-black/The Bride.jpg",
+  groom_name: "Fajar Sidik",
+  groom_short_name: "Fajar",
+  groom_parents: "Putra Kedua dari Bapak M. Dawam & (Almh) Ibu Dewi Sudarwati",
+  groom_photo_path: "/media/mustard-black/The Groom.jpg",
+  event_date: "2026-12-12",
+  ceremony_time: "08.00 WIB - Selesai",
+  reception_time: "11.00 WIB - Selesai",
+  venue_name: "Waroeng Djoglo Grand Ballroom",
+  venue_address: "Jl. Joglo Raya No. 45, Kembangan, Jakarta Barat",
+  maps_url: "https://maps.google.com/?q=Waroeng+Djoglo",
+  opening_text:
+    "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i serta kerabat sekalian untuk menghadiri acara pernikahan kami.",
+  quote_text:
+    "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.",
+  quote_source: "(QS. Ar-Rum : 21)",
+  story: [
+    {
+      year: "Awal Cerita",
+      title: "Pertemuan Pertama",
+      text: "Berawal dari pertemuan sederhana, kami saling mengenal dan mulai berbagi banyak cerita. Tanpa disadari, kebersamaan itu tumbuh menjadi rasa nyaman yang semakin kuat dari hari ke hari.",
+    },
+    {
+      year: "Lamaran",
+      title: "Momen Sakral Lamaran",
+      text: "Dengan niat yang tulus dan restu keluarga, kami memutuskan untuk melangkah ke tahap yang lebih serius. Momen lamaran menjadi awal dari perjalanan baru yang penuh harapan dan doa baik.",
+    },
+    {
+      year: "Pernikahan",
+      title: "Ikatan Suci Pernikahan",
+      text: "Kini kami sampai pada hari yang kami nantikan, hari di mana dua hati dipersatukan dalam ikatan suci pernikahan. Semoga langkah ini menjadi awal kehidupan baru yang penuh cinta, kebahagiaan, dan keberkahan.",
+    },
+  ],
+  story_image_path: "/media/mustard-black/5.jpg",
+  cover_path: "/media/mustard-black/1.jpg",
+  profile_path: "/media/mustard-black/2.jpg",
+  gallery_paths: [
+    "/media/mustard-black/1.jpg",
+    "/media/mustard-black/2.jpg",
+    "/media/mustard-black/3.jpg",
+    "/media/mustard-black/4.jpg",
+    "/media/mustard-black/5.jpg",
+  ],
+  music_path: "/media/elegant/Bergema Selamanya.mp4",
+  gift_info: {
+    bank: "BCA",
+    account_number: "7125091428",
+    account_name: "Fajar Sidik",
+  },
+  closing_text:
+    "Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.",
+  closing_greeting: "Kami yang berbahagia, Dita & Fajar",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000005",
+    slug: "mustard-black",
+    name: "Mustard Black",
+    theme: {
+      primary: "#d4a359",
+      background: "#141211",
+    },
+  },
+};
+
+export const demoInvitations = [
+  demoInvitation,
+  pinkVibesDemoInvitation,
+  blueGardenDemoInvitation,
+  netflixDemoInvitation,
+  mustardBlackDemoInvitation,
+];
 
 export const demoGreetings: Greeting[] = [
   {
