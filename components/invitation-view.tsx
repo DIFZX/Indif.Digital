@@ -10,6 +10,7 @@ import { BlueGardenInvitationView } from "@/components/templates/blue-garden/blu
 import { PinkVibesInvitationView } from "@/components/templates/pink-vibes/pink-vibes-invitation";
 import { NetflixInvitationView } from "@/components/templates/netflix/netflix-invitation";
 import { MustardBlackInvitationView } from "@/components/templates/mustard-black/mustard-black-invitation";
+import { JavaVibesInvitationView } from "@/components/templates/java-vibes/java-vibes-invitation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
@@ -283,6 +284,10 @@ export function InvitationView(props: InvitationViewProps) {
 
   if (props.invitation.template.slug === "mustard-black") {
     return <MustardBlackInvitationView {...props} />;
+  }
+
+  if (props.invitation.template.slug === "java-vibes") {
+    return <JavaVibesInvitationView {...props} />;
   }
 
   return <GreenyInvitationView {...props} />;

@@ -244,12 +244,84 @@ export const mustardBlackDemoInvitation: Invitation = {
   },
 };
 
+export const javaVibesDemoInvitation: Invitation = {
+  ...demoInvitation,
+  id: "00000000-0000-0000-0000-000000000106",
+  slug: "java-vibes",
+  bride_name: "Intan Permatasari",
+  bride_short_name: "Intan",
+  bride_parents: "Putri Alm. Bapak Soma & Ibu Heny",
+  bride_photo_path: "/media/java-vibes/2.jpg",
+  groom_name: "Difa Al Faruq",
+  groom_short_name: "Difa",
+  groom_parents: "Putra Bapak Sulaiman & Ibu Fitrotunisa",
+  groom_photo_path: "/media/java-vibes/3.jpg",
+  event_date: "2026-12-12",
+  ceremony_time: "08.00 WIB - Selesai",
+  reception_time: "11.00 - 14.00 WIB",
+  venue_name: "Gedung Islamic Centre Bekasi",
+  venue_address: "Jl. Ahmad Yani No.22, RT.005/RW.002, Marga Jaya, Kec. Bekasi Sel., Kota Bks, Jawa Barat 17141",
+  maps_url: "https://share.google/OUegQc3AUuqfbTELX",
+  opening_text:
+    "Dengan memohon Rahmat dan Ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.",
+  quote_text:
+    "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.",
+  quote_source: "(QS. Ar-Rum: 21)",
+  story: [
+    {
+      year: "2023",
+      title: "Awal Cerita",
+      text: "Berawal dari pertemuan sederhana, kami saling mengenal dan mulai berbagi banyak cerita. Tanpa disadari, kebersamaan itu tumbuh menjadi rasa nyaman yang semakin kuat dari hari ke hari.",
+    },
+    {
+      year: "2025",
+      title: "Lamaran",
+      text: "Dengan niat yang tulus dan restu keluarga, kami memutuskan untuk melangkah ke tahap yang lebih serius. Momen lamaran menjadi awal dari perjalanan baru yang penuh harapan dan doa baik.",
+    },
+    {
+      year: "2026",
+      title: "Pernikahan",
+      text: "Kini kami sampai pada hari yang kami nantikan, hari di mana dua hati dipersatukan dalam ikatan suci pernikahan. Semoga langkah ini menjadi awal kehidupan baru yang penuh cinta, kebahagiaan, dan keberkahan.",
+    },
+  ],
+  story_image_path: "/media/java-vibes/4.jpg",
+  cover_path: "/media/java-vibes/1.jpg",
+  profile_path: "/media/java-vibes/2.jpg",
+  gallery_paths: [
+    "/media/java-vibes/1.jpg",
+    "/media/java-vibes/2.jpg",
+    "/media/java-vibes/3.jpg",
+    "/media/java-vibes/4.jpg",
+    "/media/java-vibes/5.jpg",
+  ],
+  music_path: "/media/elegant/Bergema Selamanya.mp4",
+  gift_info: {
+    bank: "BCA",
+    account_number: "1234567890",
+    account_name: "Intan",
+  },
+  closing_text:
+    "Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.",
+  closing_greeting: "Wassalamu'alaikum Wr. Wb. Kami yang berbahagia, Intan & Difa",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000006",
+    slug: "java-vibes",
+    name: "Java Vibes",
+    theme: {
+      primary: "#550b18",
+      background: "#faf1e4",
+    },
+  },
+};
+
 export const demoInvitations = [
   demoInvitation,
   pinkVibesDemoInvitation,
   blueGardenDemoInvitation,
   netflixDemoInvitation,
   mustardBlackDemoInvitation,
+  javaVibesDemoInvitation,
 ];
 
 export const demoGreetings: Greeting[] = [

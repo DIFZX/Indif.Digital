@@ -44,6 +44,8 @@ function getImageClass(slug: string): string {
       return styles.netflixTemplateImage;
     case "mustard-black":
       return styles.mustardBlackTemplateImage;
+    case "java-vibes":
+      return styles.javaVibesTemplateImage;
     case "greeny-flowers":
       return styles.greenyFlowersTemplateImage;
     default:
@@ -53,6 +55,8 @@ function getImageClass(slug: string): string {
 
 function getFallbackThumbnail(slug: string): string {
   switch (slug) {
+    case "java-vibes":
+      return "/media/java-vibes/1.jpg";
     case "netflix":
       return "/media/netflix/1.jpg";
     case "mustard-black":

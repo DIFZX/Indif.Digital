@@ -1,0 +1,1528 @@
+.javaVibesContainer {
+  --maroon-deep: #250207;
+  --maroon-dark: #3b050f;
+  --maroon-base: #550b18;
+  --maroon-light: #701324;
+  --gold-light: #fce38a;
+  --gold-base: #d4af37;
+  --gold-dark: #a17c17;
+  --cream-paper: #faf1e4;
+  --cream-card: rgba(250, 241, 228, 0.94);
+  --text-dark: #2c0e13;
+  --text-muted: #6e4950;
+  --border-gold: rgba(212, 175, 55, 0.35);
+
+  position: relative;
+  min-height: 100svh;
+  background-color: var(--maroon-deep);
+  color: var(--text-dark);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   FLOATING BUTTONS (MUSIC & BOTTOM NAV)
+   ========================================================================== */
+
+.floatingMusicBtn {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 2px solid var(--gold-base);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--maroon-base) 0%, var(--maroon-deep) 100%);
+  color: var(--gold-light);
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 12px rgba(212, 175, 55, 0.3);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.floatingMusicBtn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 18px rgba(212, 175, 55, 0.5);
+}
+
+.musicDisc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+}
+
+.musicPlaying .musicDisc {
+  animation: spinDisc 4s linear infinite;
+}
+
+.musicStatusIcon {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--gold-base);
+  border-radius: 50%;
+  background: var(--maroon-deep);
+  color: var(--gold-base);
+}
+
+.musicStatusIcon svg {
+  width: 10px;
+  height: 10px;
+}
+
+.floatingNav {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 990;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: rgba(37, 2, 7, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.2);
+  max-width: 95vw;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-width: 50px;
+  padding: 0.35rem 0.45rem;
+  border-radius: 999px;
+  color: #c9a9b0;
+  text-decoration: none;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 200ms ease;
+}
+
+.navItem svg {
+  width: 18px;
+  height: 18px;
+}
+
+.navItem:hover {
+  color: var(--gold-light);
+}
+
+.navItemActive {
+  background: linear-gradient(135deg, var(--maroon-base), var(--maroon-light));
+  color: var(--gold-light) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   DESKTOP SPLIT LAYOUT
+   ========================================================================== */
+
+.splitLayout {
+  display: flex;
+  min-height: 100svh;
+}
+
+.desktopShowcase {
+  position: sticky;
+  top: 0;
+  display: none;
+  width: 50%;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--maroon-deep);
+}
+
+.showcaseSlideshow {
+  position: absolute;
+  inset: 0;
+}
+
+.showcaseSlide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: showcaseFade 24s infinite;
+}
+
+.showcaseSlide img {
+  object-fit: cover;
+}
+
+.showcaseOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(37, 2, 7, 0.4) 0%,
+    rgba(59, 5, 15, 0.75) 60%,
+    rgba(37, 2, 7, 0.95) 100%
+  );
+}
+
+.showcaseText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: #fff;
+  z-index: 2;
+}
+
+.showcaseGunungan {
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.6));
+}
+
+.showcaseKicker {
+  margin: 0 0 0.5rem;
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.showcaseTitle {
+  margin: 0;
+  font: 400 clamp(2.8rem, 4.5vw, 4.5rem) / 1.05 Georgia, "Times New Roman", serif;
+  color: var(--gold-light);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.showcaseDate {
+  margin: 1.25rem 0 0;
+  color: #eed6db;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+}
+
+.showcaseBadge {
+  margin-top: 2.5rem;
+  padding: 0.45rem 1.1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--gold-light);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.invitationPanel {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100svh;
+  background: var(--maroon-deep);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   COVER SCREEN MODAL (SAMPUL UNDANGAN)
+   ========================================================================== */
+
+.coverScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 995;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: radial-gradient(circle at center 35%, #4a0713 0%, #250207 75%);
+  overflow-y: auto;
+  animation: fadeIn 600ms ease both;
+}
+
+.coverBackground {
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='%23d4af37' fill-opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.coverGlow {
+  position: absolute;
+  top: 15%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.coverContent {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  color: #fff;
+  padding: 2rem 1rem;
+}
+
+.coverGununganWrap {
+  margin-bottom: 0.5rem;
+  animation: gununganFloat 4s ease-in-out infinite alternate;
+}
+
+.coverGunungan {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 4px 14px rgba(212, 175, 55, 0.35));
+}
+
+.coverFrameMedallion {
+  position: relative;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.coverMedallionRing {
+  position: relative;
+  width: 170px;
+  height: 220px;
+  border-radius: 120px 120px 0 0;
+  overflow: hidden;
+  border: 3px solid var(--gold-base);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.coverPortrait {
+  object-fit: cover;
+}
+
+.ronceMelati {
+  position: absolute;
+  top: 10px;
+  width: 65px;
+  pointer-events: none;
+}
+
+.ronceLeft {
+  left: -38px;
+  transform-origin: top right;
+  animation: waveLeft 3.8s ease-in-out infinite alternate;
+}
+
+.ronceRight {
+  right: -38px;
+  transform: scaleX(-1);
+  transform-origin: top right;
+  animation: waveRight 3.8s ease-in-out infinite alternate;
+}
+
+.coverEyebrow {
+  margin: 0;
+  color: var(--gold-light);
+  font: italic 400 1.3rem/1.2 Georgia, serif;
+  letter-spacing: 0.08em;
+}
+
+.coverNames {
+  margin: 0.35rem 0 0;
+  font: 400 clamp(2.4rem, 8vw, 3.2rem) / 1.05 Georgia, "Times New Roman", serif;
+  color: var(--gold-light);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.coverDate {
+  margin: 0.6rem 0 1.5rem;
+  color: #f1d7dc;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+.coverGuestCard {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 14px;
+  background: rgba(43, 4, 10, 0.7);
+  backdrop-filter: blur(8px);
+  margin-bottom: 1.5rem;
+}
+
+.coverGuestCard small {
+  display: block;
+  color: #d1b4ba;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+
+.coverGuestCard strong {
+  display: block;
+  color: var(--gold-light);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.btnOpenInvitation {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2.2rem;
+  border: 1px solid var(--gold-light);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #a17c17 0%, #d4af37 50%, #fce38a 100%);
+  color: #2b040a;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.45);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+  overflow: hidden;
+}
+
+.btnOpenInvitation:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+}
+
+.btnOpenText {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   MAIN INVITATION CONTENT
+   ========================================================================== */
+
+.mainExperience {
+  position: relative;
+  padding-bottom: 6rem;
+}
+
+.section {
+  position: relative;
+  padding: clamp(3.5rem, 7vh, 5.5rem) clamp(1.25rem, 5vw, 2.5rem);
+}
+
+.sectionOrnamentTop {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitleBlock {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.sectionKicker {
+  margin: 0 0 0.35rem;
+  color: var(--gold-base);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.sectionTitle {
+  margin: 0;
+  font: 400 clamp(2.2rem, 6vw, 3rem) / 1.15 Georgia, "Times New Roman", serif;
+  color: var(--gold-light);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.cardContainer {
+  position: relative;
+  padding: 2.25rem 1.75rem;
+  border-radius: 20px;
+  background: var(--cream-card);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.bismillahArabic {
+  margin: 0 0 1rem;
+  color: var(--maroon-base);
+  font-size: 1.55rem;
+  font-family: "Amiri", "Traditional Arabic", serif;
+}
+
+.salamScript {
+  margin: 0 0 1rem;
+  color: var(--maroon-base);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.introParagraph {
+  margin: 0 0 2rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.archedQuoteCard {
+  position: relative;
+  padding: 2rem 1.5rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.cornerFloret {
+  position: absolute;
+  pointer-events: none;
+}
+
+.cornerTopLeft {
+  top: 8px;
+  left: 8px;
+}
+
+.cornerTopRight {
+  top: 8px;
+  right: 8px;
+  transform: scaleX(-1);
+}
+
+.quoteText {
+  margin: 0 0 1rem;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-style: italic;
+  line-height: 1.85;
+}
+
+.quoteSource {
+  display: block;
+  color: var(--maroon-base);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   MEMPELAI SECTION
+   ========================================================================== */
+
+.coupleCardsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.personCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 360px;
+  padding: 2.25rem 1.5rem;
+  border-radius: 20px;
+  background: var(--cream-card);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.personArchWrap {
+  position: relative;
+  width: 160px;
+  height: 220px;
+  margin-bottom: 1.5rem;
+}
+
+.personPhotoInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 100px 100px 0 0;
+  overflow: hidden;
+  border: 3px solid var(--gold-base);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.personPhotoInner img {
+  object-fit: cover;
+}
+
+.personMelati {
+  position: absolute;
+  top: 10px;
+  width: 55px;
+  pointer-events: none;
+}
+
+.melatiLeft {
+  left: -32px;
+  transform-origin: top right;
+  animation: waveLeft 4s ease-in-out infinite alternate;
+}
+
+.melatiRight {
+  right: -32px;
+  transform: scaleX(-1);
+  transform-origin: top right;
+  animation: waveRight 4s ease-in-out infinite alternate;
+}
+
+.personRole {
+  margin: 0;
+  color: var(--maroon-base);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.personName {
+  margin: 0.35rem 0 0.65rem;
+  font: 400 1.9rem / 1.15 Georgia, serif;
+  color: var(--maroon-base);
+}
+
+.personParents {
+  margin: 0 0 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.personIgBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--maroon-base);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 200ms ease;
+}
+
+.personIgBtn:hover {
+  background: var(--maroon-base);
+  color: var(--gold-light);
+}
+
+.coupleDivider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ampersand {
+  color: var(--gold-base);
+  font: 400 2.8rem/1 Georgia, serif;
+}
+
+/* ==========================================================================
+   ACARA & COUNTDOWN SECTION
+   ========================================================================== */
+
+.countdownContainer {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.countdownGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+  max-width: 420px;
+  margin: 0 auto 1.5rem;
+}
+
+.countdownBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.5rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 14px;
+  background: rgba(43, 4, 10, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.countdownValue {
+  color: var(--gold-light);
+  font: 700 1.7rem/1 Georgia, serif;
+}
+
+.countdownLabel {
+  margin-top: 0.35rem;
+  color: #d1b4ba;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.btnCalendar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.6rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: rgba(43, 4, 10, 0.85);
+  color: var(--gold-light);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: all 250ms ease;
+}
+
+.btnCalendar:hover {
+  background: var(--gold-base);
+  color: var(--maroon-deep);
+  transform: translateY(-2px);
+}
+
+.eventsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.eventCard {
+  position: relative;
+  padding: 2.25rem 1.75rem;
+  border-radius: 20px;
+  background: var(--cream-card);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.eventBadge {
+  display: inline-block;
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  background: var(--maroon-base);
+  color: var(--gold-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.eventDateText {
+  margin: 0;
+  font: 400 1.55rem/1.2 Georgia, serif;
+  color: var(--maroon-base);
+}
+
+.eventTimeText {
+  margin: 0.4rem 0 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.eventLocationBlock {
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border-gold);
+  margin-bottom: 1.5rem;
+}
+
+.locationPinIcon {
+  width: 26px;
+  height: 26px;
+  color: var(--maroon-base);
+  margin-bottom: 0.35rem;
+}
+
+.eventLocationBlock h4 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: var(--maroon-base);
+}
+
+.eventLocationBlock p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.btnEventMaps {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.6rem;
+  border: 1px solid var(--maroon-base);
+  border-radius: 999px;
+  background: var(--maroon-base);
+  color: var(--gold-light);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(85, 11, 24, 0.35);
+  transition: all 250ms ease;
+}
+
+.btnEventMaps:hover {
+  background: var(--maroon-dark);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   KISAH CINTA (OUR LOVE STORY)
+   ========================================================================== */
+
+.storyHeroImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid var(--border-gold);
+  margin-bottom: 2rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.storyHeroImage {
+  object-fit: cover;
+}
+
+.storyHeroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(37, 2, 7, 0.85) 100%);
+}
+
+.storyTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.storyTimeline::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 11px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold-base), var(--maroon-base));
+}
+
+.storyItem {
+  position: relative;
+}
+
+.storyBullet {
+  position: absolute;
+  left: -2rem;
+  top: 0.75rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.storyCard {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: var(--cream-card);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.storyYear {
+  display: inline-block;
+  color: var(--maroon-base);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.storyTitle {
+  margin: 0 0 0.5rem;
+  font: 400 1.25rem/1.2 Georgia, serif;
+  color: var(--maroon-base);
+}
+
+.storyText {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+/* ==========================================================================
+   GALERI PREWEDDING
+   ========================================================================== */
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
+.galleryItem {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-gold);
+  padding: 0;
+  background: #250207;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.galleryItemLarge {
+  grid-column: span 2;
+  aspect-ratio: 16 / 10;
+}
+
+.galleryItem img {
+  object-fit: cover;
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.galleryItem:hover img {
+  transform: scale(1.06);
+}
+
+.galleryHover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37, 2, 7, 0.4);
+  color: var(--gold-light);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.galleryItem:hover .galleryHover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   TANDA KASIH & WEDDING GIFT
+   ========================================================================== */
+
+.giftLead {
+  max-width: 440px;
+  margin: 0.75rem auto 0;
+  color: #eed6db;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.giftCardsWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.giftCard {
+  padding: 1.75rem;
+  border-radius: 18px;
+  background: var(--cream-card);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.giftCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  color: var(--maroon-base);
+}
+
+.bankNameBadge {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  border-radius: 8px;
+  background: var(--maroon-base);
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.giftCardOwner {
+  margin: 0 0 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.giftCardNumber {
+  margin: 0 0 1.25rem;
+  font: 700 1.4rem/1.2 monospace, sans-serif;
+  color: var(--maroon-base);
+  letter-spacing: 0.08em;
+}
+
+.giftCardAddress {
+  margin: 0 0 1.25rem;
+  color: var(--text-dark);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.btnCopy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--maroon-base);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--maroon-base);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.btnCopy:hover {
+  background: var(--maroon-base);
+  color: var(--gold-light);
+}
+
+/* ==========================================================================
+   BUKU TAMU & DOA RESTU (RSVP)
+   ========================================================================== */
+
+.rsvpCard {
+  position: relative;
+  padding: 2.25rem 1.75rem;
+  border-radius: 20px;
+  background: var(--cream-card);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.rsvpForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  margin-bottom: 2.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-align: left;
+}
+
+.formGroup label {
+  color: var(--maroon-base);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.formGroup input[type="text"],
+.formGroup textarea,
+.formGroup select {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text-dark);
+  font-family: inherit;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: var(--maroon-base);
+  box-shadow: 0 0 0 3px rgba(85, 11, 24, 0.12);
+}
+
+.attendanceRadioGroup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.radioCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  transition: all 200ms ease;
+}
+
+.radioCard input {
+  accent-color: var(--maroon-base);
+}
+
+.radioCardActive {
+  background: var(--maroon-base);
+  border-color: var(--maroon-base);
+  color: var(--gold-light);
+}
+
+.formStatusAlert {
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.statusSuccess {
+  background: #eaf6ed;
+  border: 1px solid #72b283;
+  color: #1e5a2e;
+}
+
+.statusError {
+  background: #fbebee;
+  border: 1px solid #e27d8e;
+  color: #7b1d2e;
+}
+
+.btnSubmitRsvp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 2rem;
+  border: 1px solid var(--maroon-base);
+  border-radius: 999px;
+  background: var(--maroon-base);
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(85, 11, 24, 0.4);
+  transition: all 250ms ease;
+}
+
+.btnSubmitRsvp:hover:not(:disabled) {
+  background: var(--maroon-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(85, 11, 24, 0.5);
+}
+
+.btnSubmitRsvp:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.wishesFeedContainer {
+  padding-top: 2rem;
+  border-top: 1px dashed var(--border-gold);
+}
+
+.wishesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.wishesHeader h4 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--maroon-base);
+}
+
+.wishesCountBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--maroon-base);
+  color: var(--gold-light);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.wishesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+}
+
+.wishItem {
+  display: flex;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  text-align: left;
+}
+
+.wishAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--maroon-base);
+  color: var(--gold-light);
+  font-weight: 800;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.wishContent {
+  flex: 1;
+}
+
+.wishMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.wishMeta strong {
+  font-size: 0.9rem;
+  color: var(--maroon-base);
+}
+
+.badgeHadir {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #eaf6ed;
+  color: #1e5a2e;
+  font-size: 0.64rem;
+  font-weight: 700;
+}
+
+.badgeTidakHadir {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #fbebee;
+  color: #7b1d2e;
+  font-size: 0.64rem;
+  font-weight: 700;
+}
+
+.wishText {
+  margin: 0 0 0.4rem;
+  color: var(--text-dark);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.wishTime {
+  display: block;
+  color: #9c7f85;
+  font-size: 0.72rem;
+}
+
+.noWishesText {
+  margin: 2rem 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ==========================================================================
+   PENUTUP & FOOTER
+   ========================================================================== */
+
+.closingSection {
+  padding: 4rem 1.5rem 3rem;
+  text-align: center;
+  color: #fff;
+  border-top: 1px solid var(--border-gold);
+}
+
+.closingGunungan {
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 4px 12px rgba(212, 175, 55, 0.3));
+}
+
+.closingText {
+  max-width: 440px;
+  margin: 0 auto 1.5rem;
+  color: #eed6db;
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.closingGreeting {
+  margin: 0 0 1.5rem;
+  color: var(--gold-light);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.closingCoupleNames {
+  margin: 0 0 3rem;
+  font: 400 clamp(2.5rem, 7vw, 3.4rem) / 1.1 Georgia, serif;
+  color: var(--gold-light);
+}
+
+.brandFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-gold);
+}
+
+.brandFooter small {
+  color: var(--gold-base);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+}
+
+.brandLogo {
+  width: 130px;
+  height: auto;
+  filter: invert(1);
+}
+
+.brandFooter span {
+  color: #b18d94;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   LIGHTBOX MODAL
+   ========================================================================== */
+
+.lightboxBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(18, 1, 4, 0.95);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 250ms ease both;
+}
+
+.lightboxCloseBtn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border-gold);
+  border-radius: 50%;
+  background: rgba(37, 2, 7, 0.8);
+  color: var(--gold-light);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 200ms ease;
+}
+
+.lightboxCloseBtn:hover {
+  transform: scale(1.1);
+}
+
+.lightboxContent {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightboxImageWrap {
+  position: relative;
+  width: 100%;
+  height: 65vh;
+}
+
+.lightboxControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  color: var(--gold-light);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.lightboxArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-gold);
+  border-radius: 50%;
+  background: rgba(37, 2, 7, 0.8);
+  color: var(--gold-light);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 200ms ease;
+}
+
+.lightboxArrow:hover {
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   ANIMATIONS & KEYFRAMES
+   ========================================================================== */
+
+@keyframes waveLeft {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(4deg); }
+}
+
+@keyframes waveRight {
+  0% { transform: scaleX(-1) rotate(3deg); }
+  100% { transform: scaleX(-1) rotate(-4deg); }
+}
+
+@keyframes gununganFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+@keyframes spinDisc {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes showcaseFade {
+  0% { opacity: 0; }
+  8% { opacity: 1; }
+  25% { opacity: 1; }
+  33% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* ==========================================================================
+   RESPONSIVE QUERIES
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+  .desktopShowcase {
+    display: block;
+  }
+
+  .invitationPanel {
+    width: 50%;
+    max-width: none;
+    margin: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding: 3rem 1.25rem;
+  }
+
+  .cardContainer,
+  .personCard,
+  .eventCard,
+  .rsvpCard {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .coverNames {
+    font-size: 2.3rem;
+  }
+
+  .floatingNav {
+    bottom: 0.75rem;
+    padding: 0.35rem 0.4rem;
+  }
+
+  .navItem {
+    min-width: 44px;
+    padding: 0.25rem 0.35rem;
+    font-size: 0.58rem;
+  }
+
+  .navItem svg {
+    width: 16px;
+    height: 16px;
+  }
+}

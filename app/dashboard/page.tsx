@@ -19,13 +19,25 @@ export const dynamic = "force-dynamic";
 
 function getCategoryForSlug(slug: string): TemplateCategory {
   const clean = slug.toLowerCase().trim();
-  if (clean === "pink-vibes" || clean === "blue-garden" || clean.includes("pink") || clean.includes("blue")) {
+  if (
+    clean === "pink-vibes" ||
+    clean === "blue-garden" ||
+    clean === "java-vibes" ||
+    clean.includes("pink") ||
+    clean.includes("blue") ||
+    clean.includes("java")
+  ) {
     return "animasi";
   }
   if (clean === "netflix" || clean.includes("netflix")) {
     return "spesial";
   }
-  if (clean === "greeny-flowers" || clean === "mustard-black" || clean.includes("green") || clean.includes("mustard")) {
+  if (
+    clean === "greeny-flowers" ||
+    clean === "mustard-black" ||
+    clean.includes("green") ||
+    clean.includes("mustard")
+  ) {
     return "minimalis";
   }
   return "minimalis";
@@ -76,6 +88,15 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mustard-black/1.jpg",
     preview_path: "/mustard-black?to=Tamu%20Undangan",
     category: "minimalis",
+  },
+  {
+    id: "00000000-0000-0000-0000-000000000006",
+    slug: "java-vibes",
+    name: "Java Vibes",
+    description: "Template adat Jawa modern bernuansa Royal Maroon & Emas Keraton dengan motif gunungan 3D, ronce melati berayun, dan fitur digital lengkap.",
+    thumbnail_path: "/media/java-vibes/1.jpg",
+    preview_path: "/java-vibes?to=Tamu%20Undangan",
+    category: "animasi",
   },
 ];
 
