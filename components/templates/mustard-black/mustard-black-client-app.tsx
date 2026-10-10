@@ -521,8 +521,11 @@ export function MustardBlackClientApp({
               </a>
             </nav>
 
-            {/* ─── 1. HERO OPENING BANNER (Static without Reveal for iOS Stability) ─── */}
-            <section className={styles.heroSection} id="hero">
+            {/* ─── 1. HERO OPENING BANNER (Staggered Entrance Animation on Open) ─── */}
+            <section
+              className={`${styles.heroSection} ${opened ? styles.heroOpened : ""}`}
+              id="hero"
+            >
               <div className={styles.heroBackdrop}>
                 <Image
                   src={coverPath}
@@ -567,6 +570,15 @@ export function MustardBlackClientApp({
                 <span className={styles.heroDateBadge}>
                   {formatEventDate(invitation.event_date)}
                 </span>
+
+                <div className={styles.heroScrollIndicator}>
+                  <span className={styles.heroScrollText}>Scroll Down</span>
+                  <div className={styles.heroScrollChevron}>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                      <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -845,7 +857,7 @@ export function MustardBlackClientApp({
 
               <div className={styles.storyTimeline}>
                 {stories.map((st, i) => (
-                  <Reveal key={st.year} direction="up" delay={i * 120}>
+                  <Reveal key={st.year} direction="up" delay={i * 120} className={styles.storyReveal}>
                     <div className={styles.storyItem}>
                       <div className={styles.storyDot} />
                       <div className={styles.storyCard}>
