@@ -4,6 +4,11 @@ import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import { getSupabase } from "@/lib/supabase";
+import {
+  TemplateCatalog,
+  type CatalogTemplate,
+  type TemplateCategory,
+} from "./template-catalog";
 import styles from "./dashboard.module.css";
 
 export const metadata: Metadata = {
@@ -13,14 +18,19 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-type CatalogTemplate = {
-  id: string;
-  slug: string;
-  name: string;
-  description: string;
-  thumbnail_path: string | null;
-  preview_path: string | null;
-};
+function getCategoryForSlug(slug: string): TemplateCategory {
+  const clean = slug.toLowerCase().trim();
+  if (clean === "pink-vibes" || clean === "blue-garden" || clean.includes("pink") || clean.includes("blue")) {
+    return "animasi";
+  }
+  if (clean === "netflix" || clean.includes("netflix")) {
+    return "spesial";
+  }
+  if (clean === "greeny-flowers" || clean === "mustard-black" || clean.includes("green") || clean.includes("mustard")) {
+    return "minimalis";
+  }
+  return "minimalis";
+}
 
 const fallbackTemplates: CatalogTemplate[] = [
   {
@@ -30,6 +40,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Nuansa hijau yang lembut, detail bunga yang hangat, dan susunan elegan untuk kisah yang terasa dekat dan personal.",
     thumbnail_path: "/media/elegant/gallery-couple-v2.png",
     preview_path: "/intan-dan-difa?to=Tamu%20Undangan",
+    category: "minimalis",
   },
   {
     id: "00000000-0000-0000-0000-000000000002",
@@ -38,6 +49,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Nuansa dusty pink yang romantis, bunga-bunga lembut, dan komposisi modern untuk perayaan yang hangat dan manis.",
     thumbnail_path: "/media/elegant/profile-main-v1.jpeg",
     preview_path: "/pink-vibes?to=Tamu%20Undangan",
+    category: "animasi",
   },
   {
     id: "00000000-0000-0000-0000-000000000003",
@@ -46,6 +58,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Nuansa biru vintage, detail bunga berlapis, serta aksen emas yang anggun untuk perayaan yang klasik dan berkelas.",
     thumbnail_path: "/media/blue-garden/backgrounds/blue-garden-paper-v1.png",
     preview_path: "/blue-garden?to=Tamu%20Undangan",
+    category: "animasi",
   },
   {
     id: "00000000-0000-0000-0000-000000000004",
@@ -54,6 +67,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Template cinematic bertema serial Netflix dengan pemutar lagu melayang, format trailer & cerita per-episode, dan desain mobile portrait modern.",
     thumbnail_path: "/media/netflix/1.jpg",
     preview_path: "/netflix?to=Tamu%20Undangan",
+    category: "spesial",
   },
   {
     id: "00000000-0000-0000-0000-000000000005",
@@ -62,6 +76,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Template mewah bernuansa matte black & mustard gold dengan bingkai arch lengkung botanis, animasi scroll anggun, dan fitur digital lengkap.",
     thumbnail_path: "/media/mustard-black/1.jpg",
     preview_path: "/mustard-black?to=Tamu%20Undangan",
+    category: "minimalis",
   },
 ];
 
@@ -74,7 +89,7 @@ function orderUrl(templateName: string) {
 
 async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
   const supabase = getSupabase();
-  let dbTemplates: CatalogTemplate[] = [];
+  let dbTemplates: Omit<CatalogTemplate, "category">[] = [];
 
   if (supabase) {
     const { data, error } = await supabase
@@ -91,8 +106,12 @@ async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
 
   if (dbTemplates.length === 0) return fallbackTemplates;
 
-  // Merge so all supported templates (including Netflix) always appear
-  const combined = [...dbTemplates];
+  // Merge so all supported templates always appear with valid category
+  const combined: CatalogTemplate[] = dbTemplates.map((dbT) => ({
+    ...dbT,
+    category: getCategoryForSlug(dbT.slug),
+  }));
+
   for (const fallback of fallbackTemplates) {
     const idx = combined.findIndex((t) => t.slug === fallback.slug);
     if (idx === -1) {
@@ -103,6 +122,7 @@ async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
         ...combined[idx],
         thumbnail_path: combined[idx].thumbnail_path || fallback.thumbnail_path,
         preview_path: combined[idx].preview_path || fallback.preview_path,
+        category: getCategoryForSlug(combined[idx].slug),
       };
     }
   }
@@ -120,7 +140,12 @@ export default async function DashboardPage() {
           <Link className={styles.brand} href="/dashboard" aria-label={`${BRAND.name} beranda`}>
             <Image src={BRAND.logoPath} alt={BRAND.name} width={400} height={150} priority />
           </Link>
-          <a className={styles.navLink} href="#templates">Template</a>
+          <div className={styles.navLinks}>
+            <a className={styles.navLink} href="#templates">Semua</a>
+            <a className={styles.navCategoryLink} href="#animasi">Animasi</a>
+            <a className={styles.navCategoryLink} href="#spesial">Spesial</a>
+            <a className={styles.navCategoryLink} href="#minimalis">Minimalis</a>
+          </div>
         </nav>
 
         <div className={styles.heroGrid}>
@@ -138,6 +163,12 @@ export default async function DashboardPage() {
               <a className={styles.textAction} href={orderUrl("undangan digital")} target="_blank" rel="noreferrer">
                 Hubungi kami <span aria-hidden="true">↗</span>
               </a>
+            </div>
+            <div className={styles.heroCategoryBadges} aria-label="Pilihan kategori">
+              <span className={styles.heroCategoryLabel}>Pilihan Menu:</span>
+              <a className={styles.heroCategoryPill} href="#animasi">✨ Animasi</a>
+              <a className={styles.heroCategoryPill} href="#spesial">🎬 Spesial</a>
+              <a className={styles.heroCategoryPill} href="#minimalis">🌿 Minimalis</a>
             </div>
           </div>
 
@@ -168,68 +199,8 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <section className={styles.templates} id="templates">
-        <div className={styles.sectionHeading}>
-          <div>
-            <p className={styles.kicker}>Our collection</p>
-            <h2>Pilihan template</h2>
-          </div>
-          <span>{String(templates.length).padStart(2, "0")} Template</span>
-        </div>
-
-        <div className={styles.templateGrid}>
-          {templates.map((template, index) => (
-            <article className={styles.templateCard} key={template.id}>
-              <div
-                className={`${styles.templateImage} ${
-                  template.slug === "pink-vibes"
-                    ? styles.pinkTemplateImage
-                    : template.slug === "netflix"
-                    ? styles.netflixTemplateImage
-                    : ""
-                }`}
-              >
-                <Image
-                  src={resolveMediaUrl(
-                    template.thumbnail_path ??
-                      (template.slug === "netflix" ? "/media/netflix/1.jpg" : "/media/elegant/gallery-couple-v2.png")
-                  )}
-                  alt={`Preview template ${template.name}`}
-                  fill
-                  sizes="(max-width: 900px) 100vw, 46vw"
-                />
-                <span className={styles.templateIndex}>{String(index + 1).padStart(2, "0")}</span>
-                {template.slug === "netflix" && (
-                  <span className={styles.netflixBadge}>Cinematic</span>
-                )}
-              </div>
-
-              <div className={styles.templateInfo}>
-                <p className={styles.templateType}>
-                  {template.slug === "netflix" ? "Cinematic wedding invitation" : "Wedding invitation"}
-                </p>
-                <h3>{template.name}</h3>
-                <p className={styles.description}>{template.description || "Undangan digital elegan dari InDif Digital."}</p>
-                <div className={styles.cardActions}>
-                  {template.preview_path && (
-                    <Link className={styles.previewAction} href={template.preview_path} target="_blank">
-                      Preview <span aria-hidden="true">↗</span>
-                    </Link>
-                  )}
-                  <a className={styles.orderAction} href={orderUrl(template.name)} target="_blank" rel="noreferrer">
-                    Pesan sekarang <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-          {templates.length === 0 && (
-            <div className={styles.emptyTemplates}>
-              <p>Koleksi terbaru sedang kami siapkan.</p>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Interactive Catalog with Category Filters */}
+      <TemplateCatalog templates={templates} />
 
       <footer className={styles.footer}>
         <Image src={BRAND.logoPath} alt={BRAND.name} width={400} height={150} />
