@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
-import { resolveMediaUrl } from "@/lib/media";
 import { getSupabase } from "@/lib/supabase";
 import {
   TemplateCatalog,
@@ -106,7 +105,6 @@ async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
 
   if (dbTemplates.length === 0) return fallbackTemplates;
 
-  // Merge so all supported templates always appear with valid category
   const combined: CatalogTemplate[] = dbTemplates.map((dbT) => ({
     ...dbT,
     category: getCategoryForSlug(dbT.slug),
@@ -140,12 +138,7 @@ export default async function DashboardPage() {
           <Link className={styles.brand} href="/dashboard" aria-label={`${BRAND.name} beranda`}>
             <Image src={BRAND.logoPath} alt={BRAND.name} width={400} height={150} priority />
           </Link>
-          <div className={styles.navLinks}>
-            <a className={styles.navLink} href="#templates">Semua</a>
-            <a className={styles.navCategoryLink} href="#animasi">Animasi</a>
-            <a className={styles.navCategoryLink} href="#spesial">Spesial</a>
-            <a className={styles.navCategoryLink} href="#minimalis">Minimalis</a>
-          </div>
+          <a className={styles.navLink} href="#templates">Template</a>
         </nav>
 
         <div className={styles.heroGrid}>
@@ -164,42 +157,10 @@ export default async function DashboardPage() {
                 Hubungi kami <span aria-hidden="true">↗</span>
               </a>
             </div>
-            <div className={styles.heroCategoryBadges} aria-label="Pilihan kategori">
-              <span className={styles.heroCategoryLabel}>Pilihan Menu:</span>
-              <a className={styles.heroCategoryPill} href="#animasi">✨ Animasi</a>
-              <a className={styles.heroCategoryPill} href="#spesial">🎬 Spesial</a>
-              <a className={styles.heroCategoryPill} href="#minimalis">🌿 Minimalis</a>
-            </div>
           </div>
-
-          <div className={styles.heroVisual} aria-hidden="true">
-            <div className={styles.heroNumber}>01</div>
-            <div className={styles.phoneFrame}>
-              <Image
-                src={resolveMediaUrl("/media/elegant/profile-main-v1.jpeg")}
-                alt=""
-                fill
-                priority
-                sizes="(max-width: 760px) 68vw, 320px"
-              />
-              <div className={styles.phoneShade} />
-              <div className={styles.phoneCopy}>
-                <small>The Wedding of</small>
-                <strong>Intan &amp; Difa</strong>
-                <span>12 · 12 · 2026</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.features} aria-label="Keunggulan layanan">
-          <span>Personal</span>
-          <span>Elegan</span>
-          <span>Mudah dibagikan</span>
         </div>
       </section>
 
-      {/* Interactive Catalog with Category Filters */}
       <TemplateCatalog templates={templates} />
 
       <footer className={styles.footer}>

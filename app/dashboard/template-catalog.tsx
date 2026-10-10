@@ -22,64 +22,17 @@ export type CategoryFilter = "all" | TemplateCategory;
 
 const whatsappUrl = "https://wa.me/6281776396965";
 
-function orderUrl(templateName: string, categoryLabel?: string) {
-  const categoryNote = categoryLabel ? ` (Kategori ${categoryLabel})` : "";
-  const message = `Halo InDif Digital, saya tertarik memesan template ${templateName}${categoryNote}.`;
+function orderUrl(templateName: string) {
+  const message = `Halo InDif Digital, saya tertarik memesan template ${templateName}.`;
   return `${whatsappUrl}?text=${encodeURIComponent(message)}`;
 }
 
-const CATEGORY_DEFINITIONS: {
-  id: CategoryFilter;
-  label: string;
-  title: string;
-  description: string;
-  badgeLabel: string;
-  templateList: string;
-}[] = [
-  {
-    id: "all",
-    label: "Semua",
-    title: "Pilihan Koleksi Template",
-    description: "Seluruh pilihan template undangan digital eksklusif InDif Digital dari berbagai konsep desain.",
-    badgeLabel: "Koleksi Lengkap",
-    templateList: "Animasi, Spesial & Minimalis",
-  },
-  {
-    id: "animasi",
-    label: "Animasi",
-    title: "Koleksi Template Animasi",
-    description: "Template interaktif dengan transisi romantis, gerak visual dinamis, dan pengalaman membaca yang hidup.",
-    badgeLabel: "Kategori Animasi",
-    templateList: "Pink Vibes, Blue Garden",
-  },
-  {
-    id: "spesial",
-    label: "Spesial",
-    title: "Koleksi Template Spesial",
-    description: "Konsep tematik eksklusif berformat sinematik, trailer serial & storytelling visual modern.",
-    badgeLabel: "Kategori Spesial",
-    templateList: "Netflix",
-  },
-  {
-    id: "minimalis",
-    label: "Minimalis",
-    title: "Koleksi Template Minimalis",
-    description: "Estetika bersih, modern, dan berkelas dengan tipografi anggun serta sentuhan floral abadi.",
-    badgeLabel: "Kategori Minimalis",
-    templateList: "Greeny Flowers, Mustard Black",
-  },
+const CATEGORIES: { id: CategoryFilter; label: string }[] = [
+  { id: "all", label: "Semua" },
+  { id: "animasi", label: "Animasi" },
+  { id: "spesial", label: "Spesial" },
+  { id: "minimalis", label: "Minimalis" },
 ];
-
-function getCategoryLabel(category: TemplateCategory): string {
-  switch (category) {
-    case "animasi":
-      return "Animasi";
-    case "spesial":
-      return "Spesial";
-    case "minimalis":
-      return "Minimalis";
-  }
-}
 
 function getImageClass(slug: string): string {
   switch (slug) {
@@ -98,29 +51,6 @@ function getImageClass(slug: string): string {
   }
 }
 
-function getCategoryBadge(category: TemplateCategory, slug: string) {
-  switch (category) {
-    case "animasi":
-      return {
-        label: "Animasi",
-        className: styles.badgeAnimasi,
-        tagClass: styles.categoryTagAnimasi,
-      };
-    case "spesial":
-      return {
-        label: slug === "netflix" ? "Spesial • Cinematic" : "Spesial",
-        className: styles.badgeSpesial,
-        tagClass: styles.categoryTagSpesial,
-      };
-    case "minimalis":
-      return {
-        label: "Minimalis",
-        className: styles.badgeMinimalis,
-        tagClass: styles.categoryTagMinimalis,
-      };
-  }
-}
-
 function getFallbackThumbnail(slug: string): string {
   switch (slug) {
     case "netflix":
@@ -134,6 +64,17 @@ function getFallbackThumbnail(slug: string): string {
     case "greeny-flowers":
     default:
       return "/media/elegant/gallery-couple-v2.png";
+  }
+}
+
+function getCategoryLabel(category: TemplateCategory): string {
+  switch (category) {
+    case "animasi":
+      return "Animasi";
+    case "spesial":
+      return "Spesial";
+    case "minimalis":
+      return "Minimalis";
   }
 }
 
@@ -169,13 +110,6 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
     return templates.filter((t) => t.category === activeCategory);
   }, [templates, activeCategory]);
 
-  const currentCategoryInfo = useMemo(() => {
-    return (
-      CATEGORY_DEFINITIONS.find((cat) => cat.id === activeCategory) ??
-      CATEGORY_DEFINITIONS[0]
-    );
-  }, [activeCategory]);
-
   const selectCategory = (catId: CategoryFilter) => {
     setActiveCategory(catId);
     if (catId === "all") {
@@ -187,7 +121,6 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
 
   return (
     <section className={styles.templates} id="templates">
-      {/* Anchor targets so deep links jump nicely */}
       <div id="animasi" className={styles.scrollAnchor} />
       <div id="spesial" className={styles.scrollAnchor} />
       <div id="minimalis" className={styles.scrollAnchor} />
@@ -195,112 +128,83 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
       <div className={styles.sectionHeading}>
         <div>
           <p className={styles.kicker}>Our collection</p>
-          <h2>{currentCategoryInfo.title}</h2>
+          <h2>Pilihan template</h2>
         </div>
-        <span>
-          {String(filteredTemplates.length).padStart(2, "0")} Template
-          {activeCategory !== "all" ? ` ${currentCategoryInfo.label}` : ""}
-        </span>
+        <span>{String(filteredTemplates.length).padStart(2, "0")} Template</span>
       </div>
 
-      <div className={styles.categoryBar}>
-        <div className={styles.categoryMenu} role="tablist" aria-label="Menu Kategori Template">
-          {CATEGORY_DEFINITIONS.map((cat) => {
-            const isActive = activeCategory === cat.id;
-            const count = counts[cat.id];
-            return (
-              <button
-                key={cat.id}
-                role="tab"
-                aria-selected={isActive}
-                className={`${styles.categoryButton} ${isActive ? styles.categoryButtonActive : ""}`}
-                onClick={() => selectCategory(cat.id)}
-              >
-                <span>{cat.label}</span>
-                <span className={styles.categoryCount}>
-                  {String(count).padStart(2, "0")}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className={styles.categoryNotice}>
-          <div className={styles.categoryNoticeInfo}>
-            <h4>{currentCategoryInfo.title}</h4>
-            <p>{currentCategoryInfo.description}</p>
-          </div>
-          <div className={styles.categoryNoticeTag}>
-            <span>Isi template:</span>
-            <strong>{currentCategoryInfo.templateList}</strong>
-          </div>
-        </div>
+      <div className={styles.categoryMenu} role="tablist" aria-label="Kategori template">
+        {CATEGORIES.map((cat) => {
+          const isActive = activeCategory === cat.id;
+          const count = counts[cat.id];
+          return (
+            <button
+              key={cat.id}
+              role="tab"
+              aria-selected={isActive}
+              className={`${styles.categoryButton} ${isActive ? styles.categoryButtonActive : ""}`}
+              onClick={() => selectCategory(cat.id)}
+            >
+              <span>{cat.label}</span>
+              <span className={styles.categoryCount}>
+                {String(count).padStart(2, "0")}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <div className={styles.templateGrid}>
-        {filteredTemplates.map((template, index) => {
-          const badge = getCategoryBadge(template.category, template.slug);
-          const categoryName = getCategoryLabel(template.category);
+        {filteredTemplates.map((template, index) => (
+          <article className={styles.templateCard} key={template.id}>
+            <div className={`${styles.templateImage} ${getImageClass(template.slug)}`}>
+              <Image
+                src={resolveMediaUrl(
+                  template.thumbnail_path ?? getFallbackThumbnail(template.slug)
+                )}
+                alt={`Preview template ${template.name}`}
+                fill
+                sizes="(max-width: 900px) 100vw, 46vw"
+              />
+              <span className={styles.templateIndex}>
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              {template.slug === "netflix" && (
+                <span className={styles.netflixBadge}>Cinematic</span>
+              )}
+            </div>
 
-          return (
-            <article className={styles.templateCard} key={template.id}>
-              <div className={`${styles.templateImage} ${getImageClass(template.slug)}`}>
-                <Image
-                  src={resolveMediaUrl(
-                    template.thumbnail_path ?? getFallbackThumbnail(template.slug)
-                  )}
-                  alt={`Preview template ${template.name}`}
-                  fill
-                  sizes="(max-width: 900px) 100vw, 46vw"
-                />
-                <span className={styles.templateIndex}>
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className={`${styles.cardBadge} ${badge.className}`}>
-                  {badge.label}
-                </span>
-              </div>
+            <div className={styles.templateInfo}>
+              <p className={styles.templateType}>
+                {getCategoryLabel(template.category)}
+              </p>
+              <h3>{template.name}</h3>
+              <p className={styles.description}>
+                {template.description || "Undangan digital elegan dari InDif Digital."}
+              </p>
 
-              <div className={styles.templateInfo}>
-                <div className={styles.templateMetaRow}>
-                  <span className={`${styles.categoryTag} ${badge.tagClass}`}>
-                    {categoryName}
-                  </span>
-                  <p className={styles.templateType}>
-                    {template.slug === "netflix"
-                      ? "Cinematic wedding invitation"
-                      : "Wedding invitation"}
-                  </p>
-                </div>
-
-                <h3>{template.name}</h3>
-                <p className={styles.description}>
-                  {template.description || "Undangan digital elegan dari InDif Digital."}
-                </p>
-
-                <div className={styles.cardActions}>
-                  {template.preview_path && (
-                    <Link
-                      className={styles.previewAction}
-                      href={template.preview_path}
-                      target="_blank"
-                    >
-                      Preview <span aria-hidden="true">↗</span>
-                    </Link>
-                  )}
-                  <a
-                    className={styles.orderAction}
-                    href={orderUrl(template.name, categoryName)}
+              <div className={styles.cardActions}>
+                {template.preview_path && (
+                  <Link
+                    className={styles.previewAction}
+                    href={template.preview_path}
                     target="_blank"
-                    rel="noreferrer"
                   >
-                    Pesan sekarang <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
+                    Preview <span aria-hidden="true">↗</span>
+                  </Link>
+                )}
+                <a
+                  className={styles.orderAction}
+                  href={orderUrl(template.name)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Pesan sekarang <span aria-hidden="true">↗</span>
+                </a>
               </div>
-            </article>
-          );
-        })}
+            </div>
+          </article>
+        ))}
 
         {filteredTemplates.length === 0 && (
           <div className={styles.emptyTemplates}>
