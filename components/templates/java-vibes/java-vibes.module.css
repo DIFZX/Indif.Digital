@@ -1,1171 +1,1138 @@
-.javaVibesContainer {
-  --maroon-deep: #250207;
-  --maroon-dark: #3b050f;
-  --maroon-base: #550b18;
-  --maroon-light: #701324;
-  --gold-light: #fce38a;
-  --gold-base: #d4af37;
-  --gold-dark: #a17c17;
-  --cream-paper: #faf1e4;
-  --cream-card: rgba(250, 241, 228, 0.94);
-  --text-dark: #2c0e13;
-  --text-muted: #6e4950;
-  --border-gold: rgba(212, 175, 55, 0.35);
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@500;600;700&family=Great+Vibes&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
-  position: relative;
-  min-height: 100svh;
-  background-color: var(--maroon-deep);
-  color: var(--text-dark);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+/* Color tokens matching envitto.com/preview/java-maroon-3d */
+:root {
+  --jv-maroon: #550B18;
+  --jv-maroon-dark: #380710;
+  --jv-maroon-light: #6b1625;
+  --jv-base: #51260A;
+  --jv-parchment: #FAF1E4;
+  --jv-parchment-glass: rgba(250, 241, 228, 0.92);
+  --jv-gold: #D4AF37;
+  --jv-gold-light: #F3E099;
+  --jv-gold-dark: #9A7B1C;
+  --jv-border: #550B18;
+  --font-jv-latin: 'Alex Brush', 'Great Vibes', cursive;
+  --font-jv-serif: 'Playfair Display', Georgia, serif;
+  --font-jv-royal: 'Cinzel', serif;
+  --font-jv-sans: 'Montserrat', sans-serif;
+}
+
+/* Waving animations for ronce melati */
+@keyframes jvWaveLeft {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(4deg); }
+}
+
+@keyframes jvWaveRight {
+  0% { transform: rotate(3deg); }
+  100% { transform: rotate(-4deg); }
+}
+
+@keyframes jvPulseGlow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); }
+  50% { transform: scale(1.02); filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6)); }
+}
+
+@keyframes jvDiscSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes jvZoomFadeOut {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.2); opacity: 0; pointer-events: none; }
+}
+
+@keyframes jvFloatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Overall Wrapper */
+.experience {
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 20%, #2b060d 0%, #150205 100%);
+  color: var(--jv-base);
+  font-family: var(--font-jv-sans);
   overflow-x: hidden;
-}
-
-/* ==========================================================================
-   FLOATING BUTTONS (MUSIC & BOTTOM NAV)
-   ========================================================================== */
-
-.floatingMusicBtn {
-  position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  padding: 0;
-  border: 2px solid var(--gold-base);
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--maroon-base) 0%, var(--maroon-deep) 100%);
-  color: var(--gold-light);
-  cursor: pointer;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 12px rgba(212, 175, 55, 0.3);
-  transition: transform 250ms ease, box-shadow 250ms ease;
-}
-
-.floatingMusicBtn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 18px rgba(212, 175, 55, 0.5);
-}
-
-.musicDisc {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-}
-
-.musicPlaying .musicDisc {
-  animation: spinDisc 4s linear infinite;
-}
-
-.musicStatusIcon {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--gold-base);
-  border-radius: 50%;
-  background: var(--maroon-deep);
-  color: var(--gold-base);
-}
-
-.musicStatusIcon svg {
-  width: 10px;
-  height: 10px;
-}
-
-.floatingNav {
-  position: fixed;
-  bottom: 1.25rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 990;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.4rem 0.6rem;
-  border: 1px solid var(--border-gold);
-  border-radius: 999px;
-  background: rgba(37, 2, 7, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.2);
-  max-width: 95vw;
-}
-
-.navItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.15rem;
-  min-width: 50px;
-  padding: 0.35rem 0.45rem;
-  border-radius: 999px;
-  color: #c9a9b0;
-  text-decoration: none;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  transition: all 200ms ease;
-}
-
-.navItem svg {
-  width: 18px;
-  height: 18px;
-}
-
-.navItem:hover {
-  color: var(--gold-light);
-}
-
-.navItemActive {
-  background: linear-gradient(135deg, var(--maroon-base), var(--maroon-light));
-  color: var(--gold-light) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-/* ==========================================================================
-   DESKTOP SPLIT LAYOUT
-   ========================================================================== */
-
-.splitLayout {
-  display: flex;
-  min-height: 100svh;
-}
-
-.desktopShowcase {
-  position: sticky;
-  top: 0;
-  display: none;
-  width: 50%;
-  height: 100svh;
-  overflow: hidden;
-  background: var(--maroon-deep);
-}
-
-.showcaseSlideshow {
-  position: absolute;
-  inset: 0;
-}
-
-.showcaseSlide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  animation: showcaseFade 24s infinite;
-}
-
-.showcaseSlide img {
-  object-fit: cover;
-}
-
-.showcaseOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(37, 2, 7, 0.4) 0%,
-    rgba(59, 5, 15, 0.75) 60%,
-    rgba(37, 2, 7, 0.95) 100%
-  );
-}
-
-.showcaseText {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  text-align: center;
-  color: #fff;
-  z-index: 2;
-}
-
-.showcaseGunungan {
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.6));
-}
-
-.showcaseKicker {
-  margin: 0 0 0.5rem;
-  color: var(--gold-light);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-}
-
-.showcaseTitle {
-  margin: 0;
-  font: 400 clamp(2.8rem, 4.5vw, 4.5rem) / 1.05 Georgia, "Times New Roman", serif;
-  color: var(--gold-light);
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-}
-
-.showcaseDate {
-  margin: 1.25rem 0 0;
-  color: #eed6db;
-  font-size: 1.05rem;
-  letter-spacing: 0.1em;
-}
-
-.showcaseBadge {
-  margin-top: 2.5rem;
-  padding: 0.45rem 1.1rem;
-  border: 1px solid var(--border-gold);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--gold-light);
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.invitationPanel {
   position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 480px Centered Mobile Frame */
+.containerMobile {
   width: 100%;
-  max-width: 600px;
+  max-width: 480px;
+  min-height: 100vh;
   margin: 0 auto;
-  min-height: 100svh;
-  background: var(--maroon-deep);
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+  position: relative;
+  background-color: #bdaba6;
+  background-image: url('/media/java-vibes/bg.webp');
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  box-shadow: 0 0 65px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
 }
 
-/* ==========================================================================
-   COVER SCREEN MODAL (SAMPUL UNDANGAN)
-   ========================================================================== */
-
-.coverScreen {
+/* ----------------------------------------------------
+   COVER SCREEN MODAL (BEFORE OPENING)
+   ---------------------------------------------------- */
+.coverModal {
   position: fixed;
   inset: 0;
-  z-index: 995;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  background: radial-gradient(circle at center 35%, #4a0713 0%, #250207 75%);
-  overflow-y: auto;
-  animation: fadeIn 600ms ease both;
+  background: radial-gradient(circle at 50% 30%, #29050c 0%, #110204 100%);
+  overflow: hidden;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
-.coverBackground {
+.coverModal.closing {
+  animation: jvZoomFadeOut 0.8s forwards cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: none;
+}
+
+.coverInner {
+  width: 100%;
+  max-width: 480px;
+  height: 100%;
+  max-height: 100vh;
+  position: relative;
+  background-color: #bdaba6;
+  background-image: url('/media/java-vibes/bg.webp');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.5rem;
+}
+
+/* Pinned 3D Border Ornaments */
+.decorTopMiddle {
+  position: absolute;
+  top: -15px;
+  left: -20px;
+  right: -20px;
+  height: auto;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.decorTopLeft {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 130px;
+  height: auto;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.decorTopRight {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 130px;
+  height: auto;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.decorBottomLeft {
+  position: absolute;
+  bottom: -20px;
+  left: -20px;
+  width: 140px;
+  height: auto;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.decorBottomRight {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 140px;
+  height: auto;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.decorBottomMiddle {
+  position: absolute;
+  bottom: -25px;
+  left: -20px;
+  right: -20px;
+  height: auto;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Center 3D Gunungan in Cover */
+.coverGununganCenter {
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='%23d4af37' fill-opacity='0.035'/%3E%3C/svg%3E");
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
-}
-
-.coverGlow {
-  position: absolute;
-  top: 15%;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 70%);
-  filter: blur(40px);
-  pointer-events: none;
-}
-
-.coverContent {
-  position: relative;
   z-index: 2;
+  opacity: 0.18;
+}
+
+.coverGununganCenter img {
+  width: 85%;
+  height: auto;
+  object-fit: contain;
+  animation: jvPulseGlow 6s infinite ease-in-out;
+}
+
+/* Cover Content Card */
+.coverCard {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 440px;
   text-align: center;
-  color: #fff;
-  padding: 2rem 1rem;
+  width: 100%;
 }
 
-.coverGununganWrap {
-  margin-bottom: 0.5rem;
-  animation: gununganFloat 4s ease-in-out infinite alternate;
-}
-
-.coverGunungan {
-  width: 120px;
-  height: auto;
-  filter: drop-shadow(0 4px 14px rgba(212, 175, 55, 0.35));
-}
-
-.coverFrameMedallion {
-  position: relative;
-  margin: 0.5rem 0 1.25rem;
-}
-
-.coverMedallionRing {
-  position: relative;
-  width: 170px;
-  height: 220px;
-  border-radius: 120px 120px 0 0;
-  overflow: hidden;
-  border: 3px solid var(--gold-base);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(212, 175, 55, 0.3);
+.coverSubtitle {
+  font-family: var(--font-jv-latin);
+  font-size: 2.2rem;
+  color: var(--jv-base);
+  margin-bottom: 0.8rem;
+  line-height: 1;
 }
 
 .coverPortrait {
-  object-fit: cover;
+  width: 175px;
+  height: 225px;
+  border-radius: 10rem;
+  overflow: hidden;
+  border: 3px solid var(--jv-maroon);
+  box-shadow: 0 12px 30px rgba(85, 11, 24, 0.35);
+  margin-bottom: 1rem;
+  position: relative;
 }
 
-.ronceMelati {
-  position: absolute;
-  top: 10px;
-  width: 65px;
-  pointer-events: none;
+.coverCoupleTitle {
+  font-family: var(--font-jv-serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--jv-maroon);
+  line-height: 1.15;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
 }
 
-.ronceLeft {
-  left: -38px;
-  transform-origin: top right;
-  animation: waveLeft 3.8s ease-in-out infinite alternate;
+.coverGuestBox {
+  margin-bottom: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
 }
 
-.ronceRight {
-  right: -38px;
-  transform: scaleX(-1);
-  transform-origin: top right;
-  animation: waveRight 3.8s ease-in-out infinite alternate;
-}
-
-.coverEyebrow {
-  margin: 0;
-  color: var(--gold-light);
-  font: italic 400 1.3rem/1.2 Georgia, serif;
+.coverGuestYth {
+  font-size: 0.82rem;
+  color: #664a38;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.coverNames {
-  margin: 0.35rem 0 0;
-  font: 400 clamp(2.4rem, 8vw, 3.2rem) / 1.05 Georgia, "Times New Roman", serif;
-  color: var(--gold-light);
-  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-}
-
-.coverDate {
-  margin: 0.6rem 0 1.5rem;
-  color: #f1d7dc;
-  font-size: 0.88rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-}
-
-.coverGuestCard {
-  width: 100%;
-  max-width: 300px;
-  padding: 0.85rem 1.25rem;
-  border: 1px solid var(--border-gold);
-  border-radius: 14px;
-  background: rgba(43, 4, 10, 0.7);
-  backdrop-filter: blur(8px);
-  margin-bottom: 1.5rem;
-}
-
-.coverGuestCard small {
-  display: block;
-  color: #d1b4ba;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  margin-bottom: 0.25rem;
-}
-
-.coverGuestCard strong {
-  display: block;
-  color: var(--gold-light);
+.coverGuestBadge {
+  display: inline-block;
+  padding: 0.4rem 1.4rem;
+  border-radius: 999px;
+  background: rgba(250, 241, 228, 0.9);
+  border: 1px solid var(--jv-maroon);
+  color: var(--jv-maroon);
+  font-family: var(--font-jv-serif);
   font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgba(85, 11, 24, 0.1);
 }
 
 .btnOpenInvitation {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: 0.65rem;
   padding: 0.85rem 2.2rem;
-  border: 1px solid var(--gold-light);
   border-radius: 999px;
-  background: linear-gradient(135deg, #a17c17 0%, #d4af37 50%, #fce38a 100%);
-  color: #2b040a;
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--jv-maroon) 0%, #7d1829 100%);
+  color: #ffffff;
+  font-family: var(--font-jv-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  border: 1px solid var(--jv-gold);
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.45);
-  transition: transform 250ms ease, box-shadow 250ms ease;
-  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(85, 11, 24, 0.4);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .btnOpenInvitation:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 28px rgba(85, 11, 24, 0.55);
+  background: linear-gradient(135deg, #7d1829 0%, var(--jv-maroon) 100%);
 }
 
-.btnOpenText {
+/* ----------------------------------------------------
+   TWO-WAY SCROLL-REVEAL ANIMATIONS
+   (Triggers in BOTH directions: down & up)
+   ---------------------------------------------------- */
+:global(.jv-reveal) {
+  opacity: 0;
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+:global(.jv-reveal.jv-reveal-up) {
+  transform: translateY(45px);
+}
+
+:global(.jv-reveal.jv-reveal-down) {
+  transform: translateY(-45px);
+}
+
+:global(.jv-reveal.jv-reveal-left) {
+  transform: translateX(-45px);
+}
+
+:global(.jv-reveal.jv-reveal-right) {
+  transform: translateX(45px);
+}
+
+:global(.jv-reveal.jv-reveal-zoom) {
+  transform: scale(0.85);
+}
+
+:global(.jv-reveal.jv-in-view) {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+}
+
+/* ----------------------------------------------------
+   INVITATION SECTIONS & SLIDES
+   ---------------------------------------------------- */
+.sectionBlock {
   position: relative;
-  z-index: 1;
-}
-
-/* ==========================================================================
-   MAIN INVITATION CONTENT
-   ========================================================================== */
-
-.mainExperience {
-  position: relative;
-  padding-bottom: 6rem;
-}
-
-.section {
-  position: relative;
-  padding: clamp(3.5rem, 7vh, 5.5rem) clamp(1.25rem, 5vw, 2.5rem);
-}
-
-.sectionOrnamentTop {
+  padding: 4.5rem 1.25rem;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-.sectionTitleBlock {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-.sectionKicker {
-  margin: 0 0 0.35rem;
-  color: var(--gold-base);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-}
-
-.sectionTitle {
-  margin: 0;
-  font: 400 clamp(2.2rem, 6vw, 3rem) / 1.15 Georgia, "Times New Roman", serif;
-  color: var(--gold-light);
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-}
-
-.cardContainer {
+/* Card Parchment Arch */
+.archCard {
+  width: 100%;
+  max-width: 390px;
+  background-color: var(--jv-parchment-glass);
+  border: 2px solid var(--jv-maroon);
+  border-radius: 18rem 18rem 1.75rem 1.75rem;
+  box-shadow: 0 16px 40px rgba(85, 11, 24, 0.18);
+  overflow: hidden;
   position: relative;
-  padding: 2.25rem 1.75rem;
-  border-radius: 20px;
-  background: var(--cream-card);
-  border: 1px solid var(--border-gold);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
-.bismillahArabic {
-  margin: 0 0 1rem;
-  color: var(--maroon-base);
-  font-size: 1.55rem;
-  font-family: "Amiri", "Traditional Arabic", serif;
-}
-
-.salamScript {
-  margin: 0 0 1rem;
-  color: var(--maroon-base);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.introParagraph {
-  margin: 0 0 2rem;
-  color: var(--text-muted);
-  font-size: 0.92rem;
-  line-height: 1.8;
-}
-
-.archedQuoteCard {
+.archCardTopImage {
+  width: 100%;
+  height: 290px;
   position: relative;
-  padding: 2rem 1.5rem;
-  border: 1px solid var(--border-gold);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  border-radius: 18rem 18rem 0 0;
 }
 
-.cornerFloret {
-  position: absolute;
-  pointer-events: none;
+.archCardTopImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
 }
 
-.cornerTopLeft {
-  top: 8px;
-  left: 8px;
+.archCardBody {
+  padding: 2rem 1.6rem 2.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.cornerTopRight {
-  top: 8px;
-  right: 8px;
-  transform: scaleX(-1);
+.cursiveCoupleName {
+  font-family: var(--font-jv-latin);
+  font-size: 2.8rem;
+  color: var(--jv-maroon);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.arabicBismillah {
+  font-size: 1.25rem;
+  color: var(--jv-base);
+  margin-bottom: 0.8rem;
 }
 
 .quoteText {
-  margin: 0 0 1rem;
-  color: var(--text-dark);
-  font-size: 0.9rem;
+  font-size: 0.84rem;
+  line-height: 1.7;
+  color: #4a2712;
+  margin-bottom: 0.8rem;
   font-style: italic;
-  line-height: 1.85;
+  font-weight: 400;
 }
 
 .quoteSource {
-  display: block;
-  color: var(--maroon-base);
-  font-size: 0.82rem;
+  font-family: var(--font-jv-serif);
+  font-size: 0.88rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  color: var(--jv-maroon);
+  letter-spacing: 0.05em;
 }
 
-/* ==========================================================================
-   MEMPELAI SECTION
-   ========================================================================== */
-
-.coupleCardsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: center;
-}
-
-.personCard {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* ----------------------------------------------------
+   MEMPELAI SECTION (BRIDE & GROOM)
+   ---------------------------------------------------- */
+.mempelaiCard {
   width: 100%;
-  max-width: 360px;
-  padding: 2.25rem 1.5rem;
-  border-radius: 20px;
-  background: var(--cream-card);
-  border: 1px solid var(--border-gold);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+  max-width: 410px;
+  background-color: var(--jv-parchment-glass);
+  border: 2px solid var(--jv-maroon);
+  border-radius: 15rem;
+  box-shadow: 0 16px 40px rgba(85, 11, 24, 0.16);
+  padding: 4.5rem 1.5rem;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  backdrop-filter: blur(4px);
 }
 
-.personArchWrap {
-  position: relative;
-  width: 160px;
-  height: 220px;
+/* Candi Stone Pillars Flanking the Mempelai Card */
+.pillarLeft {
+  position: absolute;
+  top: -20px;
+  left: -25px;
+  width: 110px;
+  height: auto;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.pillarRight {
+  position: absolute;
+  top: -20px;
+  right: -25px;
+  width: 110px;
+  height: auto;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.sectionTitleCursive {
+  font-family: var(--font-jv-latin);
+  font-size: 2.6rem;
+  color: var(--jv-maroon);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.salamText {
+  font-size: 0.95rem;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--jv-base);
+  margin-bottom: 0.5rem;
+}
+
+.introDesc {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: #55331f;
+  margin-bottom: 2rem;
+  max-width: 320px;
+}
+
+/* Couple Person Box */
+.personBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 1.5rem;
+  width: 100%;
 }
 
-.personPhotoInner {
+.photoFrameMelati {
   position: relative;
+  width: 195px;
+  height: 270px;
+  margin: 0 auto 1.4rem;
+}
+
+.photoArchInner {
   width: 100%;
   height: 100%;
-  border-radius: 100px 100px 0 0;
+  border-radius: 10rem;
   overflow: hidden;
-  border: 3px solid var(--gold-base);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 3px solid var(--jv-maroon);
+  box-shadow: 0 10px 25px rgba(85, 11, 24, 0.25);
+  position: relative;
+  background-color: #e5d6cc;
 }
 
-.personPhotoInner img {
+.photoArchInner img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center top;
 }
 
-.personMelati {
+/* Waving Melati Ornaments */
+.melatiSwayLeft {
   position: absolute;
-  top: 10px;
-  width: 55px;
+  top: -10px;
+  left: -48px;
+  width: 110px;
   pointer-events: none;
+  z-index: 12;
+  transform-origin: bottom right;
+  animation: jvWaveRight 4s ease-in-out infinite alternate;
 }
 
-.melatiLeft {
-  left: -32px;
-  transform-origin: top right;
-  animation: waveLeft 4s ease-in-out infinite alternate;
+.melatiSwayRight {
+  position: absolute;
+  bottom: -10px;
+  right: -38px;
+  width: 95px;
+  pointer-events: none;
+  z-index: 12;
+  transform-origin: bottom left;
+  animation: jvWaveLeft 4s ease-in-out infinite alternate;
 }
 
-.melatiRight {
-  right: -32px;
-  transform: scaleX(-1);
-  transform-origin: top right;
-  animation: waveRight 4s ease-in-out infinite alternate;
+.personShortName {
+  font-family: var(--font-jv-latin);
+  font-size: 2.2rem;
+  color: var(--jv-maroon);
+  line-height: 1.1;
+  margin-bottom: 0.2rem;
 }
 
-.personRole {
-  margin: 0;
-  color: var(--maroon-base);
-  font-size: 0.72rem;
+.personFullName {
+  font-family: var(--font-jv-serif);
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.personName {
-  margin: 0.35rem 0 0.65rem;
-  font: 400 1.9rem / 1.15 Georgia, serif;
-  color: var(--maroon-base);
+  color: var(--jv-base);
+  margin-bottom: 0.4rem;
 }
 
 .personParents {
-  margin: 0 0 1.25rem;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  line-height: 1.6;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #66432c;
+  margin-bottom: 0.8rem;
+  max-width: 260px;
 }
 
-.personIgBtn {
+.instagramPill {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.45rem 1.1rem;
-  border: 1px solid var(--border-gold);
+  padding: 0.3rem 1.1rem;
   border-radius: 999px;
-  background: #fff;
-  color: var(--maroon-base);
-  font-size: 0.75rem;
+  background: var(--jv-maroon);
+  color: #ffffff;
+  font-size: 0.76rem;
   font-weight: 600;
   text-decoration: none;
-  transition: all 200ms ease;
+  box-shadow: 0 4px 12px rgba(85, 11, 24, 0.2);
+  transition: transform 0.2s ease;
 }
 
-.personIgBtn:hover {
-  background: var(--maroon-base);
-  color: var(--gold-light);
+.instagramPill:hover {
+  transform: translateY(-2px);
+  color: #fff;
 }
 
-.coupleDivider {
+.coupleAmpersand {
+  font-family: var(--font-jv-serif);
+  font-size: 2.5rem;
+  color: var(--jv-maroon);
+  font-style: italic;
+  margin: 1rem 0;
+  line-height: 1;
+}
+
+/* ----------------------------------------------------
+   SAVE THE DATE & ACARA (AKAD & RESEPSI)
+   ---------------------------------------------------- */
+.sectionSaveTheDate {
+  position: relative;
+  padding: 4.5rem 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.ampersand {
-  color: var(--gold-base);
-  font: 400 2.8rem/1 Georgia, serif;
+.saveDateBackdrop {
+  position: absolute;
+  inset: 1rem 0.75rem;
+  background-color: rgba(85, 11, 24, 0.9);
+  border-radius: 2.2rem;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.4);
+  z-index: 1;
 }
 
-/* ==========================================================================
-   ACARA & COUNTDOWN SECTION
-   ========================================================================== */
-
-.countdownContainer {
-  margin-bottom: 2.5rem;
+.saveDateContent {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  padding: 2.5rem 1rem 3.5rem;
 }
 
+.archTopCanopy {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.saveTheDateTitle {
+  font-family: var(--font-jv-latin);
+  font-size: 2.8rem;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1;
+}
+
+/* Countdown Grid */
 .countdownGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  justify-content: center;
   gap: 0.65rem;
-  max-width: 420px;
-  margin: 0 auto 1.5rem;
+  width: 100%;
+  margin-bottom: 1.5rem;
 }
 
 .countdownBox {
+  flex: 1;
+  max-width: 72px;
+  padding: 0.75rem 0.2rem;
+  border-radius: 12px;
+  background: rgba(85, 11, 24, 0.95);
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 1rem 0.5rem;
-  border: 1px solid var(--border-gold);
-  border-radius: 14px;
-  background: rgba(43, 4, 10, 0.75);
-  backdrop-filter: blur(8px);
 }
 
-.countdownValue {
-  color: var(--gold-light);
-  font: 700 1.7rem/1 Georgia, serif;
+.countdownNumber {
+  font-family: var(--font-jv-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 0.3rem;
 }
 
 .countdownLabel {
-  margin-top: 0.35rem;
-  color: #d1b4ba;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
+  font-size: 0.68rem;
+  color: var(--jv-gold-light);
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .btnCalendar {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.6rem;
-  border: 1px solid var(--border-gold);
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
   border-radius: 999px;
-  background: rgba(43, 4, 10, 0.85);
-  color: var(--gold-light);
-  font-size: 0.78rem;
+  background: rgba(250, 241, 228, 0.95);
+  border: 1px solid var(--jv-gold);
+  color: var(--jv-maroon);
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  transition: all 250ms ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+  transition: transform 0.2s ease;
 }
 
 .btnCalendar:hover {
-  background: var(--gold-base);
-  color: var(--maroon-deep);
   transform: translateY(-2px);
 }
 
-.eventsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-.eventCard {
-  position: relative;
-  padding: 2.25rem 1.75rem;
-  border-radius: 20px;
-  background: var(--cream-card);
-  border: 1px solid var(--border-gold);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
-  text-align: center;
-}
-
-.eventBadge {
-  display: inline-block;
-  padding: 0.35rem 1.1rem;
-  border-radius: 999px;
-  background: var(--maroon-base);
-  color: var(--gold-light);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-.eventDateText {
-  margin: 0;
-  font: 400 1.55rem/1.2 Georgia, serif;
-  color: var(--maroon-base);
-}
-
-.eventTimeText {
-  margin: 0.4rem 0 1.5rem;
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.eventLocationBlock {
-  padding-top: 1.25rem;
-  border-top: 1px dashed var(--border-gold);
-  margin-bottom: 1.5rem;
-}
-
-.locationPinIcon {
-  width: 26px;
-  height: 26px;
-  color: var(--maroon-base);
-  margin-bottom: 0.35rem;
-}
-
-.eventLocationBlock h4 {
-  margin: 0 0 0.35rem;
-  font-size: 1.05rem;
-  color: var(--maroon-base);
-}
-
-.eventLocationBlock p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.84rem;
-  line-height: 1.6;
-}
-
-.btnEventMaps {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.6rem;
-  border: 1px solid var(--maroon-base);
-  border-radius: 999px;
-  background: var(--maroon-base);
-  color: var(--gold-light);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  box-shadow: 0 4px 14px rgba(85, 11, 24, 0.35);
-  transition: all 250ms ease;
-}
-
-.btnEventMaps:hover {
-  background: var(--maroon-dark);
-  transform: translateY(-2px);
-}
-
-/* ==========================================================================
-   KISAH CINTA (OUR LOVE STORY)
-   ========================================================================== */
-
-.storyHeroImageWrap {
-  position: relative;
+.goldDividerImg {
   width: 100%;
-  aspect-ratio: 16 / 10;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 2px solid var(--border-gold);
+  max-width: 180px;
+  height: auto;
   margin-bottom: 2rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
-.storyHeroImage {
-  object-fit: cover;
-}
-
-.storyHeroOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 40%, rgba(37, 2, 7, 0.85) 100%);
-}
-
-.storyTimeline {
+/* Event Cards (Akad & Resepsi) using authentic acara.webp background */
+.eventCard {
+  width: 100%;
+  max-width: 345px;
+  min-height: 440px;
+  background-image: url('/media/java-vibes/decor/acara.webp');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  position: relative;
-  padding-left: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 2rem;
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--jv-base);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
-.storyTimeline::before {
-  content: "";
-  position: absolute;
-  top: 1rem;
-  bottom: 1rem;
-  left: 11px;
-  width: 2px;
-  background: linear-gradient(180deg, var(--gold-base), var(--maroon-base));
+.eventTitle {
+  font-family: var(--font-jv-latin);
+  font-size: 2.4rem;
+  color: var(--jv-maroon);
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
 }
 
-.storyItem {
-  position: relative;
+.eventDay {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #55331f;
+  margin-bottom: 0.1rem;
 }
 
-.storyBullet {
-  position: absolute;
-  left: -2rem;
-  top: 0.75rem;
-  transform: translateX(-50%);
-  z-index: 2;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+.eventBigDate {
+  font-family: var(--font-jv-serif);
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--jv-maroon);
+  line-height: 1;
+  margin-bottom: 0.1rem;
 }
 
-.storyCard {
-  padding: 1.5rem;
-  border-radius: 16px;
-  background: var(--cream-card);
-  border: 1px solid var(--border-gold);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+.eventMonthYear {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #55331f;
+  margin-bottom: 0.4rem;
 }
 
-.storyYear {
-  display: inline-block;
-  color: var(--maroon-base);
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+.eventTime {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--jv-maroon);
+  margin-bottom: 1.2rem;
+}
+
+.eventLocationPin {
+  color: var(--jv-maroon);
+  margin-bottom: 0.3rem;
+}
+
+.eventVenueName {
+  font-family: var(--font-jv-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--jv-base);
   margin-bottom: 0.25rem;
 }
 
-.storyTitle {
-  margin: 0 0 0.5rem;
-  font: 400 1.25rem/1.2 Georgia, serif;
-  color: var(--maroon-base);
+.eventVenueAddress {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: #66432c;
+  margin-bottom: 1.2rem;
+  max-width: 240px;
 }
 
-.storyText {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.86rem;
-  line-height: 1.7;
+.btnLocation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.4rem;
+  border-radius: 999px;
+  background: var(--jv-maroon);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(85, 11, 24, 0.3);
+  transition: transform 0.2s ease;
 }
 
-/* ==========================================================================
-   GALERI PREWEDDING
-   ========================================================================== */
+.btnLocation:hover {
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* ----------------------------------------------------
+   LOVE STORY SECTION
+   ---------------------------------------------------- */
+.storyCard {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--jv-parchment-glass);
+  border: 2px solid var(--jv-maroon);
+  border-radius: 2rem;
+  box-shadow: 0 16px 40px rgba(85, 11, 24, 0.16);
+  padding: 3rem 1.8rem;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+
+.timelineWrap {
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 1.8rem;
+}
+
+.timelineWrap::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 20px;
+  left: 6px;
+  width: 2px;
+  background: var(--jv-maroon);
+  opacity: 0.7;
+}
+
+.timelineItem {
+  position: relative;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.timelineItem:last-child {
+  margin-bottom: 0;
+}
+
+.timelineDot {
+  position: absolute;
+  top: 4px;
+  left: -1.8rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--jv-maroon);
+  border: 2.5px solid var(--jv-parchment);
+  box-shadow: 0 0 0 2px var(--jv-maroon);
+}
+
+.timelineTitle {
+  font-family: var(--font-jv-serif);
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--jv-maroon);
+  margin-bottom: 0.35rem;
+}
+
+.timelineText {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #55331f;
+}
+
+/* ----------------------------------------------------
+   GALLERY SECTION
+   ---------------------------------------------------- */
+.galleryCard {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--jv-parchment-glass);
+  border: 2px solid var(--jv-maroon);
+  border-radius: 2rem;
+  box-shadow: 0 16px 40px rgba(85, 11, 24, 0.16);
+  padding: 3rem 1.4rem;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(4px);
+  text-align: center;
+}
 
 .galleryGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.85rem;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 1.8rem;
 }
 
-.galleryItem {
+.galleryThumb {
   position: relative;
-  aspect-ratio: 1;
-  border-radius: 14px;
+  aspect-ratio: 4/5;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--border-gold);
-  padding: 0;
-  background: #250207;
+  border: 2px solid var(--jv-maroon);
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.galleryItemLarge {
+.galleryThumb:first-child {
   grid-column: span 2;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16/10;
 }
 
-.galleryItem img {
+.galleryThumb:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 24px rgba(85, 11, 24, 0.25);
+}
+
+.galleryThumb img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.5s ease;
 }
 
-.galleryItem:hover img {
-  transform: scale(1.06);
+.galleryThumb:hover img {
+  transform: scale(1.05);
 }
 
-.galleryHover {
-  position: absolute;
-  inset: 0;
+/* ----------------------------------------------------
+   TANDA KASIH (GIFT & REKENING)
+   ---------------------------------------------------- */
+.giftCard {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--jv-parchment-glass);
+  border: 2px solid var(--jv-maroon);
+  border-radius: 2rem;
+  box-shadow: 0 16px 40px rgba(85, 11, 24, 0.16);
+  padding: 3rem 1.5rem;
+  position: relative;
+  z-index: 10;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background: rgba(37, 2, 7, 0.4);
-  color: var(--gold-light);
-  opacity: 0;
-  transition: opacity 250ms ease;
-}
-
-.galleryItem:hover .galleryHover {
-  opacity: 1;
-}
-
-/* ==========================================================================
-   TANDA KASIH & WEDDING GIFT
-   ========================================================================== */
-
-.giftLead {
-  max-width: 440px;
-  margin: 0.75rem auto 0;
-  color: #eed6db;
-  font-size: 0.88rem;
-  line-height: 1.7;
+  backdrop-filter: blur(4px);
   text-align: center;
 }
 
-.giftCardsWrap {
+.giftDesc {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #55331f;
+  margin-top: 0.6rem;
+  margin-bottom: 1.8rem;
+  max-width: 310px;
+}
+
+.bankBox {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid var(--jv-maroon);
+  border-radius: 16px;
+  padding: 1.4rem 1.2rem;
+  margin-bottom: 1.2rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  max-width: 440px;
-  margin: 0 auto;
-}
-
-.giftCard {
-  padding: 1.75rem;
-  border-radius: 18px;
-  background: var(--cream-card);
-  border: 1px solid var(--border-gold);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-}
-
-.giftCardHeader {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  color: var(--maroon-base);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 
-.bankNameBadge {
-  display: inline-block;
-  padding: 0.25rem 0.85rem;
-  border-radius: 8px;
-  background: var(--maroon-base);
-  color: var(--gold-light);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-}
-
-.giftCardOwner {
-  margin: 0 0 0.35rem;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.giftCardNumber {
-  margin: 0 0 1.25rem;
-  font: 700 1.4rem/1.2 monospace, sans-serif;
-  color: var(--maroon-base);
+.bankLogo {
+  font-family: var(--font-jv-royal);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #005a9c;
   letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
 }
 
-.giftCardAddress {
-  margin: 0 0 1.25rem;
-  color: var(--text-dark);
-  font-size: 0.88rem;
-  line-height: 1.6;
+.bankAccountNo {
+  font-family: var(--font-jv-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--jv-maroon);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.2rem;
+}
+
+.bankHolder {
+  font-size: 0.82rem;
+  color: #66432c;
+  margin-bottom: 0.8rem;
 }
 
 .btnCopy {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.6rem 1.25rem;
-  border: 1px solid var(--maroon-base);
+  gap: 0.4rem;
+  padding: 0.45rem 1.2rem;
   border-radius: 999px;
-  background: #fff;
-  color: var(--maroon-base);
-  font-size: 0.75rem;
-  font-weight: 700;
+  background: var(--jv-maroon);
+  color: #ffffff;
+  border: none;
+  font-size: 0.76rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 200ms ease;
+  box-shadow: 0 4px 10px rgba(85, 11, 24, 0.2);
+  transition: all 0.2s ease;
 }
 
 .btnCopy:hover {
-  background: var(--maroon-base);
-  color: var(--gold-light);
+  transform: translateY(-2px);
+  background: #7d1829;
 }
 
-/* ==========================================================================
-   BUKU TAMU & DOA RESTU (RSVP)
-   ========================================================================== */
+.addressBox {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid var(--jv-maroon);
+  border-radius: 16px;
+  padding: 1.4rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
 
+.addressTitle {
+  font-family: var(--font-jv-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--jv-maroon);
+  margin-bottom: 0.4rem;
+}
+
+.addressText {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #55331f;
+  margin-bottom: 0.8rem;
+  max-width: 280px;
+}
+
+/* ----------------------------------------------------
+   RSVP & UCAPAN (CONNECTED TO SUPABASE)
+   ---------------------------------------------------- */
 .rsvpCard {
+  width: 100%;
+  max-width: 410px;
+  background-color: var(--jv-parchment-glass);
+  border: 2px solid var(--jv-maroon);
+  border-radius: 2rem;
+  box-shadow: 0 16px 40px rgba(85, 11, 24, 0.16);
+  padding: 3rem 1.5rem;
   position: relative;
-  padding: 2.25rem 1.75rem;
-  border-radius: 20px;
-  background: var(--cream-card);
-  border: 1px solid var(--border-gold);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(4px);
 }
 
 .rsvpForm {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
-  margin-bottom: 2.5rem;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-.formGroup {
+.inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
   text-align: left;
+  gap: 0.35rem;
 }
 
-.formGroup label {
-  color: var(--maroon-base);
+.inputGroup label {
   font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  color: var(--jv-maroon);
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.formGroup input[type="text"],
-.formGroup textarea,
-.formGroup select {
+.textInput,
+.selectInput,
+.textareaInput {
   width: 100%;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--border-gold);
+  padding: 0.7rem 0.9rem;
   border-radius: 10px;
-  background: #fff;
-  color: var(--text-dark);
+  border: 1.5px solid rgba(85, 11, 24, 0.35);
+  background: rgba(255, 255, 255, 0.95);
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--jv-base);
   box-sizing: border-box;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.formGroup input[type="text"]:focus,
-.formGroup textarea:focus,
-.formGroup select:focus {
-  outline: none;
-  border-color: var(--maroon-base);
+.textInput:focus,
+.selectInput:focus,
+.textareaInput:focus {
+  border-color: var(--jv-maroon);
   box-shadow: 0 0 0 3px rgba(85, 11, 24, 0.12);
 }
 
-.attendanceRadioGroup {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-}
-
-.radioCard {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1rem;
-  border: 1px solid var(--border-gold);
-  border-radius: 10px;
-  background: #fff;
-  cursor: pointer;
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  transition: all 200ms ease;
-}
-
-.radioCard input {
-  accent-color: var(--maroon-base);
-}
-
-.radioCardActive {
-  background: var(--maroon-base);
-  border-color: var(--maroon-base);
-  color: var(--gold-light);
-}
-
-.formStatusAlert {
-  padding: 0.85rem 1.25rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  line-height: 1.5;
-}
-
-.statusSuccess {
-  background: #eaf6ed;
-  border: 1px solid #72b283;
-  color: #1e5a2e;
-}
-
-.statusError {
-  background: #fbebee;
-  border: 1px solid #e27d8e;
-  color: #7b1d2e;
+.textareaInput {
+  min-height: 90px;
+  resize: vertical;
 }
 
 .btnSubmitRsvp {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.9rem 2rem;
-  border: 1px solid var(--maroon-base);
+  padding: 0.85rem 1.8rem;
   border-radius: 999px;
-  background: var(--maroon-base);
-  color: var(--gold-light);
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--jv-maroon) 0%, #7d1829 100%);
+  color: #ffffff;
+  border: 1px solid var(--jv-gold);
+  font-size: 0.88rem;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(85, 11, 24, 0.4);
-  transition: all 250ms ease;
+  box-shadow: 0 6px 18px rgba(85, 11, 24, 0.3);
+  transition: all 0.25s ease;
+  margin-top: 0.5rem;
 }
 
 .btnSubmitRsvp:hover:not(:disabled) {
-  background: var(--maroon-dark);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(85, 11, 24, 0.5);
+  box-shadow: 0 8px 24px rgba(85, 11, 24, 0.45);
 }
 
 .btnSubmitRsvp:disabled {
@@ -1173,356 +1140,273 @@
   cursor: not-allowed;
 }
 
-.wishesFeedContainer {
-  padding-top: 2rem;
-  border-top: 1px dashed var(--border-gold);
+.formStatusSuccess {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: rgba(46, 125, 50, 0.12);
+  border: 1px solid #2e7d32;
+  color: #1b5e20;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
 }
 
-.wishesHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-}
-
-.wishesHeader h4 {
-  margin: 0;
-  font-size: 1.05rem;
-  color: var(--maroon-base);
-}
-
-.wishesCountBadge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  background: var(--maroon-base);
-  color: var(--gold-light);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.wishesList {
+/* Greetings List */
+.greetingsFeed {
+  width: 100%;
+  max-height: 380px;
+  overflow-y: auto;
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  max-height: 480px;
-  overflow-y: auto;
-  padding-right: 0.35rem;
+  padding-right: 0.3rem;
 }
 
-.wishItem {
-  display: flex;
-  gap: 0.85rem;
-  padding: 1rem;
+.greetingItem {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(85, 11, 24, 0.2);
   border-radius: 12px;
-  background: #fff;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 0.9rem 1rem;
   text-align: left;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
 }
 
-.wishAvatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--maroon-base);
-  color: var(--gold-light);
-  font-weight: 800;
-  font-size: 0.95rem;
-  flex-shrink: 0;
-}
-
-.wishContent {
-  flex: 1;
-}
-
-.wishMeta {
+.greetingHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
   margin-bottom: 0.35rem;
 }
 
-.wishMeta strong {
+.greetingAuthor {
+  font-family: var(--font-jv-serif);
   font-size: 0.9rem;
-  color: var(--maroon-base);
+  font-weight: 700;
+  color: var(--jv-maroon);
+}
+
+.attendanceBadge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  text-transform: uppercase;
 }
 
 .badgeHadir {
-  display: inline-block;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  background: #eaf6ed;
-  color: #1e5a2e;
-  font-size: 0.64rem;
-  font-weight: 700;
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
 }
 
 .badgeTidakHadir {
-  display: inline-block;
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  background: #fbebee;
-  color: #7b1d2e;
-  font-size: 0.64rem;
-  font-weight: 700;
+  background: rgba(198, 40, 40, 0.15);
+  color: #c62828;
 }
 
-.wishText {
-  margin: 0 0 0.4rem;
-  color: var(--text-dark);
-  font-size: 0.85rem;
-  line-height: 1.6;
+.greetingMessage {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #4a2712;
+  margin-bottom: 0.4rem;
 }
 
-.wishTime {
-  display: block;
-  color: #9c7f85;
-  font-size: 0.72rem;
+.greetingTime {
+  font-size: 0.68rem;
+  color: #8c6a54;
 }
 
-.noWishesText {
-  margin: 2rem 0;
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  font-style: italic;
-  text-align: center;
-}
-
-/* ==========================================================================
-   PENUTUP & FOOTER
-   ========================================================================== */
-
+/* ----------------------------------------------------
+   CLOSING SECTION (MATUR NUWUN / THANK YOU)
+   ---------------------------------------------------- */
 .closingSection {
-  padding: 4rem 1.5rem 3rem;
-  text-align: center;
-  color: #fff;
-  border-top: 1px solid var(--border-gold);
-}
-
-.closingGunungan {
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 4px 12px rgba(212, 175, 55, 0.3));
-}
-
-.closingText {
-  max-width: 440px;
-  margin: 0 auto 1.5rem;
-  color: #eed6db;
-  font-size: 0.92rem;
-  line-height: 1.8;
-}
-
-.closingGreeting {
-  margin: 0 0 1.5rem;
-  color: var(--gold-light);
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-.closingCoupleNames {
-  margin: 0 0 3rem;
-  font: 400 clamp(2.5rem, 7vw, 3.4rem) / 1.1 Georgia, serif;
-  color: var(--gold-light);
-}
-
-.brandFooter {
+  position: relative;
+  min-height: 90vh;
+  padding: 5rem 1.5rem 6.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border-gold);
+  justify-content: center;
+  text-align: center;
+  background: radial-gradient(circle at 50% 40%, rgba(85, 11, 24, 0.95) 0%, rgba(25, 4, 8, 0.98) 100%);
+  color: #ffffff;
 }
 
-.brandFooter small {
-  color: var(--gold-base);
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
-}
-
-.brandLogo {
-  width: 130px;
+.closingEmblem {
+  width: 90px;
   height: auto;
-  filter: invert(1);
+  margin-bottom: 1.5rem;
+  animation: jvFloatSlow 5s ease-in-out infinite;
 }
 
-.brandFooter span {
-  color: #b18d94;
+.closingTitle {
+  font-family: var(--font-jv-latin);
+  font-size: 3.5rem;
+  color: var(--jv-gold-light);
+  line-height: 1.1;
+  margin-bottom: 1.2rem;
+}
+
+.closingDesc {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 340px;
+  margin-bottom: 1.8rem;
+}
+
+.closingGreeting {
+  font-family: var(--font-jv-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.watermarkBrand {
+  margin-top: 2.5rem;
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-/* ==========================================================================
-   LIGHTBOX MODAL
-   ========================================================================== */
+/* ----------------------------------------------------
+   FLOATING MUSIC & BOTTOM NAVIGATION
+   ---------------------------------------------------- */
+.floatingMusicBtn {
+  position: fixed;
+  bottom: 80px;
+  right: 18px;
+  z-index: 1000;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--jv-maroon);
+  border: 2px solid var(--jv-gold);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
 
-.lightboxBackdrop {
+.floatingMusicBtn.playing svg {
+  animation: jvDiscSpin 4s linear infinite;
+}
+
+.floatingBottomNav {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(85, 11, 24, 0.94);
+  border: 1px solid var(--jv-gold);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.navBtn {
+  background: none;
+  border: none;
+  color: var(--jv-parchment);
+  padding: 0.4rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  opacity: 0.65;
+}
+
+.navBtn:hover,
+.navBtn.navActive {
+  background: rgba(212, 175, 55, 0.25);
+  color: var(--jv-gold-light);
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* ----------------------------------------------------
+   LIGHTBOX MODAL
+   ---------------------------------------------------- */
+.lightboxModal {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.92);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: rgba(18, 1, 4, 0.95);
-  backdrop-filter: blur(10px);
-  animation: fadeIn 250ms ease both;
+}
+
+.lightboxImageWrapper {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  width: 500px;
+  height: 650px;
 }
 
 .lightboxCloseBtn {
   position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--border-gold);
-  border-radius: 50%;
-  background: rgba(37, 2, 7, 0.8);
-  color: var(--gold-light);
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: transform 200ms ease;
-}
-
-.lightboxCloseBtn:hover {
-  transform: scale(1.1);
-}
-
-.lightboxContent {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.lightboxImageWrap {
-  position: relative;
-  width: 100%;
-  height: 65vh;
-}
-
-.lightboxControls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1.25rem;
-  color: var(--gold-light);
-  font-size: 0.88rem;
-  font-weight: 700;
+  cursor: pointer;
+  z-index: 10001;
 }
 
-.lightboxArrow {
+.lightboxNavPrev,
+.lightboxNavNext {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--border-gold);
-  border-radius: 50%;
-  background: rgba(37, 2, 7, 0.8);
-  color: var(--gold-light);
-  font-size: 1.5rem;
   cursor: pointer;
-  transition: transform 200ms ease;
+  z-index: 10001;
 }
 
-.lightboxArrow:hover {
-  transform: scale(1.1);
-}
+.lightboxNavPrev { left: 18px; }
+.lightboxNavNext { right: 18px; }
 
-/* ==========================================================================
-   ANIMATIONS & KEYFRAMES
-   ========================================================================== */
-
-@keyframes waveLeft {
-  0% { transform: rotate(-3deg); }
-  100% { transform: rotate(4deg); }
-}
-
-@keyframes waveRight {
-  0% { transform: scaleX(-1) rotate(3deg); }
-  100% { transform: scaleX(-1) rotate(-4deg); }
-}
-
-@keyframes gununganFloat {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
-}
-
-@keyframes spinDisc {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes showcaseFade {
-  0% { opacity: 0; }
-  8% { opacity: 1; }
-  25% { opacity: 1; }
-  33% { opacity: 0; }
-  100% { opacity: 0; }
-}
-
-/* ==========================================================================
-   RESPONSIVE QUERIES
-   ========================================================================== */
-
-@media (min-width: 1024px) {
-  .desktopShowcase {
-    display: block;
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .archCard {
+    border-radius: 14rem 14rem 1.5rem 1.5rem;
   }
-
-  .invitationPanel {
-    width: 50%;
-    max-width: none;
-    margin: 0;
+  .archCardTopImage {
+    height: 250px;
+    border-radius: 14rem 14rem 0 0;
   }
-}
-
-@media (max-width: 560px) {
-  .section {
-    padding: 3rem 1.25rem;
-  }
-
-  .cardContainer,
-  .personCard,
-  .eventCard,
-  .rsvpCard {
-    padding: 1.75rem 1.25rem;
-  }
-
-  .coverNames {
-    font-size: 2.3rem;
-  }
-
-  .floatingNav {
-    bottom: 0.75rem;
-    padding: 0.35rem 0.4rem;
-  }
-
-  .navItem {
-    min-width: 44px;
-    padding: 0.25rem 0.35rem;
-    font-size: 0.58rem;
-  }
-
-  .navItem svg {
-    width: 16px;
-    height: 16px;
+  .mempelaiCard {
+    border-radius: 12rem;
+    padding: 3.5rem 1.2rem;
   }
 }

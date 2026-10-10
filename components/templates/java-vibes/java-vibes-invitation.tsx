@@ -37,9 +37,9 @@ export function JavaVibesInvitationView({
   // Default to photos in /media/java-vibes/
   const coverPath = resolveMediaUrl(invitation.cover_path) || "/media/java-vibes/1.jpg";
   const profilePath = resolveMediaUrl(invitation.profile_path) || "/media/java-vibes/2.jpg";
-  const bridePhotoPath = resolveMediaUrl(invitation.bride_photo_path) || "/media/java-vibes/2.jpg";
-  const groomPhotoPath = resolveMediaUrl(invitation.groom_photo_path) || "/media/java-vibes/3.jpg";
-  const storyImagePath = resolveMediaUrl(invitation.story_image_path) || "/media/java-vibes/4.jpg";
+  const bridePhotoPath = resolveMediaUrl(invitation.bride_photo_path) || "/media/java-vibes/The Bride.jpg";
+  const groomPhotoPath = resolveMediaUrl(invitation.groom_photo_path) || "/media/java-vibes/The Groom.jpg";
+  const storyImagePath = resolveMediaUrl(invitation.story_image_path) || "/media/java-vibes/5.jpg";
 
   const rawGallery =
     invitation.gallery_paths && invitation.gallery_paths.length > 0
@@ -56,7 +56,7 @@ export function JavaVibesInvitationView({
           "/media/java-vibes/5.jpg",
         ];
 
-  const musicPath = resolveMediaUrl(invitation.music_path) || "/media/elegant/Bergema Selamanya.mp4";
+  const musicPath = resolveMediaUrl(invitation.music_path) || "/media/java-vibes/gending-jawa.mp3";
 
   return (
     <JavaVibesClientApp

@@ -13,9 +13,9 @@ values (
   '00000000-0000-0000-0000-000000000006'::uuid,
   'java-vibes',
   'Java Vibes',
-  '{"primary":"#550b18","secondary":"#51260a","accent":"#d4af37","background":"#faf1e4"}'::jsonb,
+  '{"primary":"#550B18","secondary":"#51260A","accent":"#D4AF37","background":"#FAF1E4"}'::jsonb,
   true,
-  'Template adat Jawa bernuansa royal maroon & gold klasik dengan gunungan wayang, ronce melati beranimasi, dan alunan gamelan syahdu.',
+  'Template adat Jawa bernuansa royal maroon & gold klasik dengan gunungan wayang 3D, ronce melati beranimasi, dan alunan gamelan gending Jawa.',
   '/media/java-vibes/1.jpg',
   '/java-vibes?to=Tamu%20Undangan',
   6
@@ -68,41 +68,41 @@ select
   jv_template.id,
   'java-vibes',
   'published'::public.invitation_status,
-  'Intan Permatasari',
-  'Intan',
-  'Putri Alm. Bapak Soma & Ibu Heny',
-  '/media/java-vibes/2.jpg',
-  'Difa Al Faruq',
-  'Difa',
-  'Putra Bapak Sulaiman & Ibu Fitrotunisa',
-  '/media/java-vibes/3.jpg',
+  'Dita Maharani Putri',
+  'Dita',
+  'Putri Pertama dari Bapak Anas Rifai & Ibu Kholifah',
+  '/media/java-vibes/The Bride.jpg',
+  'Fajar Sidik',
+  'Fajar',
+  'Putra Kedua dari Bapak M. Dawam & (Almh) Ibu Dewi Sudarwati',
+  '/media/java-vibes/The Groom.jpg',
   '2026-12-12',
   '08.00 WIB - Selesai',
-  '11.00 - 14.00 WIB',
-  'Gedung Islamic Centre Bekasi',
-  'Jl. Ahmad Yani No.22, RT.005/RW.002, Marga Jaya, Kec. Bekasi Sel., Kota Bks, Jawa Barat 17141',
-  'https://share.google/OUegQc3AUuqfbTELX',
-  'Dengan memohon Rahmat dan Ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan putra-putri kami.',
-  'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.',
-  '(QS. Ar-Rum: 21)',
+  '11.00 WIB - Selesai',
+  'Waroeng Djoglo Grand Ballroom',
+  'Jl. Joglo Raya No. 45, Kembangan, Jakarta Barat',
+  'https://maps.google.com/?q=Waroeng+Djoglo',
+  'Dengan memohon Rahmat dan Ridho Allah SWT, kami bermaksud menyelenggarakan acara pernikahan putra-putri kami:',
+  'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.',
+  'Surah Ar-Ruum : 21',
   jsonb_build_array(
     jsonb_build_object(
-      'year', '2023',
-      'title', 'Awal Cerita',
-      'text', 'Berawal dari pertemuan sederhana, kami saling mengenal dan mulai berbagi banyak cerita. Tanpa disadari, kebersamaan itu tumbuh menjadi rasa nyaman yang semakin kuat dari hari ke hari.'
+      'year', '2018',
+      'title', 'Pertemuan Pertama',
+      'text', 'Berawal dari pertemuan sederhana, kami saling mengenal dan mulai berbagi banyak cerita. Rasa nyaman itu tumbuh perlahan namun pasti hingga kami memutuskan untuk menjalin hubungan.'
     ),
     jsonb_build_object(
-      'year', '2025',
-      'title', 'Lamaran',
-      'text', 'Dengan niat yang tulus dan restu keluarga, kami memutuskan untuk melangkah ke tahap yang lebih serius. Momen lamaran menjadi awal dari perjalanan baru yang penuh harapan dan doa baik.'
+      'year', '2024',
+      'title', 'Momen Sakral Lamaran',
+      'text', 'Dengan niat yang tulus dan restu kedua orang tua serta keluarga besar, kami memantapkan hati melangkah ke jenjang yang lebih serius melalui prosesi lamaran.'
     ),
     jsonb_build_object(
       'year', '2026',
-      'title', 'Pernikahan',
-      'text', 'Kini kami sampai pada hari yang kami nantikan, hari di mana dua hati dipersatukan dalam ikatan suci pernikahan. Semoga langkah ini menjadi awal kehidupan baru yang penuh cinta, kebahagiaan, dan keberkahan.'
+      'title', 'Ikatan Suci Pernikahan',
+      'text', 'Kini kami sampai pada hari yang kami nantikan, hari di mana dua hati dipersatukan dalam ikatan suci pernikahan. Semoga langkah ini menjadi awal kehidupan baru yang penuh berkah dan cinta.'
     )
   ),
-  '/media/java-vibes/4.jpg',
+  '/media/java-vibes/5.jpg',
   '/media/java-vibes/1.jpg',
   '/media/java-vibes/2.jpg',
   array[
@@ -112,11 +112,11 @@ select
     '/media/java-vibes/4.jpg',
     '/media/java-vibes/5.jpg'
   ],
-  '/media/elegant/Bergema Selamanya.mp4',
-  '{"bank": "BCA", "account_number": "1234567890", "account_name": "Intan"}'::jsonb,
+  '/media/java-vibes/gending-jawa.mp3',
+  '{"bank": "BCA", "account_number": "7125091428", "account_name": "Fajar Sidik"}'::jsonb,
   '{}'::jsonb,
-  'Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.',
-  'Wassalamu''alaikum Wr. Wb. Kami yang berbahagia, Intan & Difa'
+  'Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai. Atas kehadiran dan doa restu panjenengan sami, kami mengucapkan matur sembah nuwun.',
+  'Matur Nuwun. Kami yang berbahagia, Dita & Fajar'
 from public.templates jv_template
 where jv_template.slug = 'java-vibes'
 on conflict (slug) do update
