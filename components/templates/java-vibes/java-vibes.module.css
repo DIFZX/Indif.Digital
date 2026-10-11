@@ -370,22 +370,22 @@
 
 .heroKicker {
   font-family: var(--font-jv-latin);
-  font-size: 3rem;
-  color: #fff8eb;
+  font-size: 3.1rem;
+  color: var(--jv-maroon);
   line-height: 1;
-  margin-bottom: 0.4rem;
-  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85);
+  margin-bottom: 0.35rem;
+  text-shadow: 0 2px 10px rgba(85, 11, 24, 0.15);
 }
 
 .heroCoupleTitle {
   font-family: var(--font-jv-serif);
-  font-size: 2.8rem;
+  font-size: 2.9rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--jv-maroon);
   letter-spacing: -0.02em;
-  line-height: 1.12;
+  line-height: 1.1;
   margin-bottom: 0.8rem;
-  text-shadow: 0 4px 25px rgba(85, 11, 24, 0.95), 0 0 35px rgba(212, 175, 55, 0.75);
+  text-shadow: 0 3px 14px rgba(85, 11, 24, 0.22);
 }
 
 .heroDivider {
@@ -399,47 +399,47 @@
 
 .heroDividerLine {
   flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.8), transparent);
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(154, 123, 28, 0.7), transparent);
 }
 
 .heroDividerDot {
-  color: var(--jv-gold);
+  color: #9A7B1C;
   font-size: 0.75rem;
 }
 
 .heroDateBadge {
   font-family: var(--font-jv-sans);
   font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--jv-gold-light);
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: #6C4A11;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   margin-bottom: 1.2rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.9);
 }
 
 .heroGuestPill {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.5rem 1.4rem;
+  padding: 0.55rem 1.6rem;
   border-radius: 999px;
-  background: rgba(30, 5, 10, 0.65);
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  backdrop-filter: blur(8px);
-  margin-bottom: 1.8rem;
+  background: linear-gradient(135deg, var(--jv-maroon) 0%, #721223 100%);
+  border: 1.5px solid var(--jv-gold);
+  box-shadow: 0 4px 16px rgba(85, 11, 24, 0.28);
+  margin-bottom: 1.6rem;
 }
 
 .heroGuestYth {
   font-size: 0.75rem;
-  color: #eedcc8;
+  color: #f7ede2;
   letter-spacing: 0.05em;
 }
 
 .heroGuestName {
   font-family: var(--font-jv-serif);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #ffffff;
 }
@@ -450,25 +450,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
-  color: rgba(255, 255, 255, 0.9);
+  gap: 0.35rem;
+  color: var(--jv-maroon);
   font-family: var(--font-jv-sans);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: pointer;
   animation: jvFloatSlow 2.5s ease-in-out infinite;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.9);
   transition: transform 0.2s ease;
 }
 
 .heroScrollCue:hover {
   transform: translateY(3px);
-  color: var(--jv-gold-light);
+  color: #721223;
 }
 
 .heroScrollCue svg {
-  color: var(--jv-gold);
+  color: #9A7B1C;
 }
 
 /* ----------------------------------------------------
