@@ -72,6 +72,9 @@ export function JavaVibesClientApp({
 }: Props) {
   const [opened, setOpened] = useState(initiallyOpened);
   const [isClosingCover, setIsClosingCover] = useState(false);
+  const [gateOpening, setGateOpening] = useState(false);
+  const [doorsAjar, setDoorsAjar] = useState(false);
+  const [gateFading, setGateFading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -133,9 +136,9 @@ export function JavaVibesClientApp({
     return () => clearInterval(interval);
   }, [invitation.event_date]);
 
-  // Lock body scroll only when modal cover is closed
+  // Lock body scroll only when modal cover is closed or gate animation is active
   useEffect(() => {
-    if (!opened) {
+    if (!opened || gateOpening) {
       document.body.style.overflow = "hidden";
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     } else {
@@ -144,7 +147,7 @@ export function JavaVibesClientApp({
     return () => {
       document.body.style.overflow = "";
     };
-  }, [opened]);
+  }, [opened, gateOpening]);
 
   // ----------------------------------------------------
   // TWO-WAY SCROLL OBSERVER (ANIMATES WHEN SCROLLING DOWN & UP!)
@@ -205,20 +208,37 @@ export function JavaVibesClientApp({
   }, [opened]);
 
   async function openInvitation() {
-    setIsClosingCover(true);
-    setTimeout(() => {
-      setOpened(true);
-      setIsClosingCover(false);
-    }, 750);
-
-    if (!audioRef.current) return;
-    try {
-      audioRef.current.currentTime = 0;
-      await audioRef.current.play();
-      setPlaying(true);
-    } catch {
-      setPlaying(false);
+    // 1. Start Javanese gending background music on user tap
+    if (audioRef.current) {
+      try {
+        audioRef.current.currentTime = 0;
+        await audioRef.current.play();
+        setPlaying(true);
+      } catch {
+        setPlaying(false);
+      }
     }
+
+    // 2. Trigger Royal Palace Gate Opening Stage
+    setGateOpening(true);
+
+    // 3. Royal 3D Carved Doors swing open
+    setTimeout(() => {
+      setDoorsAjar(true);
+    }, 180);
+
+    // 4. Reveal couple names with glow, then smoothly fade out overlay into main invitation
+    setTimeout(() => {
+      setGateFading(true);
+      setOpened(true);
+    }, 2800);
+
+    // 5. Cleanup gate stage
+    setTimeout(() => {
+      setGateOpening(false);
+      setDoorsAjar(false);
+      setGateFading(false);
+    }, 3600);
   }
 
   function toggleMusic() {
@@ -366,55 +386,238 @@ export function JavaVibesClientApp({
       {/* ----------------------------------------------------
           COVER SCREEN MODAL (BEFORE OPENING)
           ---------------------------------------------------- */}
+      {/* ----------------------------------------------------
+          COVER SCREEN MODAL (BEFORE OPENING)
+          Matching screenshot & envitto.com/preview/java-maroon-3d
+          ---------------------------------------------------- */}
       {!opened && (
         <div className={`${styles.coverModal} ${isClosingCover ? styles.closing : ""}`}>
           <div className={styles.coverInner}>
-            {/* Authentic 3D Border Ornaments */}
+            {/* Top Ornamental Carved Arch */}
             <div className={styles.decorTopMiddle}>
-              <Image src="/media/java-vibes/decor/tm.webp" alt="" width={520} height={180} priority style={{ width: "100%", height: "auto" }} />
+              <Image
+                src="/media/java-vibes/decor/tm.webp"
+                alt=""
+                width={520}
+                height={180}
+                priority
+                style={{ width: "100%", height: "auto" }}
+              />
             </div>
-            <div className={styles.decorTopLeft}>
-              <Image src="/media/java-vibes/decor/tl-2.webp" alt="" width={150} height={200} priority style={{ width: "100%", height: "auto" }} />
+
+            {/* Left Floral Arrangement with Flying White Dove */}
+            <div className={styles.decorSideLeft}>
+              <Image
+                src="/media/java-vibes/decor/tl-2.webp"
+                alt=""
+                width={160}
+                height={550}
+                priority
+                style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "left center" }}
+              />
             </div>
-            <div className={styles.decorTopRight}>
-              <Image src="/media/java-vibes/decor/tr-2.webp" alt="" width={150} height={200} priority style={{ width: "100%", height: "auto" }} />
+
+            {/* Right Floral Arrangement with Flying White Dove */}
+            <div className={styles.decorSideRight}>
+              <Image
+                src="/media/java-vibes/decor/tr-2.webp"
+                alt=""
+                width={160}
+                height={550}
+                priority
+                style={{ width: "100%", height: "100%", objectFit: "contain", objectPosition: "right center" }}
+              />
             </div>
-            <div className={styles.decorBottomLeft}>
-              <Image src="/media/java-vibes/decor/bl.webp" alt="" width={160} height={200} priority style={{ width: "100%", height: "auto" }} />
-            </div>
-            <div className={styles.decorBottomRight}>
-              <Image src="/media/java-vibes/decor/br.webp" alt="" width={160} height={200} priority style={{ width: "100%", height: "auto" }} />
-            </div>
+
+            {/* Bottom Steps & Flowers Base */}
             <div className={styles.decorBottomMiddle}>
-              <Image src="/media/java-vibes/decor/bm-1.webp" alt="" width={520} height={200} priority style={{ width: "100%", height: "auto" }} />
+              <Image
+                src="/media/java-vibes/decor/bm-1.webp"
+                alt=""
+                width={520}
+                height={200}
+                priority
+                style={{ width: "100%", height: "auto" }}
+              />
             </div>
 
-            {/* 3D Gunungan Wayang Center Background */}
-            <div className={styles.coverGununganCenter}>
-              <Image src="/media/java-vibes/decor/gunungan-3d.webp" alt="" width={420} height={560} priority style={{ width: "85%", height: "auto" }} />
+            {/* Bottom-Left Gunungan Wayang Over Flowers */}
+            <div className={styles.decorBottomLeft}>
+              <Image
+                src="/media/java-vibes/decor/bl.webp"
+                alt=""
+                width={200}
+                height={240}
+                priority
+                style={{ width: "100%", height: "auto" }}
+              />
             </div>
 
-            {/* Cover Content */}
-            <div className={styles.coverCard}>
+            {/* Bottom-Right Wayang Punakawan Over Flowers */}
+            <div className={styles.decorBottomRight}>
+              <Image
+                src="/media/java-vibes/decor/br.webp"
+                alt=""
+                width={200}
+                height={240}
+                priority
+                style={{ width: "100%", height: "auto" }}
+              />
+            </div>
+
+            {/* Center Arch Card (The Arch from Screenshot) */}
+            <div className={styles.coverArchCard}>
               <div className={styles.coverSubtitle}>The Wedding Of</div>
               <div className={styles.coverPortrait}>
-                <Image src={coverPath} alt={coupleNames} fill priority style={{ objectFit: "cover" }} sizes="220px" />
+                <Image
+                  src={coverPath}
+                  alt={coupleNames}
+                  fill
+                  priority
+                  style={{ objectFit: "cover" }}
+                  sizes="220px"
+                />
               </div>
               <h1 className={styles.coverCoupleTitle}>
                 {invitation.bride_short_name} &amp; {invitation.groom_short_name}
               </h1>
 
               <div className={styles.coverGuestBox}>
-                <span className={styles.coverGuestYth}>Kepada Yth. Bapak/Ibu/Saudara/i:</span>
+                <span className={styles.coverGuestYth}>Yang Terhormat</span>
                 <span className={styles.coverGuestBadge}>{displayGuestName}</span>
               </div>
 
-              <button type="button" onClick={openInvitation} className={styles.btnOpenInvitation}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              <button
+                type="button"
+                onClick={openInvitation}
+                className={styles.btnOpenInvitation}
+                aria-label="Buka Undangan"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
                 </svg>
                 Buka Undangan
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ----------------------------------------------------
+          PINTU KERATON JAWA 3D OPENING OVERLAY
+          (When "Buka Undangan" is clicked, double doors swing open!)
+          ---------------------------------------------------- */}
+      {gateOpening && (
+        <div
+          className={`${styles.palaceGateOverlay} ${gateFading ? styles.fadingOut : ""}`}
+          aria-live="polite"
+        >
+          <div className={styles.palaceGateStage}>
+            {/* Palace Gate Lintel Header at top */}
+            <div className={styles.palaceGateHeader}>
+              <Image
+                src="/media/java-vibes/decor/tm.webp"
+                alt=""
+                width={520}
+                height={180}
+                priority
+                style={{ width: "100%", height: "auto" }}
+              />
+            </div>
+
+            {/* Palace Interior Revealed Behind The Doors */}
+            <div
+              className={`${styles.palaceGateInterior} ${
+                doorsAjar ? styles.interiorVisible : ""
+              }`}
+            >
+              <div className={styles.gateRaysGlow} />
+
+              <div className={styles.gateGununganReveal}>
+                <Image
+                  src="/media/java-vibes/decor/gunungan-3d.webp"
+                  alt="Gunungan Jawa"
+                  width={180}
+                  height={260}
+                  priority
+                  style={{ width: "100%", height: "auto" }}
+                />
+              </div>
+
+              <div className={styles.gateRevealedTitle}>The Wedding Of</div>
+              <div className={styles.gateRevealedCouple}>
+                {invitation.bride_short_name} &amp; {invitation.groom_short_name}
+              </div>
+              <div className={styles.gateRevealedDate}>
+                {formatEventDate(invitation.event_date)}
+              </div>
+              <div className={styles.gateRevealedVenue}>
+                {invitation.venue_name}
+              </div>
+            </div>
+
+            {/* 3D Double Carved Teak Doors (Pintu Gebyok Keraton) */}
+            <div className={styles.palaceDoorWrapper}>
+              {/* Left Door */}
+              <div
+                className={`${styles.palaceDoorLeft} ${
+                  doorsAjar ? styles.doorOpen : ""
+                }`}
+              >
+                <div className={styles.doorWoodPattern} />
+                <div className={styles.doorPanelFrame}>
+                  <div className={styles.doorPanelSection} />
+                  <div className={styles.doorPanelSection}>
+                    <div className={styles.doorKnocker}>
+                      <div className={styles.knockerLion} />
+                      <div className={styles.knockerRing} />
+                    </div>
+                  </div>
+                  <div className={styles.doorPanelSection} />
+                </div>
+              </div>
+
+              {/* Right Door */}
+              <div
+                className={`${styles.palaceDoorRight} ${
+                  doorsAjar ? styles.doorOpen : ""
+                }`}
+              >
+                <div className={styles.doorWoodPattern} />
+                <div className={styles.doorPanelFrame}>
+                  <div className={styles.doorPanelSection} />
+                  <div className={styles.doorPanelSection}>
+                    <div className={styles.doorKnocker}>
+                      <div className={styles.knockerLion} />
+                      <div className={styles.knockerRing} />
+                    </div>
+                  </div>
+                  <div className={styles.doorPanelSection} />
+                </div>
+              </div>
+            </div>
+
+            {/* Center Royal Gold Seal / Latch */}
+            <div
+              className={`${styles.doorCenterLatch} ${
+                doorsAjar ? styles.latchOpened : ""
+              }`}
+            >
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#5a450e">
+                <path d="M12 2L15 8H21L16 12L18 18L12 14L6 18L8 12L3 8H9L12 2Z" />
+              </svg>
             </div>
           </div>
         </div>
