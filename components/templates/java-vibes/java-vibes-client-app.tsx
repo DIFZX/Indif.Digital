@@ -72,13 +72,14 @@ export function JavaVibesClientApp({
 }: Props) {
   const [opened, setOpened] = useState(initiallyOpened);
   const [isClosingCover, setIsClosingCover] = useState(false);
-  const [gateOpening, setGateOpening] = useState(false);
-  const [doorsAjar, setDoorsAjar] = useState(false);
-  const [gateFading, setGateFading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState("pembuka");
+
+  // Hero Opening Video state
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const [heroContentVisible, setHeroContentVisible] = useState(false);
 
   // Greetings & RSVP state
   const [greetings, setGreetings] = useState<Greeting[]>(initialGreetings);
@@ -91,6 +92,64 @@ export function JavaVibesClientApp({
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const displayGuestName = guestName || "Tamu Undangan";
+
+  // Watch video playback time to reveal content at 4 seconds, and auto-play on opened
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+
+    if (!opened) {
+      video.pause();
+      video.currentTime = 0;
+      setHeroContentVisible(false);
+      return;
+    }
+
+    let videoFrameId: number | null = null;
+
+    const watchPlaybackTime = () => {
+      if (video.currentTime >= 4) {
+        setHeroContentVisible(true);
+        return;
+      }
+      scheduleWatch();
+    };
+
+    const scheduleWatch = () => {
+      if ("requestVideoFrameCallback" in video) {
+        videoFrameId = (
+          video as HTMLVideoElement & {
+            requestVideoFrameCallback: (cb: () => void) => number;
+          }
+        ).requestVideoFrameCallback(watchPlaybackTime);
+      }
+    };
+
+    scheduleWatch();
+
+    // Start video playback
+    video.play().catch(() => {
+      // If autoplay is blocked by browser, reveal content immediately
+      setHeroContentVisible(true);
+    });
+
+    return () => {
+      if (videoFrameId !== null && "cancelVideoFrameCallback" in video) {
+        (
+          video as HTMLVideoElement & {
+            cancelVideoFrameCallback: (id: number) => void;
+          }
+        ).cancelVideoFrameCallback(videoFrameId);
+      }
+    };
+  }, [opened]);
+
+  function handleVideoTimeUpdate() {
+    const video = heroVideoRef.current;
+    if (video && video.currentTime >= 4) {
+      setHeroContentVisible(true);
+    }
+  }
 
   // Restore wishes saved locally across page refreshes
   useEffect(() => {
@@ -136,9 +195,9 @@ export function JavaVibesClientApp({
     return () => clearInterval(interval);
   }, [invitation.event_date]);
 
-  // Lock body scroll only when modal cover is closed or gate animation is active
+  // Lock body scroll only when modal cover is closed
   useEffect(() => {
-    if (!opened || gateOpening) {
+    if (!opened) {
       document.body.style.overflow = "hidden";
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     } else {
@@ -147,7 +206,7 @@ export function JavaVibesClientApp({
     return () => {
       document.body.style.overflow = "";
     };
-  }, [opened, gateOpening]);
+  }, [opened]);
 
   // ----------------------------------------------------
   // TWO-WAY SCROLL OBSERVER (ANIMATES WHEN SCROLLING DOWN & UP!)
@@ -208,37 +267,20 @@ export function JavaVibesClientApp({
   }, [opened]);
 
   async function openInvitation() {
-    // 1. Start Javanese gending background music on user tap
-    if (audioRef.current) {
-      try {
-        audioRef.current.currentTime = 0;
-        await audioRef.current.play();
-        setPlaying(true);
-      } catch {
-        setPlaying(false);
-      }
-    }
-
-    // 2. Trigger Royal Palace Gate Opening Stage
-    setGateOpening(true);
-
-    // 3. Royal 3D Carved Doors swing open
+    setIsClosingCover(true);
     setTimeout(() => {
-      setDoorsAjar(true);
-    }, 180);
-
-    // 4. Reveal couple names with glow, then smoothly fade out overlay into main invitation
-    setTimeout(() => {
-      setGateFading(true);
       setOpened(true);
-    }, 2800);
+      setIsClosingCover(false);
+    }, 650);
 
-    // 5. Cleanup gate stage
-    setTimeout(() => {
-      setGateOpening(false);
-      setDoorsAjar(false);
-      setGateFading(false);
-    }, 3600);
+    if (!audioRef.current) return;
+    try {
+      audioRef.current.currentTime = 0;
+      await audioRef.current.play();
+      setPlaying(true);
+    } catch {
+      setPlaying(false);
+    }
   }
 
   function toggleMusic() {
@@ -516,123 +558,86 @@ export function JavaVibesClientApp({
       )}
 
       {/* ----------------------------------------------------
-          PINTU KERATON JAWA 3D OPENING OVERLAY
-          (When "Buka Undangan" is clicked, double doors swing open!)
-          ---------------------------------------------------- */}
-      {gateOpening && (
-        <div
-          className={`${styles.palaceGateOverlay} ${gateFading ? styles.fadingOut : ""}`}
-          aria-live="polite"
-        >
-          <div className={styles.palaceGateStage}>
-            {/* Palace Gate Lintel Header at top */}
-            <div className={styles.palaceGateHeader}>
-              <Image
-                src="/media/java-vibes/decor/tm.webp"
-                alt=""
-                width={520}
-                height={180}
-                priority
-                style={{ width: "100%", height: "auto" }}
-              />
-            </div>
-
-            {/* Palace Interior Revealed Behind The Doors */}
-            <div
-              className={`${styles.palaceGateInterior} ${
-                doorsAjar ? styles.interiorVisible : ""
-              }`}
-            >
-              <div className={styles.gateRaysGlow} />
-
-              <div className={styles.gateGununganReveal}>
-                <Image
-                  src="/media/java-vibes/decor/gunungan-3d.webp"
-                  alt="Gunungan Jawa"
-                  width={180}
-                  height={260}
-                  priority
-                  style={{ width: "100%", height: "auto" }}
-                />
-              </div>
-
-              <div className={styles.gateRevealedTitle}>The Wedding Of</div>
-              <div className={styles.gateRevealedCouple}>
-                {invitation.bride_short_name} &amp; {invitation.groom_short_name}
-              </div>
-              <div className={styles.gateRevealedDate}>
-                {formatEventDate(invitation.event_date)}
-              </div>
-              <div className={styles.gateRevealedVenue}>
-                {invitation.venue_name}
-              </div>
-            </div>
-
-            {/* 3D Double Carved Teak Doors (Pintu Gebyok Keraton) */}
-            <div className={styles.palaceDoorWrapper}>
-              {/* Left Door */}
-              <div
-                className={`${styles.palaceDoorLeft} ${
-                  doorsAjar ? styles.doorOpen : ""
-                }`}
-              >
-                <div className={styles.doorWoodPattern} />
-                <div className={styles.doorPanelFrame}>
-                  <div className={styles.doorPanelSection} />
-                  <div className={styles.doorPanelSection}>
-                    <div className={styles.doorKnocker}>
-                      <div className={styles.knockerLion} />
-                      <div className={styles.knockerRing} />
-                    </div>
-                  </div>
-                  <div className={styles.doorPanelSection} />
-                </div>
-              </div>
-
-              {/* Right Door */}
-              <div
-                className={`${styles.palaceDoorRight} ${
-                  doorsAjar ? styles.doorOpen : ""
-                }`}
-              >
-                <div className={styles.doorWoodPattern} />
-                <div className={styles.doorPanelFrame}>
-                  <div className={styles.doorPanelSection} />
-                  <div className={styles.doorPanelSection}>
-                    <div className={styles.doorKnocker}>
-                      <div className={styles.knockerLion} />
-                      <div className={styles.knockerRing} />
-                    </div>
-                  </div>
-                  <div className={styles.doorPanelSection} />
-                </div>
-              </div>
-            </div>
-
-            {/* Center Royal Gold Seal / Latch */}
-            <div
-              className={`${styles.doorCenterLatch} ${
-                doorsAjar ? styles.latchOpened : ""
-              }`}
-            >
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="#5a450e">
-                <path d="M12 2L15 8H21L16 12L18 18L12 14L6 18L8 12L3 8H9L12 2Z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ----------------------------------------------------
           MAIN INVITATION CONTAINER (480PX MOBILE FRAME)
           ---------------------------------------------------- */}
       <div className={styles.containerMobile}>
-        {/* SLIDE 1: PEMBUKA & AYAT AR-RUM 21 */}
-        <section id="pembuka" className={styles.sectionBlock}>
-          {/* Top & Bottom Ornaments for Slide 1 */}
-          <div className={styles.decorTopMiddle}>
-            <Image src="/media/java-vibes/decor/tm.webp" alt="" width={520} height={180} style={{ width: "100%", height: "auto" }} />
+        {/* SLIDE 1: HERO OPENING VIDEO */}
+        <section id="pembuka" className={styles.heroVideoSection}>
+          <video
+            ref={heroVideoRef}
+            className={styles.heroVideo}
+            muted
+            playsInline
+            preload="auto"
+            poster="/media/java-vibes/1.jpg"
+            onTimeUpdate={handleVideoTimeUpdate}
+            onEnded={() => setHeroContentVisible(true)}
+            onError={() => setHeroContentVisible(true)}
+            tabIndex={-1}
+            aria-hidden="true"
+          >
+            <source src="/media/java-vibes/decor/vidio-opening.mp4" type="video/mp4" />
+            <source src="/media/java-vibes/decor/vidio opening.mp4" type="video/mp4" />
+          </video>
+
+          {/* Vignette Overlay for Readability */}
+          <div className={styles.heroVideoOverlay} />
+
+          {/* Top Wooden Carved Arch Decor */}
+          <div className={styles.heroVideoTopDecor}>
+            <Image
+              src="/media/java-vibes/decor/tm.webp"
+              alt=""
+              width={520}
+              height={180}
+              priority
+              style={{ width: "100%", height: "auto" }}
+            />
           </div>
+
+          {/* Emerges at Second 4 of Video Playback */}
+          <div
+            className={`${styles.heroVideoContent} ${
+              heroContentVisible ? styles.heroVideoContentVisible : ""
+            }`}
+            aria-hidden={!heroContentVisible}
+          >
+            <p className={styles.heroKicker}>The Wedding Of</p>
+            <h1 className={styles.heroCoupleTitle}>
+              {invitation.bride_short_name} &amp; {invitation.groom_short_name}
+            </h1>
+            <div className={styles.heroDivider}>
+              <span className={styles.heroDividerLine} />
+              <span className={styles.heroDividerDot}>✦</span>
+              <span className={styles.heroDividerLine} />
+            </div>
+            <p className={styles.heroDateBadge}>
+              {formatEventDate(invitation.event_date)}
+            </p>
+            {guestName && (
+              <div className={styles.heroGuestPill}>
+                <span className={styles.heroGuestYth}>Kepada Yth.</span>
+                <span className={styles.heroGuestName}>{displayGuestName}</span>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => scrollToSection("ayat-suci")}
+              className={styles.heroScrollCue}
+              aria-label="Gulir ke bawah"
+            >
+              <span>Gulir ke bawah</span>
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        {/* SLIDE 1B: AYAT AR-RUM 21 & PEMBUKA */}
+        <section id="ayat-suci" className={styles.sectionBlock}>
+          {/* Top & Bottom Ornaments for Slide 1 */}
           <div className={styles.decorBottomLeft}>
             <Image src="/media/java-vibes/decor/bl.webp" alt="" width={150} height={180} style={{ width: "100%", height: "auto" }} />
           </div>
