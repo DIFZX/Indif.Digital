@@ -267,20 +267,25 @@ export function JavaVibesClientApp({
   }, [opened]);
 
   async function openInvitation() {
+    // 1. Immediately start video playback on click gesture to eliminate any delay
+    if (heroVideoRef.current) {
+      heroVideoRef.current.currentTime = 0;
+      heroVideoRef.current.play().catch(() => {});
+    }
+
+    // 2. Start background music immediately
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+      setPlaying(true);
+    }
+
+    // 3. Fast smooth fade out of cover modal
     setIsClosingCover(true);
     setTimeout(() => {
       setOpened(true);
       setIsClosingCover(false);
-    }, 650);
-
-    if (!audioRef.current) return;
-    try {
-      audioRef.current.currentTime = 0;
-      await audioRef.current.play();
-      setPlaying(true);
-    } catch {
-      setPlaying(false);
-    }
+    }, 320);
   }
 
   function toggleMusic() {
@@ -569,7 +574,6 @@ export function JavaVibesClientApp({
             muted
             playsInline
             preload="auto"
-            poster="/media/java-vibes/1.jpg"
             onTimeUpdate={handleVideoTimeUpdate}
             onEnded={() => setHeroContentVisible(true)}
             onError={() => setHeroContentVisible(true)}
@@ -580,20 +584,8 @@ export function JavaVibesClientApp({
             <source src="/media/java-vibes/decor/vidio opening.mp4" type="video/mp4" />
           </video>
 
-          {/* Vignette Overlay for Readability */}
+          {/* Lightened Overlay for Optimal Video Visibility */}
           <div className={styles.heroVideoOverlay} />
-
-          {/* Top Wooden Carved Arch Decor */}
-          <div className={styles.heroVideoTopDecor}>
-            <Image
-              src="/media/java-vibes/decor/tm.webp"
-              alt=""
-              width={520}
-              height={180}
-              priority
-              style={{ width: "100%", height: "auto" }}
-            />
-          </div>
 
           {/* Emerges at Second 4 of Video Playback */}
           <div
