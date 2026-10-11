@@ -730,9 +730,28 @@ export function JavaVibesClientApp({
           <div className={styles.saveDateBackdrop} />
 
           <div className={styles.saveDateContent}>
-            {/* 3D Arch Top Canopy */}
-            <div className={`${styles.archTopCanopy} jv-reveal jv-reveal-down`}>
-              <Image src="/media/java-vibes/decor/arch-top.webp" alt="" width={380} height={120} style={{ width: "100%", height: "auto" }} />
+            {/* 3D Framed Arch Portrait for Save The Date */}
+            <div className={`${styles.saveDateArchContainer} jv-reveal jv-reveal-down`}>
+              <div className={styles.saveDatePhotoFrame}>
+                <Image
+                  src={galleryPaths?.[2] || profilePath}
+                  alt={coupleNames}
+                  fill
+                  style={{ objectFit: "cover", objectPosition: "center 25%" }}
+                  sizes="260px"
+                  priority
+                />
+              </div>
+              <div className={styles.saveDateArchCanopy}>
+                <Image
+                  src="/media/java-vibes/decor/arch-top.webp"
+                  alt=""
+                  fill
+                  style={{ objectFit: "contain", pointerEvents: "none" }}
+                  sizes="320px"
+                  priority
+                />
+              </div>
             </div>
 
             <div className={`${styles.saveTheDateTitle} jv-reveal jv-reveal-up`}>Save The Date</div>
