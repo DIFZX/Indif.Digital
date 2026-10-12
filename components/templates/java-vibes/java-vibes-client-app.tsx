@@ -1023,10 +1023,6 @@ export function JavaVibesClientApp({
 
         {/* SLIDE 8: PENUTUP & TERIMA KASIH */}
         <section className={styles.closingSection}>
-          <div className={`${styles.closingEmblem} jv-reveal jv-reveal-zoom`}>
-            <Image src="/media/java-vibes/decor/gunungan-emblem.webp" alt="" width={90} height={120} style={{ width: "100%", height: "auto" }} />
-          </div>
-
           <div className={`${styles.closingTitle} jv-reveal jv-reveal-up`}>Matur Nuwun</div>
 
           <p className={`${styles.closingDesc} jv-reveal jv-reveal-up`}>

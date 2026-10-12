@@ -208,7 +208,7 @@
 
 .coverSubtitle {
   font-family: var(--font-jv-latin);
-  font-size: 2.2rem;
+  font-size: 1.7rem;
   color: var(--jv-base);
   margin-bottom: 0.85rem;
   line-height: 1;
@@ -370,7 +370,7 @@
 
 .heroKicker {
   font-family: var(--font-jv-latin);
-  font-size: 3.1rem;
+  font-size: 2.1rem;
   color: var(--jv-maroon);
   line-height: 1;
   margin-bottom: 0.35rem;
@@ -1454,7 +1454,7 @@
 
 .closingTitle {
   font-family: var(--font-jv-latin);
-  font-size: 3.5rem;
+  font-size: 2.3rem;
   color: var(--jv-gold-light);
   line-height: 1.1;
   margin-bottom: 1.2rem;
