@@ -315,6 +315,84 @@ export const javaVibesDemoInvitation: Invitation = {
   },
 };
 
+export const sundaVibesDemoInvitation: Invitation = {
+  ...demoInvitation,
+  id: "00000000-0000-0000-0000-000000000107",
+  slug: "sunda-vibes",
+  bride_name: "Dita Maharani Putri",
+  bride_short_name: "Dita",
+  bride_parents: "Putri Pertama dari Bapak Anas Rifai & Ibu Kholifah",
+  bride_photo_path: "/media/sunda-vibes/The Bride.jpg",
+  groom_name: "Fajar Sidik",
+  groom_short_name: "Fajar",
+  groom_parents: "Putra Kedua dari Bapak M. Dawam & (Almh) Ibu Dewi Sudarwati",
+  groom_photo_path: "/media/sunda-vibes/The Groom.jpg",
+  event_date: "2026-12-12",
+  ceremony_time: "08.00 WIB - Selesai",
+  reception_time: "11.00 WIB - Selesai",
+  venue_name: "Waroeng Djoglo Grand Ballroom",
+  venue_address: "Jl. Joglo Raya No. 45, Kembangan, Jakarta Barat",
+  maps_url: "https://maps.google.com/?q=Waroeng+Djoglo",
+  opening_text:
+    "Kalayan nyuhunkeun widi sareng ridho ti Gusti Allah SWT, simkuring saparakanca seja ngahaturanan uninga kana syukuran pernikahan putra-putri kami:",
+  quote_text:
+    "Di antara tanda-tanda (kebesaran)-Nya ialah bahwa Dia menciptakan pasangan-pasangan untukmu dari jenis dirimu sendiri agar kamu merasa tenteram kepadanya. Dia menjadikan di antaramu rasa cinta dan kasih sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir.",
+  quote_source: "QS. Ar-Rum : 21",
+  story: [
+    {
+      year: "2021",
+      title: "Pertemuan Pertama",
+      text: "Patepang dina hiji kasempetan anu saderhana, ngawitan silih kenal sareng silih ngabagi carita dugi ka tuwuh rasa asih anu tulus.",
+    },
+    {
+      year: "2023",
+      title: "Perjalanan Asih",
+      text: "Ngaliwatan sagala dinamika sareng kabagjaan sasarengan, nguatkeun komitmen kanggo silih damping dina kaayaan naon wae.",
+    },
+    {
+      year: "2025",
+      title: "Momen Lamaran",
+      text: "Kalayan restu ti sepuh kadua pihak, kami ngalengkahkeun tekad kanggo ngabeungkeut jangji dina acara lamaran anu khidmat.",
+    },
+    {
+      year: "2026",
+      title: "Menuju Halal",
+      text: "Kini dinten anu dinanti parantos cunduk, nyampurnakeun satengahing ageman dina ikatan suci pernikahan anu abadi.",
+    },
+  ],
+  story_image_path: "/media/sunda-vibes/5.jpg",
+  cover_path: "/media/sunda-vibes/1.jpg",
+  profile_path: "/media/sunda-vibes/2.jpg",
+  gallery_paths: [
+    "/media/sunda-vibes/1.jpg",
+    "/media/sunda-vibes/2.jpg",
+    "/media/sunda-vibes/3.jpg",
+    "/media/sunda-vibes/4.jpg",
+    "/media/sunda-vibes/5.jpg",
+    "/media/sunda-vibes/The Bride.jpg",
+    "/media/sunda-vibes/The Groom.jpg",
+  ],
+  music_path: "/media/sunda-vibes/audio.mp3",
+  gift_info: {
+    bank: "BCA",
+    account_number: "7125091428",
+    account_name: "Fajar Sidik",
+  },
+  closing_text:
+    "Mangrupikeun hiji kahormatan sareng kabagjaan kanggo simkuring saparakanca saupami Bapak/Ibu/Saudara/i kersa sumping ngaluuhan sarta maparin doa restu ka kadua calon panganten. Hatur nuhun kana sagala perhatosan sareng kasaeanana.",
+  closing_greeting: "Hatur Nuhun. Kami yang berbahagia, Dita & Fajar",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000007",
+    slug: "sunda-vibes",
+    name: "Sunda Vibes",
+    theme: {
+      primary: "#A87B57",
+      background: "#FFF5ED",
+    },
+  },
+};
+
 export const demoInvitations = [
   demoInvitation,
   pinkVibesDemoInvitation,
@@ -322,6 +400,7 @@ export const demoInvitations = [
   netflixDemoInvitation,
   mustardBlackDemoInvitation,
   javaVibesDemoInvitation,
+  sundaVibesDemoInvitation,
 ];
 
 export const demoGreetings: Greeting[] = [

@@ -22,8 +22,10 @@ function getCategoryForSlug(slug: string): TemplateCategory {
   if (
     clean === "netflix" ||
     clean === "java-vibes" ||
+    clean === "sunda-vibes" ||
     clean.includes("netflix") ||
-    clean.includes("java")
+    clean.includes("java") ||
+    clean.includes("sunda")
   ) {
     return "spesial";
   }
@@ -99,6 +101,15 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Template adat Jawa modern bernuansa Royal Maroon & Emas Keraton dengan motif gunungan 3D, ronce melati berayun, dan fitur digital lengkap.",
     thumbnail_path: "/media/java-vibes/1.jpg",
     preview_path: "/java-vibes?to=Tamu%20Undangan",
+    category: "spesial",
+  },
+  {
+    id: "00000000-0000-0000-0000-000000000007",
+    slug: "sunda-vibes",
+    name: "Sunda Vibes",
+    description: "Template adat Sunda modern bernuansa Warm Bronze & Ivory dengan ornamen Mahkota Siger, bingkai lengkung floral, alunan kecapi suling, dan animasi scroll dinamis.",
+    thumbnail_path: "/media/sunda-vibes/1.jpg",
+    preview_path: "/sunda-vibes?to=Tamu%20Undangan",
     category: "spesial",
   },
 ];

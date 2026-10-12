@@ -11,6 +11,7 @@ import { PinkVibesInvitationView } from "@/components/templates/pink-vibes/pink-
 import { NetflixInvitationView } from "@/components/templates/netflix/netflix-invitation";
 import { MustardBlackInvitationView } from "@/components/templates/mustard-black/mustard-black-invitation";
 import { JavaVibesInvitationView } from "@/components/templates/java-vibes/java-vibes-invitation";
+import { SundaVibesInvitationView } from "@/components/templates/sunda-vibes/sunda-vibes-invitation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
@@ -288,6 +289,10 @@ export function InvitationView(props: InvitationViewProps) {
 
   if (props.invitation.template.slug === "java-vibes") {
     return <JavaVibesInvitationView {...props} />;
+  }
+
+  if (props.invitation.template.slug === "sunda-vibes") {
+    return <SundaVibesInvitationView {...props} />;
   }
 
   return <GreenyInvitationView {...props} />;
