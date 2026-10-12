@@ -50,7 +50,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </Link>
         <nav aria-label="Navigasi admin">
           <Link href="/admin" className={styles.activeNav}><span>01</span> Kelola template</Link>
-          <Link href="/dashboard" target="_blank"><span>02</span> Website publik</Link>
+          <Link href="/" target="_blank"><span>02</span> Website publik</Link>
         </nav>
         <form action={logoutAdmin}>
           <button type="submit">Keluar <span aria-hidden="true">↗</span></button>

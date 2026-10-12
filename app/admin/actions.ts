@@ -25,6 +25,7 @@ export async function setTemplateVisibility(formData: FormData) {
   if (error) redirect("/admin?error=template-update");
 
   revalidatePath("/admin");
+  revalidatePath("/");
   revalidatePath("/dashboard");
   redirect(`/admin?status=${isActive ? "template-restored" : "template-removed"}`);
 }
