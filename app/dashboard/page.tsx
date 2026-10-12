@@ -20,17 +20,20 @@ export const dynamic = "force-dynamic";
 function getCategoryForSlug(slug: string): TemplateCategory {
   const clean = slug.toLowerCase().trim();
   if (
-    clean === "pink-vibes" ||
-    clean === "blue-garden" ||
+    clean === "netflix" ||
     clean === "java-vibes" ||
-    clean.includes("pink") ||
-    clean.includes("blue") ||
+    clean.includes("netflix") ||
     clean.includes("java")
   ) {
-    return "animasi";
-  }
-  if (clean === "netflix" || clean.includes("netflix")) {
     return "spesial";
+  }
+  if (
+    clean === "pink-vibes" ||
+    clean === "blue-garden" ||
+    clean.includes("pink") ||
+    clean.includes("blue")
+  ) {
+    return "animasi";
   }
   if (
     clean === "greeny-flowers" ||
@@ -96,7 +99,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Template adat Jawa modern bernuansa Royal Maroon & Emas Keraton dengan motif gunungan 3D, ronce melati berayun, dan fitur digital lengkap.",
     thumbnail_path: "/media/java-vibes/1.jpg",
     preview_path: "/java-vibes?to=Tamu%20Undangan",
-    category: "animasi",
+    category: "spesial",
   },
 ];
 
