@@ -15,3 +15,4 @@ npm-debug.log*
 .next-test-*.log
 .vscode/
 scratch/
+media/

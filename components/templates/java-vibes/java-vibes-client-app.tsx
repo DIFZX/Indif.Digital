@@ -581,7 +581,6 @@ export function JavaVibesClientApp({
             aria-hidden="true"
           >
             <source src="/media/java-vibes/decor/vidio-opening.mp4" type="video/mp4" />
-            <source src="/media/java-vibes/decor/vidio opening.mp4" type="video/mp4" />
           </video>
 
           {/* Lightened Overlay for Optimal Video Visibility */}
