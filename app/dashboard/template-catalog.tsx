@@ -43,22 +43,22 @@ type PriceInfo = {
 function getTemplatePriceInfo(slug: string, category: TemplateCategory): PriceInfo {
   if (category === "spesial" || slug === "java-vibes" || slug === "sunda-vibes" || slug === "netflix") {
     return {
-      originalPrice: "Rp. 450.000",
-      promoPrice: "Rp. 210.000",
-      discountBadge: "DISC. 55%",
+      originalPrice: "Rp. 120.000",
+      promoPrice: "Rp. 60.000",
+      discountBadge: "DISC. 50%",
     };
   }
   if (category === "animasi" || slug === "pink-vibes" || slug === "blue-garden") {
     return {
-      originalPrice: "Rp. 350.000",
-      promoPrice: "Rp. 175.000",
+      originalPrice: "Rp. 100.000",
+      promoPrice: "Rp. 50.000",
       discountBadge: "DISC. 50%",
     };
   }
   return {
-    originalPrice: "Rp. 250.000",
-    promoPrice: "Rp. 135.000",
-    discountBadge: "DISC. 45%",
+    originalPrice: "Rp. 70.000",
+    promoPrice: "Rp. 35.000",
+    discountBadge: "DISC. 50%",
   };
 }
 
