@@ -54,7 +54,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     slug: "greeny-flowers",
     name: "Greeny Flowers",
     description: "Nuansa hijau yang lembut, detail bunga yang hangat, dan susunan elegan untuk kisah yang terasa dekat dan personal.",
-    thumbnail_path: "/media/elegant/gallery-couple-v2.png",
+    thumbnail_path: "/media/mockups/mockup-greeny-flowers.webp",
     preview_path: "/intan-dan-difa?to=Tamu%20Undangan",
     category: "minimalis",
   },
@@ -63,7 +63,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     slug: "pink-vibes",
     name: "Pink Vibes",
     description: "Nuansa dusty pink yang romantis, bunga-bunga lembut, dan komposisi modern untuk perayaan yang hangat dan manis.",
-    thumbnail_path: "/media/elegant/profile-main-v1.jpeg",
+    thumbnail_path: "/media/mockups/mockup-pink-vibes.webp",
     preview_path: "/pink-vibes?to=Tamu%20Undangan",
     category: "animasi",
   },
@@ -72,7 +72,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     slug: "blue-garden",
     name: "Blue Garden",
     description: "Nuansa biru vintage, detail bunga berlapis, serta aksen emas yang anggun untuk perayaan yang klasik dan berkelas.",
-    thumbnail_path: "/media/blue-garden/backgrounds/blue-garden-paper-v1.png",
+    thumbnail_path: "/media/mockups/mockup-blue-garden.webp",
     preview_path: "/blue-garden?to=Tamu%20Undangan",
     category: "animasi",
   },
@@ -81,7 +81,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     slug: "netflix",
     name: "Netflix",
     description: "Template cinematic bertema serial Netflix dengan pemutar lagu melayang, format trailer & cerita per-episode, dan desain mobile portrait modern.",
-    thumbnail_path: "/media/netflix/1.jpg",
+    thumbnail_path: "/media/mockups/mockup-netflix.webp",
     preview_path: "/netflix?to=Tamu%20Undangan",
     category: "spesial",
   },
@@ -90,7 +90,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     slug: "mustard-black",
     name: "Mustard Black",
     description: "Template mewah bernuansa matte black & mustard gold dengan bingkai arch lengkung botanis, animasi scroll anggun, dan fitur digital lengkap.",
-    thumbnail_path: "/media/mustard-black/1.jpg",
+    thumbnail_path: "/media/mockups/mockup-mustard-black.webp",
     preview_path: "/mustard-black?to=Tamu%20Undangan",
     category: "minimalis",
   },
@@ -99,7 +99,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     slug: "java-vibes",
     name: "Java Vibes",
     description: "Template adat Jawa modern bernuansa Royal Maroon & Emas Keraton dengan motif gunungan 3D, ronce melati berayun, dan fitur digital lengkap.",
-    thumbnail_path: "/media/java-vibes/1.jpg",
+    thumbnail_path: "/media/mockups/mockup-java-vibes.webp",
     preview_path: "/java-vibes?to=Tamu%20Undangan",
     category: "spesial",
   },
@@ -108,7 +108,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     slug: "sunda-vibes",
     name: "Sunda Vibes",
     description: "Template adat Sunda modern bernuansa Warm Bronze & Ivory dengan ornamen Mahkota Siger, bingkai lengkung floral, alunan kecapi suling, dan animasi scroll dinamis.",
-    thumbnail_path: "/media/sunda-vibes/1.jpg",
+    thumbnail_path: "/media/mockups/mockup-sunda-vibes.webp",
     preview_path: "/sunda-vibes?to=Tamu%20Undangan",
     category: "spesial",
   },
@@ -168,33 +168,23 @@ export default async function HomePage() {
 
   return (
     <main className={styles.dashboard}>
-      <section className={styles.hero}>
-        <nav className={styles.nav} aria-label="Navigasi utama">
+      <header className={styles.header}>
+        <div className={styles.headerContainer}>
           <Link className={styles.brand} href="/" aria-label={`${BRAND.name} beranda`}>
-            <Image src={BRAND.logoPath} alt={BRAND.name} width={400} height={150} priority />
+            <Image src={BRAND.logoPath} alt={BRAND.name} width={240} height={90} priority />
           </Link>
-          <a className={styles.navLink} href="#templates">Template</a>
-        </nav>
-
-        <div className={styles.heroGrid}>
-          <div className={styles.heroCopy}>
-            <p className={styles.kicker}>Digital wedding invitation</p>
-            <h1>
-              Cerita indah,
-              <span>disampaikan dengan elegan.</span>
-            </h1>
-            <p className={styles.lead}>
-              Undangan digital yang personal, berkesan, dan siap menemani hari istimewa Anda.
-            </p>
-            <div className={styles.heroActions}>
-              <a className={styles.primaryAction} href="#templates">Lihat template</a>
-              <a className={styles.textAction} href={orderUrl("undangan digital")} target="_blank" rel="noreferrer">
-                Hubungi kami <span aria-hidden="true">↗</span>
-              </a>
-            </div>
+          <div className={styles.headerActions}>
+            <a
+              className={styles.headerWaBtn}
+              href={orderUrl("undangan digital")}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>Hubungi Kami</span>
+            </a>
           </div>
         </div>
-      </section>
+      </header>
 
       <TemplateCatalog templates={templates} />
 
