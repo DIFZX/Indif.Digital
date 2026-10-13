@@ -135,6 +135,12 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
       <div id="spesial" className={styles.scrollAnchor} />
       <div id="minimalis" className={styles.scrollAnchor} />
 
+      {/* Modern Section Heading */}
+      <div className={styles.sectionHeading}>
+        <span className={styles.sectionKicker}>Koleksi Eksklusif</span>
+        <h2>{activeCategoryTitle}</h2>
+      </div>
+
       {/* Category Pills Filter Tabs */}
       <div className={styles.categoryMenuWrapper}>
         <div className={styles.categoryMenu} role="tablist" aria-label="Kategori template">
@@ -155,11 +161,6 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
             );
           })}
         </div>
-      </div>
-
-      {/* Category Banner Bar matching punakawandigital.in */}
-      <div className={styles.categoryBannerBar}>
-        <h2>{activeCategoryTitle}</h2>
       </div>
 
       {/* Compact Templates Grid (4 columns desktop, 2 columns mobile) */}
