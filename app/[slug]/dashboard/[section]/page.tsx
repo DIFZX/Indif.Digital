@@ -5,12 +5,7 @@ import {
   type AttendanceFilter,
   type DashboardSection,
 } from "@/components/client-dashboard/client-dashboard";
-import { requireAdmin } from "@/lib/admin-auth";
-import {
-  getInvitation,
-  getInvitationRSVPs,
-  getInvitationViewCount,
-} from "@/lib/invitations";
+import { requireClientDashboard } from "@/lib/client-dashboard-access";
 
 export const dynamic = "force-dynamic";
 
@@ -47,12 +42,7 @@ export default async function CustomerDashboardSectionPage({
     notFound();
   }
 
-  const { supabase } = await requireAdmin();
-  const invitation = await getInvitation(slug);
-
-  if (!invitation) {
-    notFound();
-  }
+  const { invitation, initialRSVPs, viewCount } = await requireClientDashboard(slug);
 
   const rawAttendance = (await searchParams).attendance;
   const attendance = Array.isArray(rawAttendance) ? rawAttendance[0] : rawAttendance;
@@ -61,10 +51,6 @@ export default async function CustomerDashboardSectionPage({
       ? (attendance as AttendanceFilter)
       : "all";
 
-  const [initialRSVPs, viewCount] = await Promise.all([
-    getInvitationRSVPs(invitation.id, supabase),
-    getInvitationViewCount(invitation.id, supabase),
-  ]);
 
   return (
     <ClientDashboard

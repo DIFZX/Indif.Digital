@@ -397,14 +397,29 @@ async function main() {
       throw insertError ?? new Error("Undangan gagal dibuat.");
     }
 
+    const { data: dashboardAccess, error: dashboardAccessError } = await supabase
+      .from("invitation_dashboard_access")
+      .select("access_token")
+      .eq("invitation_id", createdInvitation.id)
+      .maybeSingle();
+    const dashboardPath = dashboardAccess?.access_token
+      ? `/${slug}/dashboard/access?key=${dashboardAccess.access_token}`
+      : null;
+
+    if (dashboardAccessError) {
+      console.warn("Peringatan: link dashboard belum tersedia. Pastikan migration terbaru sudah diterapkan.");
+    }
+
     console.log("\nUndangan berhasil dibuat sebagai draft.");
     console.log("Folder media: " + path.relative(projectDir, createdMediaRoot));
     console.log("File tersalin: " + mediaResult.copiedFiles.length);
+    if (dashboardPath) console.log("Link dashboard client: " + dashboardPath);
     for (const warning of mediaResult.warnings) console.warn("Peringatan: " + warning);
     console.log("\nLangkah berikutnya:");
     console.log("  1. Ganti file foto, galeri, dan musik di folder media pelanggan.");
     console.log("  2. Commit dan push perubahan media ke GitHub.");
     console.log("  3. Setelah deployment selesai, ubah status menjadi published di Supabase.");
+    console.log("  4. Kirim link dashboard client kepada pemilik undangan.");
   } finally {
     readline?.close();
     await supabase.auth.signOut();

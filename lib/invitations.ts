@@ -58,77 +58,88 @@ export async function getGreetings(invitationId: string): Promise<Greeting[]> {
 }
 
 
-export async function getInvitationRSVPs(
+type DashboardGreetingRow = {
+  id: string;
+  guest_name: string;
+  message: string | null;
+  attendance: GuestRSVP["attendance"] | null;
+  created_at: string;
+};
+
+type DashboardRSVPRow = {
+  id: string;
+  guest_name: string;
+  attendance: GuestRSVP["attendance"] | null;
+  guest_count: number | null;
+  created_at: string;
+};
+
+type DashboardPayload = {
+  greetings: DashboardGreetingRow[];
+  rsvps: DashboardRSVPRow[];
+  view_count: number;
+};
+
+export async function getInvitationDashboardData(
   invitationId: string,
+  dashboardToken: string,
   supabase: SupabaseClient,
-): Promise<GuestRSVP[]> {
+): Promise<{ initialRSVPs: GuestRSVP[]; viewCount: number } | null> {
+  const { data, error } = await supabase.rpc("get_invitation_dashboard_data", {
+    target_invitation_id: invitationId,
+    dashboard_token: dashboardToken,
+  });
 
-  const { data: greetings } = await supabase
-    .from("greetings")
-    .select("id, guest_name, message, attendance, created_at")
-    .eq("invitation_id", invitationId)
-    .order("created_at", { ascending: false });
+  if (error || !data || typeof data !== "object") return null;
 
-  const { data: rsvps } = await supabase
-    .from("rsvps")
-    .select("id, guest_name, attendance, guest_count, created_at")
-    .eq("invitation_id", invitationId)
-    .order("created_at", { ascending: false });
-
-  const greetingMap = new Map((greetings ?? []).map((g) => [g.guest_name?.trim().toLowerCase(), g]));
-  const list: GuestRSVP[] = [];
+  const payload = data as unknown as DashboardPayload;
+  const greetings = Array.isArray(payload.greetings) ? payload.greetings : [];
+  const rsvps = Array.isArray(payload.rsvps) ? payload.rsvps : [];
+  const greetingMap = new Map(
+    greetings.map((greeting) => [greeting.guest_name?.trim().toLowerCase(), greeting]),
+  );
+  const initialRSVPs: GuestRSVP[] = [];
   const processedNames = new Set<string>();
 
-  if (rsvps && rsvps.length > 0) {
-    for (const r of rsvps) {
-      const key = r.guest_name?.trim().toLowerCase();
-      processedNames.add(key);
-      const matchedGreeting = greetingMap.get(key);
-      list.push({
-        id: r.id,
-        invitation_id: invitationId,
-        guest_name: r.guest_name,
-        attendance: r.attendance || matchedGreeting?.attendance || "attending",
-        guest_count: r.guest_count ?? (r.attendance === "not_attending" ? 0 : 1),
-        message: matchedGreeting?.message || "",
-        created_at: r.created_at,
-      });
-    }
+  for (const rsvp of rsvps) {
+    const key = rsvp.guest_name?.trim().toLowerCase();
+    if (!key) continue;
+
+    processedNames.add(key);
+    const matchedGreeting = greetingMap.get(key);
+    initialRSVPs.push({
+      id: rsvp.id,
+      invitation_id: invitationId,
+      guest_name: rsvp.guest_name,
+      attendance: rsvp.attendance || matchedGreeting?.attendance || "attending",
+      guest_count: rsvp.guest_count ?? (rsvp.attendance === "not_attending" ? 0 : 1),
+      message: matchedGreeting?.message || "",
+      created_at: rsvp.created_at,
+    });
   }
 
-  if (greetings && greetings.length > 0) {
-    for (const g of greetings) {
-      const key = g.guest_name?.trim().toLowerCase();
-      if (!processedNames.has(key)) {
-        list.push({
-          id: g.id,
-          invitation_id: invitationId,
-          guest_name: g.guest_name,
-          attendance:
-            g.attendance === "not_attending" || g.attendance === "unsure"
-              ? g.attendance
-              : "attending",
-          guest_count: g.attendance === "not_attending" ? 0 : 1,
-          message: g.message || "",
-          created_at: g.created_at,
-        });
-      }
-    }
+  for (const greeting of greetings) {
+    const key = greeting.guest_name?.trim().toLowerCase();
+    if (!key || processedNames.has(key)) continue;
+
+    initialRSVPs.push({
+      id: greeting.id,
+      invitation_id: invitationId,
+      guest_name: greeting.guest_name,
+      attendance:
+        greeting.attendance === "not_attending" || greeting.attendance === "unsure"
+          ? greeting.attendance
+          : "attending",
+      guest_count: greeting.attendance === "not_attending" ? 0 : 1,
+      message: greeting.message || "",
+      created_at: greeting.created_at,
+    });
   }
 
-  return list;
-}
-
-export async function getInvitationViewCount(
-  invitationId: string,
-  supabase: SupabaseClient,
-): Promise<number> {
-  const { count, error } = await supabase
-    .from("invitation_views")
-    .select("id", { count: "exact", head: true })
-    .eq("invitation_id", invitationId);
-
-  if (error) return 0;
-  return count ?? 0;
+  const parsedViewCount = Number(payload.view_count);
+  return {
+    initialRSVPs,
+    viewCount: Number.isFinite(parsedViewCount) ? parsedViewCount : 0,
+  };
 }
 

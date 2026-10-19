@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { ClientDashboard } from "@/components/client-dashboard/client-dashboard";
-import { requireAdmin } from "@/lib/admin-auth";
-import { getInvitation, getInvitationRSVPs, getInvitationViewCount } from "@/lib/invitations";
+import { requireClientDashboard } from "@/lib/client-dashboard-access";
+import { getInvitation } from "@/lib/invitations";
 
 export const dynamic = "force-dynamic";
 
@@ -23,18 +22,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function CustomerDashboardPage({ params }: PageProps) {
-  const { supabase } = await requireAdmin();
   const { slug } = await params;
-  const invitation = await getInvitation(slug);
-
-  if (!invitation) {
-    notFound();
-  }
-
-  const [initialRSVPs, viewCount] = await Promise.all([
-    getInvitationRSVPs(invitation.id, supabase),
-    getInvitationViewCount(invitation.id, supabase),
-  ]);
+  const { invitation, initialRSVPs, viewCount } = await requireClientDashboard(slug);
 
   return (
     <ClientDashboard

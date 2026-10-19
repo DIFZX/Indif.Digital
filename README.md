@@ -44,10 +44,33 @@ Path yang disimpan di Supabase tetap `/media/...`; jangan simpan domain Vercel a
 
 ## Keamanan dan dashboard
 
-Route `/{slug}/dashboard` memuat data pribadi RSVP dan wajib menggunakan sesi admin
-Supabase. RLS tidak memberikan akses baca tabel `rsvps` kepada role anonim.
-Pengunjung tetap dapat mengirim RSVP dan ucapan untuk undangan `published`.
+Dashboard client tidak memakai akun atau password. Setiap undangan memperoleh magic link
+unik dengan format `/{slug}/dashboard/access?key={token}`. Setelah link dibuka,
+token disimpan dalam cookie HTTP-only selama 180 hari dan client diarahkan ke URL
+dashboard yang bersih. Jangan menaruh magic link di halaman undangan publik atau
+membagikannya selain kepada pemilik undangan.
 
-Jumlah ?Undangan Dibuka? dihitung sebagai browser unik per undangan melalui cookie
-HTTP-only. IP pengunjung tidak disimpan. Terapkan migrasi terbaru di
-`supabase/migrations/20261019190000_secure_dashboard_and_add_views.sql` sebelum
+RLS tetap melarang role anonim membaca tabel RSVP, ucapan, token dashboard, dan
+analytics secara langsung. Data dashboard hanya dikeluarkan oleh fungsi Supabase
+yang memverifikasi token milik undangan tersebut. Pengunjung tetap dapat mengirim
+RSVP dan ucapan untuk undangan `published`.
+
+Jumlah "Undangan Dibuka" dihitung sebagai browser unik per undangan. IP pengunjung
+tidak disimpan. Terapkan migration berikut secara berurutan sebelum deployment:
+
+1. `supabase/migrations/20261019190000_secure_dashboard_and_add_views.sql`
+2. `supabase/migrations/20261019210000_add_client_dashboard_magic_links.sql`
+
+Untuk melihat link dashboard undangan yang sudah ada, jalankan query ini di SQL Editor
+Supabase setelah kedua migration selesai:
+
+```sql
+select
+  invitation.slug,
+  'https://indifdigital.my.id/' || invitation.slug ||
+  '/dashboard/access?key=' || access.access_token::text as dashboard_url
+from public.invitations as invitation
+join public.invitation_dashboard_access as access
+  on access.invitation_id = invitation.id
+order by invitation.created_at desc;
+```
