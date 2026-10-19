@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { GuestRSVP, Invitation } from "@/lib/types";
@@ -13,8 +13,6 @@ type ClientDashboardProps = {
   invitation: Invitation;
   initialRSVPs: GuestRSVP[];
   viewCount: number;
-  activeTab: DashboardSection;
-  initialAttendanceFilter?: AttendanceFilter;
 };
 
 export type DashboardSection = "dashboard" | "bagikan" | "ucapan" | "acara" | "bantuan";
@@ -24,12 +22,23 @@ export function ClientDashboard({
   invitation,
   initialRSVPs,
   viewCount,
-  activeTab,
-  initialAttendanceFilter = "all",
 }: ClientDashboardProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const dashboardBaseUrl = `/${invitation.slug}/dashboard`;
+  const section = pathname.slice(dashboardBaseUrl.length).split("/").filter(Boolean)[0];
+  const activeTab: DashboardSection =
+    section === "bagikan" || section === "ucapan" || section === "acara" || section === "bantuan"
+      ? section
+      : "dashboard";
+  const attendanceParam = searchParams.get("attendance");
+  const routeAttendanceFilter: AttendanceFilter =
+    attendanceParam === "attending" || attendanceParam === "not_attending" || attendanceParam === "unsure"
+      ? attendanceParam
+      : "all";
   const [searchQuery, setSearchQuery] = useState("");
-  const [attendanceFilter, setAttendanceFilter] = useState<AttendanceFilter>(initialAttendanceFilter);
+  const attendanceFilter = routeAttendanceFilter;
   const [guestShareName, setGuestShareName] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -46,8 +55,19 @@ export function ClientDashboard({
   });
 
   const coupleNames = `${invitation.bride_short_name} & ${invitation.groom_short_name}`;
-  const dashboardBaseUrl = `/${invitation.slug}/dashboard`;
   const registeredGuestPlaceholder = 98;
+
+  useEffect(() => {
+    const dashboardRoutes = [
+      dashboardBaseUrl,
+      `${dashboardBaseUrl}/bagikan`,
+      `${dashboardBaseUrl}/ucapan`,
+      `${dashboardBaseUrl}/acara`,
+      `${dashboardBaseUrl}/bantuan`,
+    ];
+
+    dashboardRoutes.forEach((route) => router.prefetch(route));
+  }, [dashboardBaseUrl, router]);
 
   // Countdown Calculation
   useEffect(() => {
@@ -681,7 +701,15 @@ Salam hangat,
                 <span className={styles.filterLabel}>Status Kehadiran</span>
                 <select
                   value={attendanceFilter}
-                  onChange={(e) => setAttendanceFilter(e.target.value as AttendanceFilter)}
+                  onChange={(event) => {
+                    const filter = event.target.value as AttendanceFilter;
+                    const destination =
+                      filter === "all"
+                        ? `${dashboardBaseUrl}/ucapan`
+                        : `${dashboardBaseUrl}/ucapan?attendance=${filter}`;
+
+                    router.replace(destination, { scroll: false });
+                  }}
                   className={styles.filterSelect}
                 >
                   <option value="all">Semua Status</option>
@@ -908,10 +936,11 @@ Salam hangat,
         {/* Bottom Navigation Bar (5 Tabs) */}
         <nav className={styles.bottomNav} aria-label="Navigasi Menu Dashboard">
           <div className={styles.navContainer}>
-            <button
-              type="button"
+            <Link
+              href={dashboardBaseUrl}
+              prefetch
               className={`${styles.navItem} ${activeTab === "dashboard" ? styles.navItemActive : ""}`}
-              onClick={() => router.push(dashboardBaseUrl)}
+              aria-current={activeTab === "dashboard" ? "page" : undefined}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -922,12 +951,13 @@ Salam hangat,
                 </svg>
               </div>
               <span className={styles.navLabel}>Dashboard</span>
-            </button>
+            </Link>
 
-            <button
-              type="button"
+            <Link
+              href={`${dashboardBaseUrl}/bagikan`}
+              prefetch
               className={`${styles.navItem} ${activeTab === "bagikan" ? styles.navItemActive : ""}`}
-              onClick={() => router.push(`${dashboardBaseUrl}/bagikan`)}
+              aria-current={activeTab === "bagikan" ? "page" : undefined}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -938,12 +968,13 @@ Salam hangat,
                 </svg>
               </div>
               <span className={styles.navLabel}>Bagikan</span>
-            </button>
+            </Link>
 
-            <button
-              type="button"
+            <Link
+              href={`${dashboardBaseUrl}/ucapan`}
+              prefetch
               className={`${styles.navItem} ${activeTab === "ucapan" ? styles.navItemActive : ""}`}
-              onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}
+              aria-current={activeTab === "ucapan" ? "page" : undefined}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -954,12 +985,13 @@ Salam hangat,
                 )}
               </div>
               <span className={styles.navLabel}>Ucapan</span>
-            </button>
+            </Link>
 
-            <button
-              type="button"
+            <Link
+              href={`${dashboardBaseUrl}/acara`}
+              prefetch
               className={`${styles.navItem} ${activeTab === "acara" ? styles.navItemActive : ""}`}
-              onClick={() => router.push(`${dashboardBaseUrl}/acara`)}
+              aria-current={activeTab === "acara" ? "page" : undefined}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -970,12 +1002,13 @@ Salam hangat,
                 </svg>
               </div>
               <span className={styles.navLabel}>Acara</span>
-            </button>
+            </Link>
 
-            <button
-              type="button"
+            <Link
+              href={`${dashboardBaseUrl}/bantuan`}
+              prefetch
               className={`${styles.navItem} ${activeTab === "bantuan" ? styles.navItemActive : ""}`}
-              onClick={() => router.push(`${dashboardBaseUrl}/bantuan`)}
+              aria-current={activeTab === "bantuan" ? "page" : undefined}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -985,7 +1018,7 @@ Salam hangat,
                 </svg>
               </div>
               <span className={styles.navLabel}>Bantuan</span>
-            </button>
+            </Link>
           </div>
         </nav>
       </div>

@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  ClientDashboard,
-  type AttendanceFilter,
-  type DashboardSection,
-} from "@/components/client-dashboard/client-dashboard";
-import { requireClientDashboard } from "@/lib/client-dashboard-access";
-
-export const dynamic = "force-dynamic";
+import type { DashboardSection } from "@/components/client-dashboard/client-dashboard";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -20,45 +13,18 @@ const dashboardSections = new Set<DashboardSection>([
   "bantuan",
 ]);
 
-const attendanceFilters = new Set<AttendanceFilter>([
-  "all",
-  "attending",
-  "not_attending",
-  "unsure",
-]);
-
 type PageProps = {
   params: Promise<{ slug: string; section: string }>;
-  searchParams: Promise<{ attendance?: string | string[] }>;
 };
 
 export default async function CustomerDashboardSectionPage({
   params,
-  searchParams,
 }: PageProps) {
-  const { slug, section } = await params;
+  const { section } = await params;
 
   if (!dashboardSections.has(section as DashboardSection)) {
     notFound();
   }
 
-  const { invitation, initialRSVPs, viewCount } = await requireClientDashboard(slug);
-
-  const rawAttendance = (await searchParams).attendance;
-  const attendance = Array.isArray(rawAttendance) ? rawAttendance[0] : rawAttendance;
-  const initialAttendanceFilter =
-    attendance && attendanceFilters.has(attendance as AttendanceFilter)
-      ? (attendance as AttendanceFilter)
-      : "all";
-
-
-  return (
-    <ClientDashboard
-      invitation={invitation}
-      initialRSVPs={initialRSVPs}
-      viewCount={viewCount}
-      activeTab={section as DashboardSection}
-      initialAttendanceFilter={initialAttendanceFilter}
-    />
-  );
+  return null;
 }
