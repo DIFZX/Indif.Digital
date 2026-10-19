@@ -1,0 +1,1001 @@
+/* =========================================================
+   CLIENT DASHBOARD - InDif Digital Modern Minimalist Style
+   ========================================================= */
+
+.dashboardWrapper {
+  min-height: 100svh;
+  background-color: #F8FAFC;
+  color: #0F172A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 96px; /* Space for fixed bottom navigation */
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.phoneContainer {
+  width: 100%;
+  max-width: 520px;
+  min-height: 100svh;
+  background-color: #FFFFFF;
+  box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+@media (min-width: 521px) {
+  .dashboardWrapper {
+    padding-top: 24px;
+    padding-bottom: 120px;
+  }
+  .phoneContainer {
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+  }
+}
+
+/* =========================================================
+   TOP APP BAR
+   ========================================================= */
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #F1F5F9;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.brandLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brandLogo {
+  object-fit: contain;
+  height: 28px;
+  width: auto;
+}
+
+.brandBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #F0FDF4;
+  color: #166534;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid #DCFCE7;
+}
+
+.pulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #22C55E;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  animation: pulseAnimation 2s infinite;
+}
+
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+/* =========================================================
+   HERO CARD
+   ========================================================= */
+.heroCard {
+  margin: 16px 16px 8px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+  box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.25);
+  background-color: #0F172A;
+}
+
+.heroBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.heroBackdropImage {
+  object-fit: cover;
+  filter: brightness(0.65) saturate(1.1);
+  transform: scale(1.03);
+  transition: transform 0.5s ease;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.3) 0%,
+    rgba(15, 23, 42, 0.75) 60%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
+  z-index: 2;
+}
+
+.heroBody {
+  position: relative;
+  z-index: 3;
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* COUNTDOWN TIMER */
+.countdownBox {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 20px;
+}
+
+.countdownItem {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countdownNum {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+}
+
+.countdownLabel {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+.heroCoupleTitle {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+  color: #FFFFFF;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.heroDateVenue {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.heroButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  color: #FFFFFF;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+}
+
+.btnSuccess {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btnSuccess:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+}
+
+/* =========================================================
+   PAGE CONTENT CONTAINER
+   ========================================================= */
+.contentArea {
+  padding: 12px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* =========================================================
+   DASHBOARD OVERVIEW TAB
+   ========================================================= */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
+.sectionTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+}
+
+.sectionSubtitle {
+  font-size: 0.8rem;
+  color: #64748B;
+  margin: 2px 0 0;
+}
+
+.statList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.statCard:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+}
+
+.statCardLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statCardTitle {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: #64748B;
+}
+
+.statCardValue {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+}
+
+.statCardRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statIconBadge {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #FFFFFF;
+}
+
+.badgeAmber {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+}
+
+.badgeTeal {
+  background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+  box-shadow: 0 4px 10px rgba(13, 148, 136, 0.25);
+}
+
+.badgeBlue {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
+}
+
+.badgeEmerald {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+}
+
+.badgeRose {
+  background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+  box-shadow: 0 4px 10px rgba(244, 63, 94, 0.25);
+}
+
+.badgePurple {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.25);
+}
+
+.chevronIcon {
+  color: #94A3B8;
+}
+
+.infoFootnote {
+  font-size: 0.8rem;
+  color: #94A3B8;
+  text-align: center;
+  margin: 12px 16px 4px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   TAB: UCAPAN & RSVP
+   ========================================================= */
+.rsvpSummaryGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.summaryTile {
+  padding: 16px;
+  border-radius: 18px;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  min-height: 96px;
+  box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.12);
+}
+
+.summaryTileBgIcon {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  font-size: 3.5rem;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.summaryTileVal {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.summaryTileLabel {
+  font-size: 0.825rem;
+  font-weight: 500;
+  opacity: 0.92;
+  margin-top: 6px;
+}
+
+.tileBlue {
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+}
+
+.tilePurple {
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+}
+
+.tileGreen {
+  background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+}
+
+.tileRed {
+  background: linear-gradient(135deg, #F43F5E 0%, #BE123C 100%);
+}
+
+/* ACTION BAR (SEARCH & EXPORT EXCEL) */
+.actionBar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.searchAndDownloadRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchInputWrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  color: #94A3B8;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  border-radius: 12px;
+  border: 1px solid #CBD5E1;
+  background-color: #FFFFFF;
+  color: #0F172A;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchInput:focus {
+  border-color: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.btnDownloadExcel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btnDownloadExcel:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+.btnDownloadExcel:active {
+  transform: translateY(0);
+}
+
+/* FILTER ROW */
+.filterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filterLabel {
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.filterSelect {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #CBD5E1;
+  background-color: #FFFFFF;
+  color: #1E293B;
+  font-size: 0.85rem;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+}
+
+/* WISH / RSVP FEED LIST */
+.rsvpList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rsvpItemCard {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rsvpHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.guestInfoCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.guestName {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+}
+
+.rsvpMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attendancePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+.pillHadir {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.pillTidakHadir {
+  background-color: #FFF1F2;
+  color: #9F1239;
+  border: 1px solid #FECDD3;
+}
+
+.pillBelum {
+  background-color: #F3E8FF;
+  color: #6B21A8;
+  border: 1px solid #E9D5FF;
+}
+
+.rsvpTime {
+  font-size: 0.75rem;
+  color: #94A3B8;
+}
+
+.guestMessageBubble {
+  background-color: #F8FAFC;
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #F1F5F9;
+  color: #334155;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.rsvpActionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btnReplyAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background-color: #F0FDF4;
+  color: #166534;
+  border: 1px solid #DCFCE7;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnReplyAction:hover {
+  background-color: #DCFCE7;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #F8FAFC;
+  border-radius: 16px;
+  border: 1px dashed #CBD5E1;
+  color: #64748B;
+}
+
+/* =========================================================
+   TAB: BAGIKAN (SHARE / GENERATE LINK)
+   ========================================================= */
+.shareCard {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.formInput {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #CBD5E1;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #FFFFFF;
+}
+
+.formInput:focus {
+  border-color: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.previewLinkBox {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.previewLinkHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btnCopyMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #F0FDF4;
+  color: #166534;
+  border: 1px solid #DCFCE7;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.725rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btnCopyMini:hover {
+  background-color: #DCFCE7;
+}
+
+.btnCopiedActive {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+}
+
+.previewLinkLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.previewLinkText {
+  font-size: 0.825rem;
+  font-family: monospace;
+  color: #0F766E;
+  word-break: break-all;
+}
+
+.previewMessageBox {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.825rem;
+  line-height: 1.6;
+  color: #334155;
+  white-space: pre-wrap;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.shareBtnGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* =========================================================
+   TAB: INFO ACARA & BANTUAN
+   ========================================================= */
+.infoCard {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.infoCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.infoCardIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background-color: #F0FDF4;
+  color: #166534;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infoCardTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+}
+
+.infoDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.bankBox {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bankInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bankName {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.bankNumber {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: 0.05em;
+  font-family: monospace;
+}
+
+.bankOwner {
+  font-size: 0.775rem;
+  color: #475569;
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION BAR
+   ========================================================= */
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.navContainer {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 520px;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid #E2E8F0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 8px 6px 14px;
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+}
+
+@media (min-width: 521px) {
+  .navContainer {
+    border-radius: 20px 20px 0 0;
+    border-left: 1px solid #E2E8F0;
+    border-right: 1px solid #E2E8F0;
+  }
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: #64748B;
+  padding: 6px 2px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.navItem:hover {
+  color: #0F172A;
+}
+
+.navItemActive {
+  color: #0F766E;
+  font-weight: 700;
+}
+
+.navIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.navLabel {
+  font-size: 0.675rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.navBadgeCount {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background-color: #EF4444;
+  color: #FFFFFF;
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 9999px;
+  line-height: 1.2;
+}
+
+/* =========================================================
+   TOAST NOTIFICATION
+   ========================================================= */
+.toastNotification {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: #0F172A;
+  color: #FFFFFF;
+  padding: 12px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeInDown 0.25s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

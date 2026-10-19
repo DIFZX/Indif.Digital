@@ -1,0 +1,35 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { ClientDashboard } from "@/components/client-dashboard/client-dashboard";
+import { getInvitation, getInvitationRSVPs } from "@/lib/invitations";
+
+export const dynamic = "force-dynamic";
+
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const invitation = await getInvitation(slug);
+  if (!invitation) return { title: "Dashboard Tidak Ditemukan" };
+
+  return {
+    title: `Dashboard RSVP | ${invitation.bride_short_name} & ${invitation.groom_short_name}`,
+    description: `Pantau data kehadiran tamu dan ucapan doa pernikahan ${invitation.bride_short_name} & ${invitation.groom_short_name}.`,
+    robots: { index: false, follow: false },
+  };
+}
+
+export default async function CustomerDashboardPage({ params }: PageProps) {
+  const { slug } = await params;
+  const invitation = await getInvitation(slug);
+
+  if (!invitation) {
+    notFound();
+  }
+
+  const initialRSVPs = await getInvitationRSVPs(invitation.id, slug);
+
+  return <ClientDashboard invitation={invitation} initialRSVPs={initialRSVPs} />;
+}

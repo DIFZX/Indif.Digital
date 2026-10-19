@@ -1,4 +1,4 @@
-import type { Greeting, Invitation } from "@/lib/types";
+import type { Greeting, GuestRSVP, Invitation } from "@/lib/types";
 
 export const demoInvitation: Invitation = {
   id: "00000000-0000-0000-0000-000000000101",
@@ -412,3 +412,111 @@ export const demoGreetings: Greeting[] = [
     created_at: "2026-08-18T08:00:00.000Z",
   },
 ];
+
+export const javaVibesDemoRSVPs: GuestRSVP[] = [
+  {
+    id: "jv-rsvp-01",
+    guest_name: "Dimas & Partner",
+    attendance: "attending",
+    guest_count: 2,
+    message: "Alhamdulillah setelah penantian panjang lancar sampai hari h bestie🥰",
+    created_at: "2026-10-19T09:30:00.000Z",
+  },
+  {
+    id: "jv-rsvp-02",
+    guest_name: "Rian & Istri",
+    attendance: "attending",
+    guest_count: 2,
+    message: "MasyaAllahh, selamat menempuh ibadah terpanjang Dita dan Fajar🥰 Sakinah mawaddah warahmah.",
+    created_at: "2026-10-19T08:15:00.000Z",
+  },
+  {
+    id: "jv-rsvp-03",
+    guest_name: "Sarah Amalia",
+    attendance: "attending",
+    guest_count: 1,
+    message: "Barakallah Dita & mas Fajar! Semoga dilancarkan acaranya sampai hari H yaa cantik.",
+    created_at: "2026-10-19T07:45:00.000Z",
+  },
+  {
+    id: "jv-rsvp-04",
+    guest_name: "Budi Prasetyo",
+    attendance: "attending",
+    guest_count: 2,
+    message: "Selamat menempuh hidup baru Fajar & Dita, langgeng sampai kakek nenek dan berkah selalu.",
+    created_at: "2026-10-18T20:10:00.000Z",
+  },
+  {
+    id: "jv-rsvp-05",
+    guest_name: "Anisa Rahma",
+    attendance: "attending",
+    guest_count: 1,
+    message: "Happy wedding Dita sayang! See you on your big day ✨",
+    created_at: "2026-10-18T18:05:00.000Z",
+  },
+  {
+    id: "jv-rsvp-06",
+    guest_name: "Wahyu Nugroho",
+    attendance: "not_attending",
+    guest_count: 0,
+    message: "Mohon maaf belum bisa hadir mas Fajar karena ada dinas ke luar kota. Doa terbaik untuk kedua mempelai 🙏",
+    created_at: "2026-10-18T16:22:00.000Z",
+  },
+  {
+    id: "jv-rsvp-07",
+    guest_name: "Hendra Kurniawan",
+    attendance: "attending",
+    guest_count: 2,
+    message: "Selamat berbahagia mas Fajar & mba Dita, semoga menjadi keluarga sakinah mawaddah warahmah.",
+    created_at: "2026-10-18T14:40:00.000Z",
+  },
+  {
+    id: "jv-rsvp-08",
+    guest_name: "Dian Sastrowardoyo",
+    attendance: "not_attending",
+    guest_count: 0,
+    message: "Happy wedding Dita & Fajar! Maaf berhalangan hadir langsung, semoga acaranya berkah dan lancar ya.",
+    created_at: "2026-10-18T12:15:00.000Z",
+  },
+  {
+    id: "jv-rsvp-09",
+    guest_name: "Citra Lestari",
+    attendance: "attending",
+    guest_count: 1,
+    message: "Lancar-lancar ya Dit! Doa terbaik untuk kalian berdua 🤍",
+    created_at: "2026-10-18T11:05:00.000Z",
+  },
+  {
+    id: "jv-rsvp-10",
+    guest_name: "Rizky Ramadhan",
+    attendance: "not_attending",
+    guest_count: 0,
+    message: "Selamat menempuh hidup baru sahabatku, maaf belum bisa datang. Semoga langgeng selamanya!",
+    created_at: "2026-10-18T09:50:00.000Z",
+  },
+  {
+    id: "jv-rsvp-11",
+    guest_name: "Aditya Pratama",
+    attendance: "attending",
+    guest_count: 2,
+    message: "Selamat brader Fajar! Mantap akhirnya berlabuh juga di pelaminan. Sukses acaranya bro!",
+    created_at: "2026-10-17T21:18:00.000Z",
+  },
+  {
+    id: "jv-rsvp-12",
+    guest_name: "Putri Ayu",
+    attendance: "not_attending",
+    guest_count: 0,
+    message: "Barakallahu lakum wa baraka alaikum. Maafkan ya Dit belum bisa hadir, doa terbaik untukmu dan suami.",
+    created_at: "2026-10-17T19:35:00.000Z",
+  },
+  {
+    id: "jv-rsvp-13",
+    guest_name: "Maya Indah",
+    attendance: "attending",
+    guest_count: 2,
+    message: "Selamat untuk Dita dan Mas Fajar, semoga selalu diberkahi kebahagiaan berlimpah.",
+    created_at: "2026-10-17T15:20:00.000Z",
+  },
+];
+

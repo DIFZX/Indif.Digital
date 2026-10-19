@@ -58,3 +58,14 @@ export type Greeting = {
   attendance: "attending" | "not_attending" | "unsure" | null;
   created_at: string;
 };
+
+export type GuestRSVP = {
+  id: string;
+  invitation_id?: string;
+  guest_name: string;
+  attendance: "attending" | "not_attending" | "unsure";
+  guest_count: number;
+  message?: string;
+  created_at: string;
+};
+

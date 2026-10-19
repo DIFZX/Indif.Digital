@@ -1,5 +1,12 @@
 import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
-  redirect("/");
+type DashboardPageProps = {
+  searchParams: Promise<{ slug?: string }>;
+};
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  const query = await searchParams;
+  const targetSlug = query.slug?.trim() || "java-vibes";
+  redirect(`/${targetSlug}/dashboard`);
 }
+
