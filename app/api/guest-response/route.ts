@@ -11,6 +11,18 @@ const schema = z.object({
 });
 
 export async function POST(request: Request) {
+  if (request.headers.get("sec-fetch-site") === "cross-site") {
+    return NextResponse.json({ message: "Permintaan lintas situs ditolak." }, { status: 403 });
+  }
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > 4_096) {
+    return NextResponse.json({ message: "Data yang dikirim terlalu besar." }, { status: 413 });
+  }
+
+  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
+    return NextResponse.json({ message: "Format data tidak didukung." }, { status: 415 });
+  }
+
   const parsed = schema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ message: "Data yang dikirim belum valid." }, { status: 400 });
 
@@ -29,23 +41,7 @@ export async function POST(request: Request) {
     .maybeSingle();
 
   if (!inv) {
-    // Graceful fallback for demo or unmigrated invitations
-    const demoGreeting = message
-      ? {
-          id: "demo-" + Date.now(),
-          guest_name: guestName,
-          message,
-          attendance,
-          created_at: new Date().toISOString(),
-        }
-      : null;
-
-    return NextResponse.json({
-      message: message
-        ? "Terima kasih, respons dan ucapan Anda sudah tersimpan."
-        : "Terima kasih, respons Anda sudah tersimpan.",
-      greeting: demoGreeting,
-    }, { status: 201 });
+    return NextResponse.json({ message: "Undangan tidak ditemukan atau sudah tidak aktif." }, { status: 404 });
   }
 
   const { error: rsvpError } = await supabase.from("rsvps").insert({

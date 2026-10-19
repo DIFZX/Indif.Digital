@@ -95,6 +95,7 @@ export function SundaVibesClientApp({
 
   // Restore wishes saved locally across page refreshes
   useEffect(() => {
+    const restoreTimer = window.setTimeout(() => {
     try {
       const stored = localStorage.getItem(`sunda_vibes_wishes_${invitation.id}`);
       if (stored) {
@@ -113,6 +114,8 @@ export function SundaVibesClientApp({
         }
       }
     } catch {}
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, [invitation.id]);
 
   // Live countdown timer

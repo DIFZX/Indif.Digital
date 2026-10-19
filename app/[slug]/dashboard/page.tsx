@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ClientDashboard } from "@/components/client-dashboard/client-dashboard";
-import { getInvitation, getInvitationRSVPs } from "@/lib/invitations";
+import { requireAdmin } from "@/lib/admin-auth";
+import { getInvitation, getInvitationRSVPs, getInvitationViewCount } from "@/lib/invitations";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function CustomerDashboardPage({ params }: PageProps) {
+  const { supabase } = await requireAdmin();
   const { slug } = await params;
   const invitation = await getInvitation(slug);
 
@@ -29,7 +31,17 @@ export default async function CustomerDashboardPage({ params }: PageProps) {
     notFound();
   }
 
-  const initialRSVPs = await getInvitationRSVPs(invitation.id, slug);
+  const [initialRSVPs, viewCount] = await Promise.all([
+    getInvitationRSVPs(invitation.id, supabase),
+    getInvitationViewCount(invitation.id, supabase),
+  ]);
 
-  return <ClientDashboard invitation={invitation} initialRSVPs={initialRSVPs} />;
+  return (
+    <ClientDashboard
+      invitation={invitation}
+      initialRSVPs={initialRSVPs}
+      viewCount={viewCount}
+      activeTab="dashboard"
+    />
+  );
 }

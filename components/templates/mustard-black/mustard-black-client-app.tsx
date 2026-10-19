@@ -72,6 +72,7 @@ export function MustardBlackClientApp({
 
   // Restore any wishes saved locally across page refreshes
   useEffect(() => {
+    const restoreTimer = window.setTimeout(() => {
     try {
       const stored = localStorage.getItem(`mustard_black_wishes_${invitation.id}`);
       if (stored) {
@@ -90,6 +91,8 @@ export function MustardBlackClientApp({
         }
       }
     } catch {}
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, [invitation.id]);
 
   // Prevent iOS Safari gesture/pinch zoom glitches

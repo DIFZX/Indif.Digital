@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InvitationView } from "@/components/invitation-view";
+import { InvitationViewTracker } from "@/components/invitation-view-tracker";
 import { getGreetings, getInvitation } from "@/lib/invitations";
 
 type PageProps = {
@@ -29,5 +30,10 @@ export default async function InvitationPage({ params, searchParams }: PageProps
   const rawGuestName = Array.isArray(query.to) ? query.to[0] : query.to;
   const guestName = rawGuestName?.trim().slice(0, 80) || null;
   const preview = (Array.isArray(query.preview) ? query.preview[0] : query.preview) === "1";
-  return <InvitationView invitation={invitation} greetings={greetings} guestName={guestName} initiallyOpened={preview} />;
+  return (
+    <>
+      {!preview && <InvitationViewTracker invitationId={invitation.id} />}
+      <InvitationView invitation={invitation} greetings={greetings} guestName={guestName} initiallyOpened={preview} />
+    </>
+  );
 }

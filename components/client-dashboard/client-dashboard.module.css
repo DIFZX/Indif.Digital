@@ -44,9 +44,9 @@
   position: sticky;
   top: 0;
   z-index: 40;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 12px 20px;
   background-color: #FFFFFF;
   border-bottom: 1px solid #F1F5F9;
@@ -54,11 +54,38 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
+.backButton {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+  padding: 6px 9px 6px 6px;
+  border-radius: 10px;
+  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.backButton:hover {
+  color: #0F766E;
+  background: #F0FDFA;
+}
+
+@media (max-width: 420px) {
+  .backButton span {
+    display: none;
+  }
+}
+
 .brandLink {
   display: flex;
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  justify-self: center;
 }
 
 .brandLogo {
@@ -68,6 +95,7 @@
 }
 
 .brandBadge {
+  justify-self: end;
   display: inline-flex;
   align-items: center;
   gap: 6px;

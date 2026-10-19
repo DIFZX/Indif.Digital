@@ -42,6 +42,12 @@ Ketika R2 sudah digunakan:
 
 Path yang disimpan di Supabase tetap `/media/...`; jangan simpan domain Vercel atau domain R2 di setiap baris. Dengan demikian perpindahan provider cukup dilakukan melalui satu environment variable. URL absolut `https://...` tetap didukung untuk kebutuhan khusus dan tidak akan diubah resolver.
 
-## Batas keamanan saat ini
+## Keamanan dan dashboard
 
-Tidak ada login klien. RLS hanya membuka undangan berstatus `published`, template aktif, dan ucapan yang telah disetujui. Pengunjung dapat menambahkan RSVP dan ucapan; ucapan baru langsung disetujui sesuai konfigurasi saat ini. Pembuatan undangan melalui generator hanya diizinkan untuk akun yang terdaftar di `admin_profiles`.
+Route `/{slug}/dashboard` memuat data pribadi RSVP dan wajib menggunakan sesi admin
+Supabase. RLS tidak memberikan akses baca tabel `rsvps` kepada role anonim.
+Pengunjung tetap dapat mengirim RSVP dan ucapan untuk undangan `published`.
+
+Jumlah ?Undangan Dibuka? dihitung sebagai browser unik per undangan melalui cookie
+HTTP-only. IP pengunjung tidak disimpan. Terapkan migrasi terbaru di
+`supabase/migrations/20261019190000_secure_dashboard_and_add_views.sql` sebelum

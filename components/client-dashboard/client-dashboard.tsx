@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { GuestRSVP, Invitation } from "@/lib/types";
@@ -11,56 +12,30 @@ import styles from "./client-dashboard.module.css";
 type ClientDashboardProps = {
   invitation: Invitation;
   initialRSVPs: GuestRSVP[];
+  viewCount: number;
+  activeTab: DashboardSection;
+  initialAttendanceFilter?: AttendanceFilter;
 };
 
-type TabType = "dashboard" | "bagikan" | "ucapan" | "acara" | "bantuan";
+export type DashboardSection = "dashboard" | "bagikan" | "ucapan" | "acara" | "bantuan";
+export type AttendanceFilter = "all" | "attending" | "not_attending" | "unsure";
 
-export function ClientDashboard({ invitation, initialRSVPs }: ClientDashboardProps) {
-  const [activeTab, setActiveTab] = useState<TabType>("dashboard");
+export function ClientDashboard({
+  invitation,
+  initialRSVPs,
+  viewCount,
+  activeTab,
+  initialAttendanceFilter = "all",
+}: ClientDashboardProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [attendanceFilter, setAttendanceFilter] = useState<string>("all");
+  const [attendanceFilter, setAttendanceFilter] = useState<AttendanceFilter>(initialAttendanceFilter);
   const [guestShareName, setGuestShareName] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const [rsvps, setRsvps] = useState<GuestRSVP[]>(initialRSVPs);
+  const rsvps = initialRSVPs;
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  // Sync with localStorage if any new wishes were submitted on this device
-  useEffect(() => {
-    try {
-      const localKey = `java_vibes_wishes_${invitation.id}`;
-      const stored = localStorage.getItem(localKey);
-      if (stored) {
-        const parsed = JSON.parse(stored) as {
-          id?: string;
-          guest_name: string;
-          message?: string;
-          attendance?: any;
-          created_at?: string;
-        }[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setRsvps((prev) => {
-            const map = new Map<string, GuestRSVP>();
-            prev.forEach((item) => map.set(item.guest_name.toLowerCase().trim(), item));
-            parsed.forEach((item) => {
-              const key = item.guest_name?.toLowerCase().trim();
-              if (key && !map.has(key)) {
-                map.set(key, {
-                  id: item.id || "local-" + Date.now(),
-                  guest_name: item.guest_name,
-                  attendance: item.attendance || "attending",
-                  guest_count: item.attendance === "not_attending" ? 0 : 1,
-                  message: item.message || "",
-                  created_at: item.created_at || new Date().toISOString(),
-                });
-              }
-            });
-            return Array.from(map.values());
-          });
-        }
-      }
-    } catch {}
-  }, [invitation.id]);
 
   // Live countdown state
   const [timeLeft, setTimeLeft] = useState({
@@ -71,6 +46,8 @@ export function ClientDashboard({ invitation, initialRSVPs }: ClientDashboardPro
   });
 
   const coupleNames = `${invitation.bride_short_name} & ${invitation.groom_short_name}`;
+  const dashboardBaseUrl = `/${invitation.slug}/dashboard`;
+  const registeredGuestPlaceholder = 98;
 
   // Countdown Calculation
   useEffect(() => {
@@ -121,6 +98,10 @@ export function ClientDashboard({ invitation, initialRSVPs }: ClientDashboardPro
   const totalPax = useMemo(() => {
     return attendingList.reduce((acc, curr) => acc + (curr.guest_count || 1), 0);
   }, [attendingList]);
+  const totalMessages = useMemo(
+    () => rsvps.filter((item) => Boolean(item.message?.trim())).length,
+    [rsvps],
+  );
 
   // Filtered RSVP list for tab "ucapan"
   const filteredRSVPs = useMemo(() => {
@@ -143,6 +124,10 @@ export function ClientDashboard({ invitation, initialRSVPs }: ClientDashboardPro
   // Export to Excel / CSV with UTF-8 BOM
   const handleExportExcel = () => {
     try {
+      const escapeCsvCell = (value: string) => {
+        const protectedValue = /^[=+\-@\t\r]/.test(value.trimStart()) ? `'${value}` : value;
+        return `"${protectedValue.replace(/"/g, '""')}"`;
+      };
       const BOM = "\uFEFF";
       const headers = [
         "No",
@@ -161,7 +146,7 @@ export function ClientDashboard({ invitation, initialRSVPs }: ClientDashboardPro
             ? "Tidak Hadir"
             : "Belum Memilih";
         const pax = item.attendance === "attending" ? item.guest_count || 1 : 0;
-        const msg = (item.message || "-").replace(/"/g, '""');
+        const msg = item.message || "-";
         const formattedDate = new Intl.DateTimeFormat("id-ID", {
           dateStyle: "medium",
           timeStyle: "short",
@@ -169,11 +154,11 @@ export function ClientDashboard({ invitation, initialRSVPs }: ClientDashboardPro
 
         return [
           index + 1,
-          `"${item.guest_name.replace(/"/g, '""')}"`,
-          `"${status}"`,
+          escapeCsvCell(item.guest_name),
+          escapeCsvCell(status),
           pax,
-          `"${msg}"`,
-          `"${formattedDate}"`,
+          escapeCsvCell(msg),
+          escapeCsvCell(formattedDate),
         ].join(",");
       });
 
@@ -284,6 +269,13 @@ Salam hangat,
       <div className={styles.phoneContainer}>
         {/* Top Header */}
         <header className={styles.topBar}>
+          <Link href={`/${invitation.slug}`} className={styles.backButton}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+            <span>Kembali</span>
+          </Link>
+
           <Link href={`/${invitation.slug}`} className={styles.brandLink}>
             <Image
               src={BRAND.logoPath}
@@ -359,7 +351,7 @@ Salam hangat,
                 <button
                   type="button"
                   className={styles.btnSuccess}
-                  onClick={() => setActiveTab("bagikan")}
+                  onClick={() => router.push(`${dashboardBaseUrl}/bagikan`)}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
@@ -386,10 +378,10 @@ Salam hangat,
 
             <div className={styles.statList}>
               {/* Tamu Terdaftar */}
-              <div className={styles.statCard} onClick={() => setActiveTab("bagikan")}>
+              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/bagikan`)}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Tamu Terdaftar</span>
-                  <span className={styles.statCardValue}>98</span>
+                  <span className={styles.statCardValue}>{registeredGuestPlaceholder}</span>
                 </div>
                 <div className={styles.statCardRight}>
                   <div className={`${styles.statIconBadge} ${styles.badgeAmber}`}>
@@ -407,10 +399,10 @@ Salam hangat,
               </div>
 
               {/* Undangan Dibuka */}
-              <div className={styles.statCard} onClick={() => setActiveTab("ucapan")}>
+              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Undangan Dibuka</span>
-                  <span className={styles.statCardValue}>85</span>
+                  <span className={styles.statCardValue}>{viewCount}</span>
                 </div>
                 <div className={styles.statCardRight}>
                   <div className={`${styles.statIconBadge} ${styles.badgeTeal}`}>
@@ -426,10 +418,10 @@ Salam hangat,
               </div>
 
               {/* Total Ucapan */}
-              <div className={styles.statCard} onClick={() => setActiveTab("ucapan")}>
+              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Total Ucapan</span>
-                  <span className={styles.statCardValue}>{initialRSVPs.length}</span>
+                  <span className={styles.statCardValue}>{totalMessages}</span>
                 </div>
                 <div className={styles.statCardRight}>
                   <div className={`${styles.statIconBadge} ${styles.badgeBlue}`}>
@@ -444,7 +436,7 @@ Salam hangat,
               </div>
 
               {/* Bersedia Hadir */}
-              <div className={styles.statCard} onClick={() => { setActiveTab("ucapan"); setAttendanceFilter("attending"); }}>
+              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan?attendance=attending`)}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Bersedia Hadir</span>
                   <span className={styles.statCardValue}>{attendingList.length}</span>
@@ -462,7 +454,7 @@ Salam hangat,
               </div>
 
               {/* Belum Bisa Hadir */}
-              <div className={styles.statCard} onClick={() => { setActiveTab("ucapan"); setAttendanceFilter("not_attending"); }}>
+              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan?attendance=not_attending`)}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Belum Bisa Hadir</span>
                   <span className={styles.statCardValue}>{notAttendingList.length}</span>
@@ -481,7 +473,7 @@ Salam hangat,
               </div>
 
               {/* Estimasi Porsi Katering */}
-              <div className={styles.statCard} onClick={() => setActiveTab("ucapan")}>
+              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Estimasi Porsi Katering</span>
                   <span className={styles.statCardValue}>{totalPax} Porsi</span>
@@ -627,7 +619,7 @@ Salam hangat,
             {/* 4 Summary Grid Tiles */}
             <div className={styles.rsvpSummaryGrid}>
               <div className={`${styles.summaryTile} ${styles.tileBlue}`}>
-                <span className={styles.summaryTileVal}>{initialRSVPs.length}</span>
+                <span className={styles.summaryTileVal}>{totalMessages}</span>
                 <span className={styles.summaryTileLabel}>Total Ucapan</span>
                 <span className={styles.summaryTileBgIcon}>💬</span>
               </div>
@@ -689,7 +681,7 @@ Salam hangat,
                 <span className={styles.filterLabel}>Status Kehadiran</span>
                 <select
                   value={attendanceFilter}
-                  onChange={(e) => setAttendanceFilter(e.target.value)}
+                  onChange={(e) => setAttendanceFilter(e.target.value as AttendanceFilter)}
                   className={styles.filterSelect}
                 >
                   <option value="all">Semua Status</option>
@@ -919,7 +911,7 @@ Salam hangat,
             <button
               type="button"
               className={`${styles.navItem} ${activeTab === "dashboard" ? styles.navItemActive : ""}`}
-              onClick={() => setActiveTab("dashboard")}
+              onClick={() => router.push(dashboardBaseUrl)}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -935,7 +927,7 @@ Salam hangat,
             <button
               type="button"
               className={`${styles.navItem} ${activeTab === "bagikan" ? styles.navItemActive : ""}`}
-              onClick={() => setActiveTab("bagikan")}
+              onClick={() => router.push(`${dashboardBaseUrl}/bagikan`)}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -951,14 +943,14 @@ Salam hangat,
             <button
               type="button"
               className={`${styles.navItem} ${activeTab === "ucapan" ? styles.navItemActive : ""}`}
-              onClick={() => setActiveTab("ucapan")}
+              onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
                 </svg>
-                {initialRSVPs.length > 0 && (
-                  <span className={styles.navBadgeCount}>{initialRSVPs.length}</span>
+                {totalMessages > 0 && (
+                  <span className={styles.navBadgeCount}>{totalMessages}</span>
                 )}
               </div>
               <span className={styles.navLabel}>Ucapan</span>
@@ -967,7 +959,7 @@ Salam hangat,
             <button
               type="button"
               className={`${styles.navItem} ${activeTab === "acara" ? styles.navItemActive : ""}`}
-              onClick={() => setActiveTab("acara")}
+              onClick={() => router.push(`${dashboardBaseUrl}/acara`)}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -983,7 +975,7 @@ Salam hangat,
             <button
               type="button"
               className={`${styles.navItem} ${activeTab === "bantuan" ? styles.navItemActive : ""}`}
-              onClick={() => setActiveTab("bantuan")}
+              onClick={() => router.push(`${dashboardBaseUrl}/bantuan`)}
             >
               <div className={styles.navIconWrapper}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

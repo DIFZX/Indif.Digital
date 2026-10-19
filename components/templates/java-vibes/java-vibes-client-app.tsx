@@ -101,8 +101,8 @@ export function JavaVibesClientApp({
     if (!opened) {
       video.pause();
       video.currentTime = 0;
-      setHeroContentVisible(false);
-      return;
+      const resetTimer = window.setTimeout(() => setHeroContentVisible(false), 0);
+      return () => window.clearTimeout(resetTimer);
     }
 
     let videoFrameId: number | null = null;
@@ -153,6 +153,7 @@ export function JavaVibesClientApp({
 
   // Restore wishes saved locally across page refreshes
   useEffect(() => {
+    const restoreTimer = window.setTimeout(() => {
     try {
       const stored = localStorage.getItem(`java_vibes_wishes_${invitation.id}`);
       if (stored) {
@@ -171,6 +172,8 @@ export function JavaVibesClientApp({
         }
       }
     } catch {}
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, [invitation.id]);
 
   // Live countdown timer

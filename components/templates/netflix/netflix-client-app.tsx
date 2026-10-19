@@ -73,6 +73,7 @@ export function NetflixClientApp({
 
   // Restore any wishes saved locally across page refreshes
   useEffect(() => {
+    const restoreTimer = window.setTimeout(() => {
     try {
       const stored = localStorage.getItem(`nikahfix_wishes_${invitation.id}`);
       if (stored) {
@@ -91,6 +92,8 @@ export function NetflixClientApp({
         }
       }
     } catch {}
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
   }, [invitation.id]);
 
   // Prevent iOS Safari gesture/pinch zoom glitches

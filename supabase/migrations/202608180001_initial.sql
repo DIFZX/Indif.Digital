@@ -10,7 +10,7 @@ create table public.templates (
   theme jsonb not null default '{}'::jsonb,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null defaunlt now()
+  updated_at timestamptz not null default now()
 );
 
 create table public.invitations (

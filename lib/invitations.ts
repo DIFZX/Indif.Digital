@@ -1,12 +1,11 @@
 import {
   demoGreetings,
-  demoInvitation,
   demoInvitations,
   javaVibesDemoGreetings,
-  javaVibesDemoRSVPs,
 } from "@/lib/demo";
 import { getSupabase } from "@/lib/supabase";
 import type { Greeting, GuestRSVP, Invitation } from "@/lib/types";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 const invitationSelect = `
   id, slug, status, bride_name, bride_short_name, bride_parents, bride_photo_path,
@@ -59,14 +58,10 @@ export async function getGreetings(invitationId: string): Promise<Greeting[]> {
 }
 
 
-export async function getInvitationRSVPs(invitationId: string, slug?: string): Promise<GuestRSVP[]> {
-  const isJavaVibes = slug === "java-vibes" || invitationId === "00000000-0000-0000-0000-000000000106";
-  const supabase = getSupabase();
-
-  if (!supabase) {
-    if (isJavaVibes) return javaVibesDemoRSVPs;
-    return [];
-  }
+export async function getInvitationRSVPs(
+  invitationId: string,
+  supabase: SupabaseClient,
+): Promise<GuestRSVP[]> {
 
   const { data: greetings } = await supabase
     .from("greetings")
@@ -109,7 +104,10 @@ export async function getInvitationRSVPs(invitationId: string, slug?: string): P
           id: g.id,
           invitation_id: invitationId,
           guest_name: g.guest_name,
-          attendance: (g.attendance as any) || "attending",
+          attendance:
+            g.attendance === "not_attending" || g.attendance === "unsure"
+              ? g.attendance
+              : "attending",
           guest_count: g.attendance === "not_attending" ? 0 : 1,
           message: g.message || "",
           created_at: g.created_at,
@@ -118,10 +116,19 @@ export async function getInvitationRSVPs(invitationId: string, slug?: string): P
     }
   }
 
-  if (list.length === 0 && isJavaVibes) {
-    return javaVibesDemoRSVPs;
-  }
-
   return list;
+}
+
+export async function getInvitationViewCount(
+  invitationId: string,
+  supabase: SupabaseClient,
+): Promise<number> {
+  const { count, error } = await supabase
+    .from("invitation_views")
+    .select("id", { count: "exact", head: true })
+    .eq("invitation_id", invitationId);
+
+  if (error) return 0;
+  return count ?? 0;
 }
 
