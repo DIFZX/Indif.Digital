@@ -1,4 +1,10 @@
-import { demoGreetings, demoInvitation, demoInvitations, javaVibesDemoRSVPs } from "@/lib/demo";
+import {
+  demoGreetings,
+  demoInvitation,
+  demoInvitations,
+  javaVibesDemoGreetings,
+  javaVibesDemoRSVPs,
+} from "@/lib/demo";
 import { getSupabase } from "@/lib/supabase";
 import type { Greeting, GuestRSVP, Invitation } from "@/lib/types";
 
@@ -29,8 +35,10 @@ export async function getInvitation(slug: string): Promise<Invitation | null> {
 }
 
 export async function getGreetings(invitationId: string): Promise<Greeting[]> {
+  const isJavaVibes = invitationId === "00000000-0000-0000-0000-000000000106";
   const supabase = getSupabase();
   if (!supabase) {
+    if (isJavaVibes) return javaVibesDemoGreetings;
     const isDemo = demoInvitations.some((inv) => inv.id === invitationId);
     return isDemo ? demoGreetings : [];
   }
@@ -43,8 +51,13 @@ export async function getGreetings(invitationId: string): Promise<Greeting[]> {
     .order("created_at", { ascending: false })
     .limit(50);
 
+  if ((!data || data.length === 0) && isJavaVibes) {
+    return javaVibesDemoGreetings;
+  }
+
   return (data ?? []) as Greeting[];
 }
+
 
 export async function getInvitationRSVPs(invitationId: string, slug?: string): Promise<GuestRSVP[]> {
   const isJavaVibes = slug === "java-vibes" || invitationId === "00000000-0000-0000-0000-000000000106";

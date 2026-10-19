@@ -520,3 +520,12 @@ export const javaVibesDemoRSVPs: GuestRSVP[] = [
   },
 ];
 
+export const javaVibesDemoGreetings: Greeting[] = javaVibesDemoRSVPs.map((r) => ({
+  id: r.id,
+  guest_name: r.guest_name,
+  message: r.message || "",
+  attendance: r.attendance,
+  created_at: r.created_at,
+}));
+
+
