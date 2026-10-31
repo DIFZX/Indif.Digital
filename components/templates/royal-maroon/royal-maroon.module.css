@@ -1,0 +1,254 @@
+@font-face {
+  font-family: "Royal Monogram";
+  src: url("/media/royal-maroon/fonts/monogram.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Royal Script";
+  src: url("/media/royal-maroon/fonts/script.woff2") format("woff2");
+  font-display: swap;
+}
+
+.experience {
+  --rm-primary: #7c2527;
+  --rm-paper: #fff0e5;
+  --rm-accent: #ceb172;
+  --rm-ink: #47282b;
+  --rm-muted: #705456;
+  --rm-surface: #fff8f0;
+  color: var(--rm-ink);
+  background: var(--rm-paper);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-x: clip;
+}
+
+.experience *, .experience *::before, .experience *::after { box-sizing: border-box; }
+.experience h1, .experience h2, .experience h3, .experience p { margin: 0; }
+.experience h1, .experience h2, .experience h3 { color: inherit; font-family: inherit; font-weight: 400; }
+.experience a { color: inherit; text-decoration: none; }
+.experience p, .experience h1, .experience h2, .experience h3 { overflow-wrap: anywhere; }
+.experience button, .experience input, .experience select, .experience textarea { font: inherit; }
+.experience :focus-visible { outline: 2px solid var(--rm-primary); outline-offset: 5px; }
+.experience section { scroll-margin-top: 20px; }
+.experience :global(.reveal) { transform: translateY(22px); transition-duration: .9s, .9s, .75s; }
+.experience :global(.reveal-scale) { transform: scale(.97); }
+.experience :global(.reveal.is-visible) { transform: none; }
+.experience :global(.reveal-left) { transform: translateX(-22px); }
+.experience :global(.reveal-right) { transform: translateX(22px); }
+.eyebrow { color: var(--rm-primary); font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.button { display: inline-flex; min-height: 44px; max-width: 100%; text-align: center; align-items: center; justify-content: center; gap: 12px; padding: 10px 23px; border: 1px solid transparent; border-radius: 30px; background: radial-gradient(ellipse at top, #a94d4f, var(--rm-primary)); color: #fff9f1 !important; font-size: 11px !important; font-weight: 700; letter-spacing: .1em; line-height: 1.7; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 14px #6b26281a; transition: transform .2s, box-shadow .2s; }
+.button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px #6b26282b; }
+.button:disabled { opacity: .65; cursor: wait; transform: none; }
+.cover { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; min-height: 100svh; overflow-y: auto; background: var(--rm-paper) url("/media/royal-maroon/cover-desktop.webp") center / cover no-repeat; text-align: center; transition: opacity .65s, visibility .65s; }
+.coverContent { width: min(calc(100% - 40px), 420px); margin: 24px auto; padding: 30px 26px; border: 1px solid #a77a55a6; border-radius: 160px 160px 24px 24px; background: #fff8f0f7; box-shadow: 0 18px 60px #49222326, inset 0 0 0 6px #ceb17217; animation: entrance .85s both; }
+.coverContent h1 { color: var(--rm-primary); margin: 16px 0 22px; font-size: clamp(27px, 6vw, 43px); line-height: 1.3; text-transform: uppercase; }
+.coverContent > .monogram { margin-bottom: 20px; transform: scale(.8); height: 125px; }
+.guestSalutation { font-size: 14px; }
+.guestName { margin: 12px 0 27px !important; font-size: 18px; font-style: italic; font-weight: 700; overflow-wrap: anywhere; }
+.monogram { color: var(--rm-primary); position: relative; display: flex; justify-content: center; align-items: center; width: 170px; height: 150px; margin-inline: auto; line-height: 1; }
+.monogram span:first-child { font-family: "Royal Monogram", Georgia, serif; font-size: 142px; transform: translateX(10px); }
+.monogram span:last-child { font-family: "Royal Script", cursive; font-size: 116px; position: absolute; left: 68px; top: 48px; opacity: .88; }
+.experience[data-opened="true"] .cover { opacity: 0; visibility: hidden; pointer-events: none; }
+.stage { outline: none; }
+.experience[data-opened="false"] .stage { visibility: hidden; }
+.layout { min-height: 100svh; }
+.showcase { position: fixed; inset: 0 520px 0 0; overflow: hidden; color: #fff8ef; background: #3d1b1b; }
+.showcase > img { object-fit: cover; object-position: center 40%; }
+.showcaseShade { position: absolute; inset: 0; background: linear-gradient(180deg, #21110c24 15%, #21110c55 45%, #21110cf0); }
+.showcase .eyebrow { color: #fff3e4; }
+.showcaseCopy { position: absolute; left: 8%; right: 8%; bottom: 12%; }
+.showcaseCopy h2 { margin: 12px 0; font-size: clamp(40px, 5vw, 76px); line-height: 1.15; }
+.showcaseCopy > p:last-child { font-size: 18px; }
+.showcaseBrand { position: absolute; left: 8%; bottom: 5%; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; opacity: .75; }
+.panel { position: relative; width: 520px; margin-left: auto; box-shadow: -8px 0 60px #1c0e1726; }
+.hero { min-height: 100svh; display: grid; place-items: center; padding: 85px 35px 120px; background: var(--rm-paper) url("/media/royal-maroon/hero.webp") center / cover no-repeat; text-align: center; }
+.heroContent { padding-top: 50px; width: 100%; color: var(--rm-primary); }
+.heroContent > .eyebrow { font-size: 12px; }
+.experience[data-opened="true"] .heroContent > * { animation: entrance 1s both; }
+.experience[data-opened="true"] .heroContent > :nth-child(2) { animation-delay: .15s; }
+.experience[data-opened="true"] .heroContent > :nth-child(3) { animation-delay: .3s; }
+.experience[data-opened="true"] .heroContent > :nth-child(4) { animation-delay: .45s; }
+.experience[data-opened="true"] .heroContent > :nth-child(5) { animation-delay: .6s; }
+.heroContent > .monogram { margin-bottom: 55px; }
+.heroContent h2 { color: var(--rm-primary); margin: 22px 0 15px; font-size: clamp(29px, 7vw, 43px); line-height: 1.25; text-transform: uppercase; }
+.heroDate { color: var(--rm-primary); font-size: 16px; letter-spacing: .18em; }
+.scrollCue { display: flex; flex-direction: column; align-items: center; margin-top: 40px; gap: 6px; }
+.scrollCue > span { font-size: 25px; animation: float 2s ease-in-out infinite; }
+.scrollCue small { color: var(--rm-primary); font-size: 9px; font-style: italic; letter-spacing: .08em; }
+.section { padding: 85px 36px; text-align: center; background-size: cover; background-position: center; }
+.section h2 { color: var(--rm-primary); margin: 9px 0 28px; font-size: clamp(29px, 7vw, 40px); line-height: 1.3; }
+.section > :global(.reveal) > .eyebrow { font-size: 10px; }
+.introCard, .personDetails, .closingCard {
+  position: relative;
+  padding: 28px 24px;
+  border: 1px solid #a77a5566;
+  border-radius: 24px;
+  background: var(--rm-surface);
+  color: var(--rm-ink);
+  box-shadow: 0 8px 28px #4922230d, inset 0 0 0 5px #ceb1720d;
+}
+.introCard h2 { margin-bottom: 18px; }
+.introCard > h2:first-child { margin-top: 0; }
+.personDetails { margin-top: 26px; }
+.closingCard { padding: 32px 24px; }
+.quote .eyebrow, .story .eyebrow, .story h2 { color: #fff0e5; }
+.quote cite { color: #f0d4a7; }
+
+.quote { background-image: linear-gradient(#50191de8, #50191de8), url("/media/royal-maroon/maroon.webp"); color: #fff0e5; padding-top: 65px; padding-bottom: 85px; }
+.quotePortrait { position: relative; width: 175px; height: 175px; border-radius: 50%; margin: 0 auto 28px; padding: 7px; border: 1px solid #ceb172a8; }
+.quotePortrait img { object-fit: cover; border-radius: 50%; padding: 7px; }
+.quote blockquote { margin: 25px 0 0; }
+.quote blockquote p { font-size: 14px; line-height: 1.95; }
+.quote cite { display: block; margin-top: 22px; font-size: 12px; font-style: normal; }
+.couple {
+  padding-bottom: 90px;
+  background-image: url("/media/royal-maroon/events.webp");
+  border-block: 1px solid #ceb17266;
+  box-shadow: inset 0 1px 0 #fff0e512, inset 0 -1px 0 #fff0e512;
+}
+.couple .introCard,
+.couple .personDetails {
+  border-color: #ceb17299;
+  box-shadow: 0 12px 32px #2c0a121f, inset 0 0 0 5px #ceb1720d;
+}
+.couple .personPortrait {
+  background: var(--rm-surface);
+  border-color: #ceb172;
+  box-shadow: 0 10px 30px #2c0a122b;
+}
+.couple .ampersand { border-color: #ceb17299; }
+
+.opening { max-width: 360px; margin-inline: auto !important; font-size: 14px; }
+.person { margin-top: 40px; }
+.personPortrait { position: relative; width: min(82%, 280px); aspect-ratio: 4 / 5; height: auto; margin: 0 auto 23px; border: 1px solid var(--rm-primary); border-radius: 150px 150px 12px 12px; padding: 7px; }
+.personPortrait > img:first-child { padding: 7px; border-radius: inherit; object-fit: cover; }
+.personPortrait .portraitFlower { position: absolute; width: 115px; height: auto; right: -38px; bottom: -40px; z-index: 1; filter: drop-shadow(0 5px 6px #7c252715); transform-origin: 50% 80%; animation: floralDrift 7s ease-in-out infinite; }
+.personLabel { color: var(--rm-muted); font-size: 10px; text-transform: uppercase; letter-spacing: .22em; }
+.scriptName { color: var(--rm-primary); margin: 10px 0 4px !important; font-family: "Royal Script", cursive; font-size: 52px; line-height: 1.6; }
+.person h3 { color: var(--rm-primary); font-size: 19px; line-height: 1.4; text-transform: uppercase; }
+.parents { color: var(--rm-ink); max-width: 300px; margin: 12px auto 0 !important; font-size: 13px; line-height: 1.8; }
+.ampersand { display: grid; place-items: center; width: 64px; height: 64px; margin: 30px auto -10px; border: 1px solid #a77a5566; border-radius: 50%; background: var(--rm-surface); color: var(--rm-primary); font-family: "Royal Script", cursive; font-size: 42px; line-height: 1; }
+.events { background-image: url("/media/royal-maroon/events.webp"); padding-top: 80px; padding-bottom: 150px; }
+.countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 340px; margin: 15px auto 25px; }
+.countdown > div { display: flex; flex-direction: column; padding: 9px 2px; border: 1px solid #7c252733; border-radius: 40px 40px 8px 8px; background: var(--rm-surface); }
+.countdown strong { font-size: 27px; font-weight: 400; line-height: 1.5; }
+.countdown span { font-size: 10px; }
+.eventCards { display: grid; gap: 35px; margin-top: 50px; }
+.eventCard { padding: 35px 24px; border: 1px solid #ab7c5d80; outline: 1px solid #ab7c5d40; outline-offset: -7px; border-radius: 160px 160px 8px 8px; background: var(--rm-surface); box-shadow: 0 12px 30px #722b2610; }
+.eventSymbol { display: flex; justify-content: center; color: var(--rm-primary); margin: 16px 0 20px; }
+.eventSymbol svg { width: 32px; height: 32px; }
+.eventCard h3 { color: var(--rm-primary); font-size: 26px; text-transform: uppercase; }
+.eventDate { display: flex; flex-direction: column; align-items: center; margin: 22px 0 16px; text-transform: uppercase; font-size: 13px; letter-spacing: .1em; }
+.eventDate strong { font-weight: 400; font-size: 75px; line-height: 1.3; }
+.eventDivider { height: 1px; width: 50px; margin: 24px auto; background: var(--rm-accent); }
+.venue { font-size: 15px; font-weight: 700; line-height: 1.6; text-transform: uppercase; }
+.address { margin: 10px 0 24px !important; font-size: 13px; }
+.story { background-image: linear-gradient(#50191deb, #50191deb), url("/media/royal-maroon/maroon.webp"); color: #fff0e5; }
+.storyPhoto { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 140px 140px 4px 4px; margin-bottom: 40px; border: 1px solid #ceb17280; }
+.storyPhoto img { object-fit: cover; padding: 6px; border-radius: inherit; }
+.timeline { text-align: left; border-left: 1px solid #ceb17270; margin: 0 5px 0 15px; padding-left: 26px; }
+.timeline article { position: relative; margin-bottom: 36px; }
+.timeline > :last-child article { margin-bottom: 0; }
+.timeline article::before { content: ""; position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--rm-accent); left: -31px; top: 12px; box-shadow: 0 0 0 5px #ceb17220; }
+.storyYear { color: #ebc896; font-size: 12px; letter-spacing: .12em; }
+.timeline h3 { font-size: 23px; margin: 3px 0 12px; }
+.timeline p { font-size: 13px; line-height: 1.9; }
+.gallery { background-image: url("/media/royal-maroon/events.webp"); padding-inline: 20px; }
+.gallery :global(.gallery-grid) { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: none; grid-auto-rows: auto; gap: 9px; margin-top: 28px; }
+.gallery :global(.gallery-grid button) { min-height: 0; height: auto; aspect-ratio: 3 / 4; border: 0; border-radius: 3px; padding: 0; overflow: hidden; position: relative; cursor: zoom-in; background: #e6d5c4; }
+.gallery :global(.gallery-grid .gallery-featured) { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 4 / 3; height: auto; }
+.gallery :global(.gallery-grid img) { object-fit: cover; transition: transform .5s; }
+.gallery :global(.gallery-grid button:hover img) { transform: scale(1.04); }
+.gallery :global(.gallery-grid button span) { font-size: 10px; background: #642024eb; }
+.gallery :global(.gallery-grid button:focus-visible span) { opacity: 1; }
+.gift { background-image: url("/media/royal-maroon/events.webp"); padding-bottom: 125px; }
+.gift > :global(.reveal) > p:last-of-type { font-size: 13px; }
+.bankCard { display: flex; flex-direction: column; align-items: flex-start; background: linear-gradient(120deg, #873b3c, #611a1c); color: #fff5e9; border: 1px solid #ceb1729c; border-radius: 17px; max-width: 350px; margin: 30px auto 0; padding: 25px; text-align: left; box-shadow: 0 14px 35px #611a1c22; }
+.bankName { align-self: flex-end; font-size: 23px; font-weight: 700; font-style: italic; line-height: 1; }
+.bankChip { color: #e1bf7c; display: block; line-height: 1; margin: 15px 0; }
+.bankChip svg { width: 38px; height: 32px; }
+.bankCard > strong { max-width: 100%; font-size: clamp(18px, 5vw, 24px); font-weight: 400; letter-spacing: .08em; overflow-wrap: anywhere; user-select: all; }
+.bankCard > p { font-size: 12px; }
+.bankCard .button { margin-top: 20px; background: #fff0e5; color: #611a1c !important; font-size: 9px !important; }
+.bankCard .copyStatus { margin-top: 8px; min-height: 18px; font-size: 10px; }
+.wishes { background-image: url("/media/royal-maroon/events.webp"); }
+.wishes > :global(.reveal) > p:last-child { font-size: 13px; }
+.guestbook { margin-top: 30px; text-align: left; }
+.form { display: grid; gap: 14px; padding: 24px 20px; border: 1px solid #a77a5566; border-radius: 24px; background: var(--rm-surface); box-shadow: 0 8px 28px #4922230d; }
+.form label { display: grid; gap: 5px; font-size: 12px; font-weight: 700; }
+.form input, .form select, .form textarea { width: 100%; min-width: 0; border: 1px solid #7c252738; border-radius: 6px; padding: 12px 13px; background: #fffbf5; color: #552326; font-size: 16px; font-weight: 400; line-height: 1.4; }
+.form input:disabled { background: #e9ded4; opacity: .7; }
+.form textarea { resize: vertical; min-height: 110px; }
+.form input::placeholder, .form textarea::placeholder { color: #705456; font-size: 13px; }
+.form .button { justify-self: start; margin-top: 4px; }
+.formStatus { padding: 12px; border: 1px solid #63846450; background: #edf3e4; color: #35543c; border-radius: 5px; font-size: 13px; }
+.formStatus[data-type="error"], .formStatus[data-type="partial"] { background: #fce4dc; color: #822a29; border-color: #b8493940; }
+.greetings { max-height: 480px; overflow-y: auto; margin-top: 24px; padding: 24px 20px; border: 1px solid #a77a5566; border-radius: 24px; background: var(--rm-surface); scrollbar-color: #b1887f #efe0d5; scrollbar-width: thin; }
+.greetingsCount { padding-bottom: 15px; font-size: 11px; letter-spacing: .06em; }
+.greeting { border-top: 1px solid #7c252722; padding: 19px 0; }
+.greeting > div { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.greeting strong { font-size: 13px; overflow-wrap: anywhere; }
+.greeting p { margin: 9px 0 5px; color: #674842; font-size: 13px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.greeting time { font-size: 11px; color: var(--rm-muted); }
+.attendance { font-family: Arial, sans-serif; font-size: 8px; padding: 2px 7px; background: #eedbd5; color: #84433a; border-radius: 20px; }
+.attendance[data-attending="true"] { background: #e0e8d7; color: #4d6341; }
+.footer { min-height: 950px; padding: 65px 24px 260px; background: var(--rm-paper) url("/media/royal-maroon/closing.webp") center / cover no-repeat; text-align: center; }
+.footer > :global(.reveal) > p { color: var(--rm-ink); font-size: 14px; line-height: 1.85; }
+.closingGreeting { margin-top: 15px !important; font-style: italic; }
+.footer .monogram { transform: scale(.75); margin-top: 25px; }
+.footer h2 { color: var(--rm-primary); font-size: 32px; line-height: 1.3; margin: 0 0 25px; }
+.brand { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.brand span { color: var(--rm-muted); font-size: 10px; letter-spacing: .12em; }
+.brand img { width: 110px; height: auto; }
+.navigation { position: fixed; z-index: 20; bottom: calc(15px + env(safe-area-inset-bottom, 0px)); right: 22px; width: 476px; max-width: calc(100% - 36px); display: flex; justify-content: space-around; padding: 9px 12px; border: 1px solid #ceb17270; border-radius: 50px; background: #6d2225ed; color: #fff3e6; backdrop-filter: blur(12px); box-shadow: 0 5px 24px #380f0f33; }
+.navigation a { display: flex; flex: 1; flex-direction: column; justify-content: center; align-items: center; min-width: 0; min-height: 46px; border-radius: 22px; font-size: 10px; gap: 4px; line-height: 1.4; transition: background .2s, color .2s; }
+.navigation a[aria-current="location"] { background: #fff3e6; color: #642024; }
+.navigation a:hover { background: #fff3e620; }
+.navigation a[aria-current="location"]:hover { background: #fff3e6; }
+.navigation a > span { font-size: 9px; line-height: 1.3; }
+.navigation :focus-visible, .musicToggle:focus-visible, .story :focus-visible { outline-color: #fff0e5; }
+.musicToggle { position: fixed; z-index: 21; right: 20px; bottom: calc(99px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 9px 13px; border: 1px solid #ceb1729c; border-radius: 30px; background: #6d2225; color: #fff0e5; cursor: pointer; box-shadow: 0 4px 16px #380f0f25; }
+.musicToggle span { display: block; font-size: 10px; letter-spacing: .04em; }
+
+@keyframes float { 50% { transform: translateY(5px); } }
+@keyframes entrance { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes floralDrift { 0%, 100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(2deg) translateY(-4px); } }
+
+@media (max-width: 900px) {
+  .showcase { display: none; }
+  .panel { width: min(100%, 520px); margin-inline: auto; }
+  .layout { background: #ead9cd; }
+  .cover { background-image: url("/media/royal-maroon/cover.webp"); }
+  .coverContent { padding: 28px 22px; }
+  .coverContent h1 { font-size: 30px; }
+  .coverContent > .monogram { margin-bottom: 18px; }
+  .navigation { right: 50%; transform: translateX(50%); }
+  .musicToggle { right: max(18px, calc((100vw - 520px) / 2 + 18px)); }
+}
+
+@media (max-width: 380px) {
+  .section { padding-inline: 24px; }
+  .hero { padding-inline: 20px; }
+  .coverContent { padding-inline: 16px; }
+  .coverContent h1 { font-size: 26px; }
+  .personPortrait { width: 85%; }
+  .portraitFlower { max-width: 100px; }
+  .footer { padding-inline: 20px; }
+  .introCard, .personDetails, .closingCard { padding-inline: 18px; }
+  .eventCard { padding-inline: 18px; }
+}
+
+@media (max-height: 650px) {
+  .coverContent > .monogram { transform: scale(.7); height: 100px; margin-bottom: 15px; }
+  .coverContent h1 { margin: 12px 0; }
+  .coverContent { padding-top: 16px; padding-bottom: 24px; }
+  .guestName { margin: 6px 0 18px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience *, .experience *::before, .experience *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .experience :global(.reveal) { opacity: 1; transform: none; }
+}

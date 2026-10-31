@@ -23,6 +23,7 @@ function getCategoryForSlug(slug: string): TemplateCategory {
     clean === "netflix" ||
     clean === "java-vibes" ||
     clean === "sunda-vibes" ||
+    clean === "royal-maroon" ||
     clean.includes("netflix") ||
     clean.includes("java") ||
     clean.includes("sunda")
@@ -110,6 +111,15 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Template adat Sunda modern bernuansa Warm Bronze & Ivory dengan ornamen Mahkota Siger, bingkai lengkung floral, alunan kecapi suling, dan animasi scroll dinamis.",
     thumbnail_path: "/media/mockups/mockup-sunda-vibes.webp",
     preview_path: "/sunda-vibes?to=Tamu%20Undangan",
+    category: "spesial",
+  },
+  {
+    id: "00000000-0000-0000-0000-000000000008",
+    slug: "royal-maroon",
+    name: "Royal Maroon",
+    description: "Nuansa marun dan ivory dengan monogram klasik, floral anggrek, lanskap Nusantara, serta fitur RSVP dan dashboard lengkap.",
+    thumbnail_path: "/media/mockups/mockup-royal-maroon.webp",
+    preview_path: "/royal-maroon?to=Tamu%20Undangan",
     category: "spesial",
   },
 ];

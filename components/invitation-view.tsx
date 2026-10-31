@@ -12,6 +12,7 @@ import { NetflixInvitationView } from "@/components/templates/netflix/netflix-in
 import { MustardBlackInvitationView } from "@/components/templates/mustard-black/mustard-black-invitation";
 import { JavaVibesInvitationView } from "@/components/templates/java-vibes/java-vibes-invitation";
 import { SundaVibesInvitationView } from "@/components/templates/sunda-vibes/sunda-vibes-invitation";
+import { RoyalMaroonInvitationView } from "@/components/templates/royal-maroon/royal-maroon-invitation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
@@ -271,6 +272,10 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
 }
 
 export function InvitationView(props: InvitationViewProps) {
+  if (props.invitation.template.slug === "royal-maroon") {
+    return <RoyalMaroonInvitationView {...props} />;
+  }
+
   if (props.invitation.template.slug === "blue-garden") {
     return <BlueGardenInvitationView {...props} />;
   }

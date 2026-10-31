@@ -393,6 +393,19 @@ export const sundaVibesDemoInvitation: Invitation = {
   },
 };
 
+export const royalMaroonDemoInvitation: Invitation = {
+  ...javaVibesDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000108",
+  slug: "royal-maroon",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000008",
+    slug: "royal-maroon",
+    name: "Royal Maroon",
+    theme: { primary: "#7c2527", accent: "#ceb172", background: "#fff0e5" },
+  },
+};
+
 export const demoInvitations = [
   demoInvitation,
   pinkVibesDemoInvitation,
@@ -401,6 +414,7 @@ export const demoInvitations = [
   mustardBlackDemoInvitation,
   javaVibesDemoInvitation,
   sundaVibesDemoInvitation,
+  royalMaroonDemoInvitation,
 ];
 
 export const demoGreetings: Greeting[] = [
