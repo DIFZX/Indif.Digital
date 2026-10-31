@@ -714,48 +714,37 @@
   background: var(--sv-white);
   border: 1px solid var(--sv-card-border);
   border-radius: 32px;
-  padding: 2.2rem 1.5rem 2rem;
+  padding: 2rem 1.25rem 1.75rem;
   box-shadow: var(--sv-shadow-card);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   position: relative;
   overflow: hidden;
   text-align: center;
 }
 
-.eventIconHeader {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--sv-cream) 0%, #faece2 100%);
-  border: 1px solid var(--sv-gold-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.2rem;
-  color: var(--sv-bronze);
-  font-size: 1.3rem;
-  box-shadow: var(--sv-shadow-subtle);
-}
-
 .eventTitle {
   font-family: var(--font-sv-serif);
-  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 6vw, 1.7rem);
   font-weight: 700;
   color: var(--sv-bronze-dark);
-  margin-bottom: 0.6rem;
+  margin: 0 0 0.9rem;
+  line-height: 1.2;
+  text-wrap: balance;
 }
 
 .eventDateBadge {
   display: inline-block;
+  max-width: 100%;
   background: var(--sv-cream);
   border: 1px solid var(--sv-gold-border);
   border-radius: 20px;
-  padding: 0.4rem 1.2rem;
+  padding: 0.45rem 0.9rem;
   font-family: var(--font-sv-sans);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--sv-bronze);
-  margin-bottom: 1.2rem;
+  margin: 0 0 1rem;
+  line-height: 1.5;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -765,14 +754,15 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--sv-dark);
-  margin-bottom: 1.2rem;
+  margin: 0;
+  line-height: 1.6;
 }
 
 .eventVenueDivider {
   width: 60px;
   height: 1px;
   background: var(--sv-gold-border);
-  margin: 1.2rem auto;
+  margin: 1.4rem auto 1.2rem;
 }
 
 .eventVenueLabel {
@@ -790,7 +780,9 @@
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--sv-bronze-dark);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.35;
+  text-wrap: balance;
 }
 
 .eventVenueAddress {
@@ -803,6 +795,9 @@
 
 .btnMap {
   display: inline-flex;
+  width: 100%;
+  max-width: 320px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -811,7 +806,8 @@
   font-family: var(--font-sv-sans);
   font-size: 0.8rem;
   font-weight: 600;
-  padding: 0.7rem 1.6rem;
+  padding: 0.75rem 1rem;
+  line-height: 1.4;
   border-radius: 30px;
   text-decoration: none;
   box-shadow: 0 6px 18px rgba(168, 123, 87, 0.35);
@@ -821,6 +817,10 @@
 .btnMap:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(168, 123, 87, 0.5);
+}
+
+.btnMap svg {
+  flex-shrink: 0;
 }
 
 /* Dress code & Note card */

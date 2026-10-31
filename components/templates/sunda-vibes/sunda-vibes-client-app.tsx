@@ -662,7 +662,6 @@ export function SundaVibesClientApp({
 
           {/* Akad Nikah Card */}
           <div className={`${styles.svReveal} ${styles.eventCard}`}>
-            <div className={styles.eventIconHeader}>💍</div>
             <h3 className={styles.eventTitle}>Akad Nikah</h3>
             <div className={styles.eventDateBadge}>{formattedDate}</div>
             <div className={styles.eventTimeText}>
@@ -693,7 +692,6 @@ export function SundaVibesClientApp({
 
           {/* Resepsi Card */}
           <div className={`${styles.svReveal} ${styles.eventCard}`}>
-            <div className={styles.eventIconHeader}>🎉</div>
             <h3 className={styles.eventTitle}>Resepsi Pernikahan</h3>
             <div className={styles.eventDateBadge}>{formattedDate}</div>
             <div className={styles.eventTimeText}>
