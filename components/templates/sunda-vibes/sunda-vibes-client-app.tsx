@@ -492,7 +492,7 @@ export function SundaVibesClientApp({
             aria-hidden="true"
           >
             <source
-              src="/media/sunda-vibes/Opening Sunda Vibes v2 - Web 720p.mp4"
+              src="/media/sunda-vibes/Opening Sunda Vibes v3 - Web 720p.mp4"
               type="video/mp4"
               onError={() => setHeroContentVisible(true)}
             />
