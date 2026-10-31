@@ -6,8 +6,19 @@ import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
 import styles from "./sunda-vibes.module.css";
+import { SundaIcon } from "./sunda-icons";
 
 const HERO_CONTENT_REVEAL_SECONDS = 7;
+
+const NAV_ITEMS = [
+  { id: "pembuka", label: "Sampul" },
+  { id: "mempelai", label: "Mempelai" },
+  { id: "acara", label: "Acara" },
+  { id: "kisah", label: "Kisah" },
+  { id: "galeri", label: "Galeri" },
+  { id: "hadiah", label: "Tanda Kasih" },
+  { id: "ucapan", label: "Doa & Ucapan" },
+] as const;
 
 type Props = {
   invitation: Invitation;
@@ -277,14 +288,10 @@ export function SundaVibesClientApp({
 
   function toggleMusic() {
     if (!audioRef.current) return;
-    if (playing) {
-      audioRef.current.pause();
-      setPlaying(false);
+    if (audioRef.current.paused) {
+      audioRef.current.play().catch(() => setPlaying(false));
     } else {
-      audioRef.current
-        .play()
-        .then(() => setPlaying(true))
-        .catch(() => setPlaying(false));
+      audioRef.current.pause();
     }
   }
 
@@ -411,7 +418,15 @@ export function SundaVibesClientApp({
   return (
     <div className={`${styles.experience} ${themeClassName}`}>
       {/* Background Audio */}
-      <audio ref={audioRef} src={musicPath} loop preload="auto" />
+      <audio
+        ref={audioRef}
+        src={musicPath}
+        loop
+        preload="auto"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        onError={() => setPlaying(false)}
+      />
 
       {/* ====================================================
           COVER SCREEN MODAL (BEFORE OPENING)
@@ -512,24 +527,24 @@ export function SundaVibesClientApp({
               <span>{invitation.groom_short_name}</span>
             </h1>
             <p className={styles.heroDate}>{formattedDate}</p>
-          </div>
 
-          <button
-            type="button"
-            className={[
-              styles.heroScrollCue,
-              opened && heroContentVisible ? styles.heroScrollCueVisible : "",
-            ].join(" ")}
-            onClick={() => scrollToSection("ayat-suci")}
-            tabIndex={opened && heroContentVisible ? 0 : -1}
-            aria-hidden={!opened || !heroContentVisible}
-            aria-label="Gulir ke bagian pembuka undangan"
-          >
-            <span>Gulir ke bawah</span>
-            <svg width="18" height="22" viewBox="0 0 18 22" fill="none" aria-hidden="true">
-              <path d="M9 2v16M3.5 12.5 9 18l5.5-5.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+            <button
+              type="button"
+              className={[
+                styles.heroScrollCue,
+                opened && heroContentVisible ? styles.heroScrollCueVisible : "",
+              ].join(" ")}
+              onClick={() => scrollToSection("ayat-suci")}
+              tabIndex={opened && heroContentVisible ? 0 : -1}
+              aria-hidden={!opened || !heroContentVisible}
+              aria-label="Gulir ke bagian pembuka undangan"
+            >
+              <span>Gulir ke bawah</span>
+              <svg width="18" height="22" viewBox="0 0 18 22" fill="none" aria-hidden="true">
+                <path d="M9 2v16M3.5 12.5 9 18l5.5-5.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
         </section>
 
         {/* SECTION 2: AYAT SUCI / QUOTE */}
@@ -1233,83 +1248,33 @@ export function SundaVibesClientApp({
           ==================================================== */}
       {opened && (
         <>
-          {/* Floating Audio Play/Pause Button */}
           <button
             type="button"
             onClick={toggleMusic}
-            className={`${styles.floatingAudioBtn} ${playing ? styles.spinning : ""}`}
-            title={playing ? "Jeda Musik" : "Putar Musik"}
-            aria-label="Putar atau jeda musik"
+            className={styles.floatingAudioBtn}
+            title={playing ? "Matikan musik" : "Nyalakan musik"}
+            aria-label="Musik latar"
+            aria-pressed={playing}
           >
-            {playing ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
-              </svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4.27 3L3 4.27l9 9v.28c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4v-1.73l4.27 4.27 1.27-1.27L4.27 3zM14 7h4V3h-6v5.18l2 2V7z" />
-              </svg>
-            )}
+            <SundaIcon name={playing ? "music" : "music-off"} />
+            <span>Musik {playing ? "On" : "Off"}</span>
+            <span className={styles.audioStatus} aria-hidden="true" />
           </button>
 
-          {/* Floating Bottom Navigation Bar */}
           <nav className={styles.floatingBottomNav} aria-label="Navigasi Undangan">
-            <button
-              type="button"
-              onClick={() => scrollToSection("pembuka")}
-              className={`${styles.navBtn} ${activeSection === "pembuka" ? styles.active : ""}`}
-              title="Sampul"
-            >
-              🏠
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection("mempelai")}
-              className={`${styles.navBtn} ${activeSection === "mempelai" ? styles.active : ""}`}
-              title="Mempelai"
-            >
-              💑
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection("acara")}
-              className={`${styles.navBtn} ${activeSection === "acara" ? styles.active : ""}`}
-              title="Acara"
-            >
-              📅
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection("kisah")}
-              className={`${styles.navBtn} ${activeSection === "kisah" ? styles.active : ""}`}
-              title="Kisah"
-            >
-              📖
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection("galeri")}
-              className={`${styles.navBtn} ${activeSection === "galeri" ? styles.active : ""}`}
-              title="Galeri"
-            >
-              🖼️
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection("hadiah")}
-              className={`${styles.navBtn} ${activeSection === "hadiah" ? styles.active : ""}`}
-              title="Tanda Kasih"
-            >
-              🎁
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection("ucapan")}
-              className={`${styles.navBtn} ${activeSection === "ucapan" ? styles.active : ""}`}
-              title="Doa & Ucapan"
-            >
-              💬
-            </button>
+            {NAV_ITEMS.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => scrollToSection(id)}
+                className={`${styles.navBtn} ${activeSection === id ? styles.active : ""}`}
+                title={label}
+                aria-label={label}
+                aria-current={activeSection === id ? "location" : undefined}
+              >
+                <SundaIcon name={id} />
+              </button>
+            ))}
           </nav>
         </>
       )}
