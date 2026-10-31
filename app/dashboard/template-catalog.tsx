@@ -44,8 +44,8 @@ function getTemplatePriceInfo(slug: string, category: TemplateCategory): PriceIn
   if (category === "spesial" || slug === "java-vibes" || slug === "sunda-vibes" || slug === "netflix") {
     return {
       originalPrice: "Rp. 120.000",
-      promoPrice: "Rp. 60.000",
-      discountBadge: "DISC. 50%",
+      promoPrice: "Rp. 80.000",
+      discountBadge: "DISC. 33,33%",
     };
   }
   if (category === "animasi" || slug === "pink-vibes" || slug === "blue-garden") {

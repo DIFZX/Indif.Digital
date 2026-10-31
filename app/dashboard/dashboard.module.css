@@ -417,9 +417,9 @@
 /* Red Diagonal Discount Ribbon */
 .discountRibbon {
   position: absolute;
-  top: 14px;
-  right: -26px;
-  width: 110px;
+  top: 24px;
+  right: -30px;
+  width: 124px;
   background: var(--crimson-discount);
   color: #FFFFFF;
   text-align: center;
@@ -778,9 +778,9 @@
   }
 
   .discountRibbon {
-    top: 10px;
+    top: 22px;
     right: -28px;
-    width: 95px;
+    width: 116px;
     padding: 0.14rem 0;
   }
 
