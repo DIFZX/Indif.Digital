@@ -7,6 +7,8 @@ import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
 import styles from "./sunda-vibes.module.css";
 
+const HERO_CONTENT_REVEAL_SECONDS = 7;
+
 type Props = {
   invitation: Invitation;
   greetings: Greeting[];
@@ -80,6 +82,8 @@ export function SundaVibesClientApp({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState("pembuka");
+  const [heroContentVisible, setHeroContentVisible] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
 
   // Greetings & RSVP state
   const [greetings, setGreetings] = useState<Greeting[]>(initialGreetings);
@@ -92,6 +96,41 @@ export function SundaVibesClientApp({
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const displayGuestName = guestName || "Tamu Undangan";
+
+  // Follow media time so buffering cannot reveal the names too early.
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video || !opened) return;
+
+    let frameId: number | undefined;
+    const watchPlayback = () => {
+      if (video.currentTime >= HERO_CONTENT_REVEAL_SECONDS) {
+        setHeroContentVisible(true);
+        return;
+      }
+      if (video.requestVideoFrameCallback) {
+        frameId = video.requestVideoFrameCallback(watchPlayback);
+      }
+    };
+
+    watchPlayback();
+    if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+      // A preloaded source can fail before React attaches its error handler.
+      const fallbackTimer = window.setTimeout(() => setHeroContentVisible(true), 0);
+      return () => window.clearTimeout(fallbackTimer);
+    }
+    video.play().catch(() => setHeroContentVisible(true));
+
+    return () => {
+      if (frameId !== undefined) video.cancelVideoFrameCallback(frameId);
+    };
+  }, [opened]);
+
+  function handleHeroTimeUpdate() {
+    if (heroVideoRef.current && heroVideoRef.current.currentTime >= HERO_CONTENT_REVEAL_SECONDS) {
+      setHeroContentVisible(true);
+    }
+  }
 
   // Restore wishes saved locally across page refreshes
   useEffect(() => {
@@ -213,6 +252,14 @@ export function SundaVibesClientApp({
   }, [opened]);
 
   function openInvitation() {
+    if (opened || isClosingCover) return;
+
+    // Start from the tap gesture for inline playback on mobile browsers.
+    if (heroVideoRef.current) {
+      heroVideoRef.current.currentTime = 0;
+      heroVideoRef.current.play().catch(() => {});
+    }
+
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
       audioRef.current
@@ -286,7 +333,7 @@ export function SundaVibesClientApp({
       attendance: rsvpAttendance,
       message:
         rsvpMessage.trim() ||
-        `Wilujeng nikah kagem ${coupleNames}, mugi janten kulawarga anu sakinah mawaddah warahmah!`,
+        `Selamat menempuh hidup baru, ${coupleNames}. Semoga menjadi keluarga yang penuh ketenangan, cinta, dan kasih sayang!`,
       created_at: new Date().toISOString(),
     };
 
@@ -318,11 +365,11 @@ export function SundaVibesClientApp({
         });
         setStatusMessage({
           type: "success",
-          text: "Hatur nuhun! Doa restu sareng konfirmasi kehadiran anjeun parantos katampi.",
+          text: "Terima kasih! Doa restu dan konfirmasi kehadiran Anda telah diterima.",
         });
         setRsvpMessage("");
       } else {
-        throw new Error("Gagal ngirim ucapan");
+        throw new Error("Gagal mengirim ucapan");
       }
     } catch {
       // Optimistic fallback
@@ -338,7 +385,7 @@ export function SundaVibesClientApp({
       });
       setStatusMessage({
         type: "success",
-        text: "Hatur nuhun! Doa restu anjeun parantos kacatet.",
+        text: "Terima kasih! Doa restu Anda telah dicatat.",
       });
       setRsvpMessage("");
     } finally {
@@ -349,7 +396,10 @@ export function SundaVibesClientApp({
   function scrollToSection(id: string) {
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
     }
   }
 
@@ -381,7 +431,7 @@ export function SundaVibesClientApp({
                   className={styles.coverSigerImg}
                 />
               </div>
-              <div className={styles.coverSubheader}>The Wedding of</div>
+              <div className={styles.coverSubheader}>Undangan Pernikahan</div>
               <h1 className={styles.coverCoupleTitle}>
                 {invitation.bride_short_name} &amp; {invitation.groom_short_name}
               </h1>
@@ -426,53 +476,64 @@ export function SundaVibesClientApp({
           MAIN INVITATION CONTENT (MOBILE FRAME 480PX)
           ==================================================== */}
       <div className={styles.containerMobile}>
-        {/* SECTION 1: HERO / PEMBUKA */}
-        <section id="pembuka" className={styles.heroSection}>
-          <div className={`${styles.svRevealScale} ${styles.coverSigerWrap}`}>
-            <Image
-              src="/media/sunda-vibes/decor/siger.webp"
-              alt="Siger Sunda Mahkota"
-              width={80}
-              height={75}
-              priority
-              className={styles.coverSigerImg}
+        {/* SECTION 1: OPENING VIDEO (10 SECONDS, NO LOOP) */}
+        <section id="pembuka" className={styles.heroVideoSection}>
+          <video
+            ref={heroVideoRef}
+            className={styles.heroVideo}
+            poster={profilePath || coverPath}
+            muted
+            playsInline
+            preload="auto"
+            onTimeUpdate={handleHeroTimeUpdate}
+            onEnded={() => setHeroContentVisible(true)}
+            onError={() => setHeroContentVisible(true)}
+            tabIndex={-1}
+            aria-hidden="true"
+          >
+            <source
+              src="/media/sunda-vibes/Opening Sunda Vibes v2 - Web 720p.mp4"
+              type="video/mp4"
+              onError={() => setHeroContentVisible(true)}
             />
+          </video>
+
+          <div
+            className={[
+              styles.heroVideoContent,
+              opened && heroContentVisible ? styles.heroVideoContentVisible : "",
+            ].join(" ")}
+            aria-hidden={!opened || !heroContentVisible}
+          >
+            <p className={styles.heroTagline}>UNDANGAN PERNIKAHAN</p>
+            <h1 className={styles.heroCoupleName}>
+              <span>{invitation.bride_short_name}</span>
+              <span className={styles.heroAmpersand}>&amp;</span>
+              <span>{invitation.groom_short_name}</span>
+            </h1>
+            <p className={styles.heroDate}>{formattedDate}</p>
           </div>
 
-          <div className={`${styles.svReveal} ${styles.heroTagline}`}>
-            THE WEDDING OF
-          </div>
-
-          <h1 className={`${styles.svReveal} ${styles.heroCoupleName}`}>
-            {invitation.bride_short_name} &amp; {invitation.groom_short_name}
-          </h1>
-
-          <div className={`${styles.svReveal} ${styles.heroDate}`}>
-            {formattedDate}
-          </div>
-
-          {/* Arched Photo Frame */}
-          <div className={`${styles.svRevealScale} ${styles.heroArchFrame}`}>
-            <Image
-              src={profilePath || coverPath}
-              alt={coupleNames}
-              fill
-              priority
-              className={styles.heroArchImg}
-            />
-          </div>
-
-          <Image
-            src="/media/sunda-vibes/decor/frame.webp"
-            alt="Decorative Frame"
-            width={440}
-            height={55}
-            className={`${styles.svReveal} ${styles.frameDivider}`}
-          />
+          <button
+            type="button"
+            className={[
+              styles.heroScrollCue,
+              opened && heroContentVisible ? styles.heroScrollCueVisible : "",
+            ].join(" ")}
+            onClick={() => scrollToSection("ayat-suci")}
+            tabIndex={opened && heroContentVisible ? 0 : -1}
+            aria-hidden={!opened || !heroContentVisible}
+            aria-label="Gulir ke bagian pembuka undangan"
+          >
+            <span>Gulir ke bawah</span>
+            <svg width="18" height="22" viewBox="0 0 18 22" fill="none" aria-hidden="true">
+              <path d="M9 2v16M3.5 12.5 9 18l5.5-5.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </section>
 
         {/* SECTION 2: AYAT SUCI / QUOTE */}
-        <section className={styles.quoteSection}>
+        <section id="ayat-suci" className={styles.quoteSection}>
           <div className={`${styles.svReveal} ${styles.quoteCard}`}>
             <Image
               src="/media/sunda-vibes/decor/siger.webp"
@@ -483,7 +544,7 @@ export function SundaVibesClientApp({
             />
 
             <div className={styles.bismillahText}>
-              بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+              Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
             </div>
 
             <p className={styles.quoteContent}>
@@ -500,10 +561,10 @@ export function SundaVibesClientApp({
         {/* SECTION 3: THE COUPLE (MEMPELAI) */}
         <section id="mempelai" className={styles.coupleSection}>
           <h2 className={`${styles.svReveal} ${styles.sectionTitleScript}`}>
-            The Couple
+            Mempelai
           </h2>
           <div className={`${styles.svReveal} ${styles.sectionSubtitle}`}>
-            Calon Panganten
+            Kedua Calon Pengantin
           </div>
 
           {/* Bride Card */}
@@ -516,7 +577,7 @@ export function SundaVibesClientApp({
                 className={styles.couplePhotoImg}
               />
             </div>
-            <div className={styles.coupleRole}>Pengantin Wanita (Neng)</div>
+            <div className={styles.coupleRole}>Pengantin Wanita</div>
             <h3 className={styles.coupleFullName}>{invitation.bride_name}</h3>
             <p className={styles.coupleParents}>
               {invitation.bride_parents || "Putri Pertama dari Bapak Bambang Wijaya & Ibu Siti Aminah"}
@@ -549,7 +610,7 @@ export function SundaVibesClientApp({
                 className={styles.couplePhotoImg}
               />
             </div>
-            <div className={styles.coupleRole}>Pengantin Pria (A)</div>
+            <div className={styles.coupleRole}>Pengantin Pria</div>
             <h3 className={styles.coupleFullName}>{invitation.groom_name}</h3>
             <p className={styles.coupleParents}>
               {invitation.groom_parents || "Putra Kedua dari Bapak Hendra Kusuma & Ibu Dewi Lestari"}
@@ -576,12 +637,12 @@ export function SundaVibesClientApp({
             Waktu &amp; Tempat
           </h2>
           <div className={`${styles.svReveal} ${styles.sectionSubtitle}`}>
-            Runtuyan Acara
+            Rangkaian Acara
           </div>
 
           <p className={`${styles.svReveal} ${styles.introSalam}`}>
             {invitation.opening_text ||
-              "Kalayan nyuhunkeun widi sareng ridho ti Gusti Allah SWT, simkuring saparakanca seja ngahaturanan uninga kana syukuran pernikahan putra-putri kami:"}
+              "Dengan memohon rahmat dan rida Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan putra-putri kami:"}
           </p>
 
           {/* Akad Nikah Card */}
@@ -648,18 +709,18 @@ export function SundaVibesClientApp({
 
           {/* Dress Code & Catatan */}
           <div className={`${styles.svReveal} ${styles.dressCodeCard}`}>
-            <div className={styles.dressCodeTitle}>Dress Code Acara</div>
+            <div className={styles.dressCodeTitle}>Ketentuan Busana</div>
             <p className={styles.dressCodeDesc}>
-              Kalayan hormat, simkuring saparakanca nganjurkeun para tamu uleman ngagem acuk kalayan warna-warna bumi (Earth Tone):
+              Dengan hormat, kami mengundang para tamu untuk mengenakan busana bernuansa warna bumi:
             </p>
             <div className={styles.dressCodePalette}>
-              <div className={styles.colorSwatch} style={{ backgroundColor: "#A87B57" }} title="Warm Bronze"></div>
-              <div className={styles.colorSwatch} style={{ backgroundColor: "#C19C8E" }} title="Rosewood"></div>
-              <div className={styles.colorSwatch} style={{ backgroundColor: "#E3CEBE" }} title="Champagne Cream"></div>
-              <div className={styles.colorSwatch} style={{ backgroundColor: "#85937D" }} title="Sage Olive"></div>
+              <div className={styles.colorSwatch} style={{ backgroundColor: "#A87B57" }} title="Perunggu Hangat"></div>
+              <div className={styles.colorSwatch} style={{ backgroundColor: "#C19C8E" }} title="Cokelat Mawar"></div>
+              <div className={styles.colorSwatch} style={{ backgroundColor: "#E3CEBE" }} title="Krem Keemasan"></div>
+              <div className={styles.colorSwatch} style={{ backgroundColor: "#85937D" }} title="Hijau Zaitun"></div>
             </div>
             <p className={styles.dressCodeDesc} style={{ marginTop: "0.8rem", fontSize: "0.72rem" }}>
-              *Punten sateuacanna supados tetep ngiringan protokol kasehatan sareng katertiban salami acara lumangsung.
+              Mohon tetap menjaga kesehatan dan ketertiban selama acara berlangsung.
             </p>
           </div>
         </section>
@@ -667,20 +728,20 @@ export function SundaVibesClientApp({
         {/* SECTION 5: COUNTDOWN & GOOGLE CALENDAR */}
         <section className={styles.countdownSection}>
           <h2 className={`${styles.svReveal} ${styles.sectionTitleScript}`}>
-            Counting The Days
+            Menghitung Hari
           </h2>
           <div className={`${styles.svReveal} ${styles.sectionSubtitle}`}>
-            Ngetang Dinten
+            Menuju Hari Bahagia
           </div>
 
           <div className={`${styles.svReveal} ${styles.countdownGrid}`}>
             <div className={styles.countdownBox}>
               <div className={styles.countdownNumber}>{timeLeft.days}</div>
-              <div className={styles.countdownLabel}>Dinten</div>
+              <div className={styles.countdownLabel}>Hari</div>
             </div>
             <div className={styles.countdownBox}>
               <div className={styles.countdownNumber}>{timeLeft.hours}</div>
-              <div className={styles.countdownLabel}>Tabuh</div>
+              <div className={styles.countdownLabel}>Jam</div>
             </div>
             <div className={styles.countdownBox}>
               <div className={styles.countdownNumber}>{timeLeft.minutes}</div>
@@ -704,14 +765,14 @@ export function SundaVibesClientApp({
               <line x1="8" y1="2" x2="8" y2="6"></line>
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <span>Simpen kana Google Calendar</span>
+            <span>Simpan ke Kalender Google</span>
           </a>
 
-          {/* Live Streaming card */}
+          {/* Siaran Langsung card */}
           <div className={`${styles.svReveal} ${styles.streamingCard}`}>
-            <div className={styles.streamingTitle}>Live Streaming</div>
+            <div className={styles.streamingTitle}>Siaran Langsung</div>
             <p className={styles.streamingDesc}>
-              Kagem wargi atanapi rerencangan anu teu tiasa sumping langsung, tiasa nyakseni momen kabagjaan ieu sacara daring ngalangkungan siaran langsung di handap ieu:
+              Bagi keluarga dan sahabat yang belum dapat hadir, silakan menyaksikan momen bahagia kami melalui siaran langsung berikut:
             </p>
             <a
               href="https://youtube.com"
@@ -722,7 +783,7 @@ export function SundaVibesClientApp({
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
               </svg>
-              <span>Nongton Live Streaming</span>
+              <span>Tonton Siaran Langsung</span>
             </a>
           </div>
         </section>
@@ -731,10 +792,10 @@ export function SundaVibesClientApp({
         <section id="kisah" className={styles.storySection}>
           <div style={{ textAlign: "center" }}>
             <h2 className={`${styles.svReveal} ${styles.sectionTitleScript}`}>
-              Love Stories
+              Kisah Cinta Kami
             </h2>
             <div className={`${styles.svReveal} ${styles.sectionSubtitle}`}>
-              Lalampahan Asih
+              Perjalanan Bersama
             </div>
           </div>
 
@@ -755,15 +816,15 @@ export function SundaVibesClientApp({
                   <div className={styles.storyYearBadge}>2021</div>
                   <h3 className={styles.storyTitle}>Pertemuan Pertama</h3>
                   <p className={styles.storyText}>
-                    Patepang dina hiji kasempetan anu saderhana, ngawitan silih kenal sareng silih ngabagi carita dugi ka tuwuh rasa asih anu tulus.
+                    Berawal dari pertemuan sederhana, kami saling mengenal dan berbagi cerita hingga tumbuh rasa cinta yang tulus.
                   </p>
                 </div>
                 <div className={`${styles.svReveal} ${styles.storyCard}`}>
                   <div className={styles.storyNodeDot}></div>
                   <div className={styles.storyYearBadge}>2023</div>
-                  <h3 className={styles.storyTitle}>Perjalanan Asih</h3>
+                  <h3 className={styles.storyTitle}>Perjalanan Cinta</h3>
                   <p className={styles.storyText}>
-                    Ngaliwatan sagala dinamika sareng kabagjaan sasarengan, nguatkeun komitmen kanggo silih damping dina kaayaan naon wae.
+                    Melalui berbagai cerita dan kebahagiaan bersama, kami menguatkan komitmen untuk saling mendampingi dalam setiap keadaan.
                   </p>
                 </div>
                 <div className={`${styles.svReveal} ${styles.storyCard}`}>
@@ -771,7 +832,7 @@ export function SundaVibesClientApp({
                   <div className={styles.storyYearBadge}>2025</div>
                   <h3 className={styles.storyTitle}>Momen Lamaran</h3>
                   <p className={styles.storyText}>
-                    Kalayan restu ti sepuh kadua pihak, kami ngalengkahkeun tekad kanggo ngabeungkeut jangji dina acara lamaran anu khidmat.
+                    Dengan restu kedua orang tua, kami memantapkan langkah untuk mengikat janji dalam acara lamaran yang khidmat.
                   </p>
                 </div>
                 <div className={`${styles.svReveal} ${styles.storyCard}`}>
@@ -779,7 +840,7 @@ export function SundaVibesClientApp({
                   <div className={styles.storyYearBadge}>2026</div>
                   <h3 className={styles.storyTitle}>Menuju Halal</h3>
                   <p className={styles.storyText}>
-                    Kini dinten anu dinanti parantos cunduk, nyampurnakeun satengahing ageman dina ikatan suci pernikahan anu abadi.
+                    Kini hari yang dinantikan telah tiba. Kami siap memulai kehidupan bersama dalam ikatan suci pernikahan.
                   </p>
                 </div>
               </>
@@ -790,14 +851,14 @@ export function SundaVibesClientApp({
         {/* SECTION 7: GALERI FOTO & LIGHTBOX */}
         <section id="galeri" className={styles.gallerySection}>
           <h2 className={`${styles.svReveal} ${styles.sectionTitleScript}`}>
-            Our Gallery
+            Galeri Kenangan
           </h2>
           <div className={`${styles.svReveal} ${styles.sectionSubtitle}`}>
             Momen Bahagia
           </div>
 
           <div className={`${styles.svReveal} ${styles.galleryQuote}`}>
-            &ldquo;Constantly, consistently, continually, You.&rdquo;
+            &ldquo;Dalam setiap langkah dan waktu, selalu kamu.&rdquo;
           </div>
 
           <div className={`${styles.svReveal} ${styles.galleryGrid}`}>
@@ -877,14 +938,14 @@ export function SundaVibesClientApp({
         {/* SECTION 8: WEDDING GIFT (TANDA KASIH & AMPLOP DIGITAL) */}
         <section id="hadiah" className={styles.giftSection}>
           <h2 className={`${styles.svReveal} ${styles.sectionTitleScript}`}>
-            Wedding Gift
+            Hadiah Pernikahan
           </h2>
           <div className={`${styles.svReveal} ${styles.sectionSubtitle}`}>
-            Tanda Asih
+            Tanda Kasih
           </div>
 
           <p className={`${styles.svReveal} ${styles.giftIntro}`}>
-            Tanpa ngirangan rasa hormat, kagem Bapak/Ibu/Wargi sadayana anu hoyong masihan tanda asih kagem kadua mempelai, tiasa ngalangkungan rekening di handap ieu:
+            Tanpa mengurangi rasa hormat, bagi Bapak/Ibu/Saudara/i yang ingin memberikan tanda kasih kepada kedua mempelai, dapat melalui rekening berikut:
           </p>
 
           {/* ATM Card 1: BCA */}
@@ -932,7 +993,7 @@ export function SundaVibesClientApp({
                 <span>Salin Nomor Rekening</span>
               </button>
               {copiedKey === "bca-1" && (
-                <span className={styles.copyToast}>Kasalik!</span>
+                <span className={styles.copyToast}>Berhasil disalin!</span>
               )}
             </div>
           </div>
@@ -971,7 +1032,7 @@ export function SundaVibesClientApp({
                 <span>Salin Nomor Rekening</span>
               </button>
               {copiedKey === "mandiri-2" && (
-                <span className={styles.copyToast}>Kasalik!</span>
+                <span className={styles.copyToast}>Berhasil disalin!</span>
               )}
             </div>
           </div>
@@ -990,7 +1051,7 @@ export function SundaVibesClientApp({
               </div>
             </div>
             <p className={styles.dressCodeDesc} style={{ marginBottom: "0.8rem" }}>
-              Alamat Pangiriman: Kediaman Mempelai Wanita, Jl. Cisurupan No. 28, RT 02 / RW 05, Cisurupan, Garut / Bandung. Penerima: Dita Maharani Putri (0812-3456-7890).
+              Alamat Pengiriman: Kediaman Mempelai Wanita, Jl. Cisurupan No. 28, RT 02 / RW 05, Cisurupan, Garut / Bandung. Penerima: Dita Maharani Putri (0812-3456-7890).
             </p>
             <button
               type="button"
@@ -1006,7 +1067,7 @@ export function SundaVibesClientApp({
               <span>Salin Alamat Kado</span>
             </button>
             {copiedKey === "alamat-kado" && (
-              <span className={styles.copyToast}>Alamat Kasalik!</span>
+              <span className={styles.copyToast}>Alamat berhasil disalin!</span>
             )}
           </div>
         </section>
@@ -1017,7 +1078,7 @@ export function SundaVibesClientApp({
             Doa &amp; Ucapan
           </h2>
           <div className={`${styles.svReveal} ${styles.sectionSubtitle}`}>
-            Pangesto &amp; Konfirmasi
+            Doa Restu &amp; Konfirmasi
           </div>
 
           <div className={`${styles.svReveal} ${styles.wishesCard}`}>
@@ -1028,7 +1089,7 @@ export function SundaVibesClientApp({
                   type="text"
                   value={rsvpName}
                   onChange={(e) => setRsvpName(e.target.value)}
-                  placeholder="Ketik nami anjeun di dieu..."
+                  placeholder="Tuliskan nama lengkap Anda..."
                   required
                   className={styles.formInput}
                 />
@@ -1044,7 +1105,7 @@ export function SundaVibesClientApp({
                   className={styles.formSelect}
                 >
                   <option value="attending">Insya Allah Hadir</option>
-                  <option value="not_attending">Hapunten, Teu Tiasa Hadir</option>
+                  <option value="not_attending">Maaf, Belum Bisa Hadir</option>
                 </select>
               </div>
 
@@ -1065,11 +1126,11 @@ export function SundaVibesClientApp({
               )}
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Doa &amp; Ucapan kagem Mempelai</label>
+                <label className={styles.formLabel}>Doa &amp; Ucapan untuk Mempelai</label>
                 <textarea
                   value={rsvpMessage}
                   onChange={(e) => setRsvpMessage(e.target.value)}
-                  placeholder="Tuliskeun doa sareng harepan sae kagem kadua mempelai..."
+                  placeholder="Tuliskan doa dan harapan terbaik untuk kedua mempelai..."
                   className={styles.formTextarea}
                 ></textarea>
               </div>
@@ -1080,7 +1141,7 @@ export function SundaVibesClientApp({
                 className={styles.btnSubmitWishes}
                 id="btn-submit-rsvp"
               >
-                <span>{submitting ? "Ngirimkeun..." : "Kirim Doa &amp; Konfirmasi"}</span>
+                <span>{submitting ? "Mengirim..." : "Kirim Doa & Konfirmasi"}</span>
               </button>
 
               {statusMessage && (
@@ -1104,7 +1165,7 @@ export function SundaVibesClientApp({
             <div className={styles.wishesFeed}>
               {greetings.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "1.5rem", color: "var(--sv-muted)", fontSize: "0.82rem" }}>
-                  Tacan aya ucapan. Janten anu munggaran ngintun doa restu!
+                  Belum ada ucapan. Jadilah yang pertama mengirimkan doa restu!
                 </div>
               ) : (
                 greetings.map((item, idx) => (
@@ -1118,7 +1179,7 @@ export function SundaVibesClientApp({
                             : styles.badgeNotAttending
                         }`}
                       >
-                        {item.attendance === "attending" ? "Hadir" : "Teu Hadir"}
+                        {item.attendance === "attending" ? "Hadir" : "Tidak Hadir"}
                       </span>
                     </div>
                     <p className={styles.wishMessage}>{item.message}</p>
@@ -1145,12 +1206,12 @@ export function SundaVibesClientApp({
           />
 
           <h2 className={`${styles.svReveal} ${styles.closingTitle}`}>
-            Hatur Nuhun
+            Terima Kasih
           </h2>
 
           <p className={`${styles.svReveal} ${styles.closingText}`}>
             {invitation.closing_text ||
-              "Mangrupikeun hiji kahormatan sareng kabagjaan kanggo simkuring saparakanca saupami Bapak/Ibu/Saudara/i kersa sumping ngaluuhan sarta maparin doa restu ka kadua calon panganten. Hatur nuhun kana sagala perhatosan sareng kasaeanana."}
+              "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kedua mempelai. Terima kasih atas perhatian dan doa baik yang diberikan."}
           </p>
 
           <div className={`${styles.svReveal} ${styles.closingCoupleSign}`}>
@@ -1162,7 +1223,7 @@ export function SundaVibesClientApp({
           </div>
 
           <div className={styles.watermarkBrand}>
-            Made with ❤️ by {BRAND.name}
+            Dibuat dengan ❤️ oleh {BRAND.name}
           </div>
         </section>
       </div>
@@ -1177,8 +1238,8 @@ export function SundaVibesClientApp({
             type="button"
             onClick={toggleMusic}
             className={`${styles.floatingAudioBtn} ${playing ? styles.spinning : ""}`}
-            title={playing ? "Jeda Musik" : "Puter Musik"}
-            aria-label="Puter atanapi Jeda Musik"
+            title={playing ? "Jeda Musik" : "Putar Musik"}
+            aria-label="Putar atau jeda musik"
           >
             {playing ? (
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -1237,7 +1298,7 @@ export function SundaVibesClientApp({
               type="button"
               onClick={() => scrollToSection("hadiah")}
               className={`${styles.navBtn} ${activeSection === "hadiah" ? styles.active : ""}`}
-              title="Tanda Asih"
+              title="Tanda Kasih"
             >
               🎁
             </button>

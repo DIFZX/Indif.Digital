@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Pinyon+Script&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
-
 /* Color tokens matching https://the.gandilova.com/tema/montion-4/ (Adat Sunda Modern) */
 :root {
   --sv-bronze: #A87B57;
@@ -19,9 +17,6 @@
   --sv-shadow-card: 0 16px 40px rgba(122, 84, 54, 0.12);
   --sv-shadow-glow: 0 0 25px rgba(168, 123, 87, 0.3);
 
-  --font-sv-script: 'Pinyon Script', cursive;
-  --font-sv-serif: 'Libre Caslon Text', Georgia, serif;
-  --font-sv-sans: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Keyframe animations */
@@ -99,10 +94,13 @@
    OVERALL CONTAINER & 480PX MOBILE FRAME
    ==================================================== */
 .experience {
+  --font-sv-display: var(--font-sunda-display), Georgia, "Times New Roman", serif;
+  --font-sv-serif: var(--font-sv-display);
+  --font-sv-sans: var(--font-sunda-body), Arial, sans-serif;
   min-height: 100vh;
   background: radial-gradient(circle at 50% 15%, #463428 0%, #1e150f 100%);
   color: var(--sv-dark);
-  font-family: var(--sv-sans);
+  font-family: var(--font-sv-sans);
   overflow-x: hidden;
   position: relative;
   -webkit-font-smoothing: antialiased;
@@ -246,12 +244,14 @@
 }
 
 .coverCoupleTitle {
-  font-family: var(--font-sv-script);
-  font-size: 3.4rem;
+  font-family: var(--font-sv-display);
+  font-size: clamp(2.5rem, 10vw, 3.4rem);
   line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
   color: var(--sv-bronze-dark);
   margin: 0;
-  font-weight: normal;
   text-shadow: 0 2px 10px rgba(168, 123, 87, 0.15);
 }
 
@@ -349,72 +349,156 @@
 /* ====================================================
    HERO / COVER SECTION (INSIDE APP)
    ==================================================== */
-.heroSection {
+.heroVideoSection {
   position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3.5rem 1.5rem 3rem;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  display: grid;
+  place-items: center;
   text-align: center;
   overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+  background: var(--sv-cream);
 }
 
-.heroArchFrame {
-  position: relative;
-  width: 250px;
-  height: 340px;
-  border-radius: 160px 160px 24px 24px;
-  overflow: hidden;
-  box-shadow: 0 20px 45px rgba(122, 84, 54, 0.25);
-  border: 5px solid var(--sv-white);
-  outline: 1.5px solid var(--sv-gold-border);
-  margin: 1.2rem auto;
-}
-
-.heroArchImg {
+.heroVideo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  pointer-events: none;
 }
 
-.heroFloralArch {
+.heroVideoContent {
   position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110%;
-  pointer-events: none;
-  opacity: 0.9;
+  top: 29%;
+  left: 15%;
+  z-index: 1;
+  width: 70%;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity 1.1s ease, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), visibility 1.1s;
+}
+
+.heroVideoContentVisible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .heroTagline {
-  font-family: var(--font-sv-sans);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.28em;
+  margin: 0 0 1rem;
   color: var(--sv-bronze);
-  font-weight: 600;
-  margin-bottom: 0.4rem;
+  font-family: var(--font-sv-sans);
+  font-size: clamp(0.55rem, 2.4cqw, 0.68rem);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
 }
 
 .heroCoupleName {
-  font-family: var(--font-sv-script);
-  font-size: 3.8rem;
-  color: var(--sv-bronze-dark);
-  line-height: 1.05;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.04em;
   margin: 0;
-  font-weight: normal;
+  color: var(--sv-bronze-dark);
+  font-family: var(--font-sv-display);
+  font-size: clamp(2.5rem, 14cqw, 4.2rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+}
+
+.heroCoupleName > span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.heroAmpersand {
+  color: var(--sv-bronze);
+  font-size: 0.48em;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.1;
 }
 
 .heroDate {
-  font-family: var(--font-sv-sans);
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
+  margin: 1.1rem 0 0;
   color: var(--sv-muted);
+  font-family: var(--font-sv-sans);
+  font-size: clamp(0.57rem, 2.65cqw, 0.75rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+}
+
+.heroScrollCue {
+  position: absolute;
+  top: 61%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.4rem 0.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--sv-bronze-dark);
+  font-family: var(--font-sv-sans);
+  font-size: clamp(0.5rem, 2cqw, 0.6rem);
   font-weight: 500;
-  margin-top: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity 1s ease, transform 1s ease, visibility 1s;
+}
+
+.heroScrollCueVisible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  transition-delay: 0.5s;
+}
+
+.heroScrollCue svg {
+  animation: svScrollDown 2s ease-in-out infinite;
+}
+
+.heroScrollCue:focus-visible {
+  outline: 1px solid var(--sv-bronze);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+@keyframes svScrollDown {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroVideoContent,
+  .heroScrollCue {
+    transition: none;
+  }
+
+  .heroScrollCue svg {
+    animation: none;
+  }
 }
 
 /* Horizontal Decorative Frame Divider */
@@ -457,8 +541,9 @@
 }
 
 .bismillahText {
-  font-family: 'Amiri', 'Traditional Arabic', serif;
-  font-size: 1.55rem;
+  font-family: var(--font-sv-serif);
+  font-size: 1.15rem;
+  font-style: italic;
   color: var(--sv-bronze-dark);
   margin-bottom: 1.2rem;
   line-height: 1.8;
@@ -496,8 +581,11 @@
 }
 
 .sectionTitleScript {
-  font-family: var(--font-sv-script);
-  font-size: 3.2rem;
+  font-family: var(--font-sv-display);
+  font-size: clamp(2.3rem, 9vw, 3rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
   color: var(--sv-bronze-dark);
   margin: 0 0 0.3rem;
   line-height: 1;
@@ -602,7 +690,7 @@
 }
 
 .coupleAmpersand {
-  font-family: var(--font-sv-script);
+  font-family: var(--font-sv-display);
   font-size: 3.5rem;
   color: var(--sv-bronze);
   line-height: 1;
@@ -1420,8 +1508,9 @@
 }
 
 .closingTitle {
-  font-family: var(--font-sv-script);
-  font-size: 3.5rem;
+  font-family: var(--font-sv-display);
+  font-size: clamp(2.5rem, 10vw, 3.2rem);
+  font-weight: 500;
   color: var(--sv-bronze-dark);
   margin: 0 0 0.8rem;
   line-height: 1;
@@ -1439,7 +1528,7 @@
 }
 
 .closingCoupleSign {
-  font-family: var(--font-sv-script);
+  font-family: var(--font-sv-display);
   font-size: 3rem;
   color: var(--sv-bronze-dark);
   margin-bottom: 0.4rem;

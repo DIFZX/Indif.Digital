@@ -1,6 +1,7 @@
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
-import styles from "./sunda-vibes.module.css";
+import { localizeSundaInvitation } from "./indonesian-copy";
+import { sundaBodyFont, sundaDisplayFont } from "./fonts";
 import { SundaVibesClientApp } from "./sunda-vibes-client-app";
 
 type SundaVibesInvitationProps = {
@@ -27,11 +28,12 @@ function calendarUrl(invitation: Invitation) {
 }
 
 export function SundaVibesInvitationView({
-  invitation,
+  invitation: sourceInvitation,
   greetings,
   guestName,
   initiallyOpened = false,
 }: SundaVibesInvitationProps) {
+  const invitation = localizeSundaInvitation(sourceInvitation);
   const coupleNames = `${invitation.bride_short_name} & ${invitation.groom_short_name}`;
 
   // Default to photos in /media/sunda-vibes/
@@ -75,7 +77,7 @@ export function SundaVibesInvitationView({
       storyImagePath={storyImagePath}
       musicPath={musicPath}
       calendarUrl={calendarUrl(invitation)}
-      themeClassName={`${styles.experience}`}
+      themeClassName={[sundaDisplayFont.variable, sundaBodyFont.variable].join(" ")}
     />
   );
 }
