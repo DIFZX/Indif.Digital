@@ -308,8 +308,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  /* Preserve the complete 9:16 decorative frame on tall Android screens. */
-  object-fit: contain;
+  /* Use only the scaling needed to fill the hero without letterboxing. */
+  object-fit: cover;
   object-position: center;
   z-index: 1;
 }
