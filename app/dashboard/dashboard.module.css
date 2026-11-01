@@ -469,7 +469,7 @@
   align-items: center;
   text-align: center;
   flex: 1;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .cardTitle {
@@ -508,6 +508,7 @@
   align-items: center;
   gap: 0.45rem;
   width: 100%;
+  margin-top: auto;
 }
 
 .btnLihatContoh {
@@ -831,6 +832,7 @@
   .cardPriceBox {
     margin-bottom: 0.6rem;
     gap: 0.3rem;
+    flex-wrap: wrap;
   }
 
   .originalPrice {
@@ -849,12 +851,17 @@
 
   .btnLihatContoh {
     width: 100%;
+    min-height: 44px;
     font-size: 0.68rem;
     padding: 0.42rem 0.5rem;
   }
 
   .btnPesanIcon {
-    display: none; /* Single prominent button on mobile keeps cards clean */
+    display: inline-flex;
+    width: 100%;
+    min-height: 44px;
+    font-size: 0.72rem;
+    padding: 0.42rem 0.5rem;
   }
 
   .floatingWhatsappBtn {

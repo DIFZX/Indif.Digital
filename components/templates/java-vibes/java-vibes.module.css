@@ -292,13 +292,15 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  min-height: 580px;
+  height: 100svh;
+  flex-shrink: 0;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #000000;
+  background-color: var(--jv-parchment);
   isolation: isolate;
+  container-type: inline-size;
 }
 
 .heroVideo {
@@ -306,7 +308,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* Preserve the complete 9:16 decorative frame on tall Android screens. */
+  object-fit: contain;
   object-position: center;
   z-index: 1;
 }
@@ -327,9 +330,9 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2.5rem 1.5rem;
-  max-width: 400px;
-  width: 90%;
+  padding: 1.5rem 0.5rem;
+  max-width: min(400px, calc(100svh * 9 / 16 * 0.82));
+  width: 82%;
   box-sizing: border-box;
 }
 
@@ -370,7 +373,7 @@
 
 .heroKicker {
   font-family: var(--font-jv-latin);
-  font-size: 2.1rem;
+  font-size: clamp(1.5rem, 7cqw, 2.1rem);
   color: var(--jv-maroon);
   line-height: 1;
   margin-bottom: 0.35rem;
@@ -379,7 +382,7 @@
 
 .heroCoupleTitle {
   font-family: var(--font-jv-serif);
-  font-size: 2.9rem;
+  font-size: clamp(1.8rem, 10cqw, 2.9rem);
   font-weight: 700;
   color: var(--jv-maroon);
   letter-spacing: -0.02em;
@@ -410,7 +413,7 @@
 
 .heroDateBadge {
   font-family: var(--font-jv-sans);
-  font-size: 0.92rem;
+  font-size: clamp(0.62rem, 2.8cqw, 0.92rem);
   font-weight: 700;
   color: #6C4A11;
   letter-spacing: 0.18em;

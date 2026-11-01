@@ -65,8 +65,8 @@ function getTemplatePriceInfo(slug: string, category: TemplateCategory): PriceIn
 function getMockupThumbnail(slug: string, fallbackPath: string | null): string {
   const map: Record<string, string> = {
     "java-vibes": "/media/mockups/mockup-java-vibes.webp",
-    "royal-maroon": "/media/mockups/mockup-royal-maroon.webp",
-    "sunda-vibes": "/media/mockups/mockup-sunda-vibes.webp",
+    "royal-maroon": "/media/mockups/mockup-royal-maroon-v2.webp",
+    "sunda-vibes": "/media/mockups/mockup-sunda-vibes-v4-1.webp",
     "netflix": "/media/mockups/mockup-netflix.webp",
     "blue-garden": "/media/mockups/mockup-blue-garden.webp",
     "pink-vibes": "/media/mockups/mockup-pink-vibes.webp",
