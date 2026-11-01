@@ -27,7 +27,10 @@ export async function getInvitation(slug: string): Promise<Invitation | null> {
     .eq("status", "published")
     .single();
 
-  if (error || !data) {
+  // Inactive catalogue templates can be hidden by RLS while the published
+  // invitation is still readable. Use the known demo instead of rendering a
+  // null template relation; custom invitations without a demo stay unavailable.
+  if (error || !data || !data.template) {
     return demoInvitations.find((invitation) => invitation.slug === slug) ?? null;
   }
   return data as unknown as Invitation;

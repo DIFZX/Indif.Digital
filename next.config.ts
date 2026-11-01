@@ -4,6 +4,7 @@ const configuredMediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_BASE_URL?.trim();
 const mediaBaseUrl = configuredMediaBaseUrl ? new URL(configuredMediaBaseUrl) : null;
 const mediaPathPrefix = mediaBaseUrl?.pathname.replace(/\/+$/, "") ?? "";
 const mediaOrigin = mediaBaseUrl?.origin;
+const isDevelopment = process.env.NODE_ENV === "development";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -11,11 +12,11 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   `img-src 'self' data: blob:${mediaOrigin ? ` ${mediaOrigin}` : ""}`,
   `media-src 'self' blob:${mediaOrigin ? ` ${mediaOrigin}` : ""}`,
-  "font-src 'self' data:",
+  "font-src 'self' data: https://fonts.gstatic.com",
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
   "upgrade-insecure-requests",
 ].join("; ");

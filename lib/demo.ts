@@ -406,6 +406,19 @@ export const royalMaroonDemoInvitation: Invitation = {
   },
 };
 
+export const blushRoseDemoInvitation: Invitation = {
+  ...sundaVibesDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000109",
+  slug: "blush-rose",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000009",
+    slug: "blush-rose",
+    name: "Pinky Bloom",
+    theme: { primary: "#b51e40", accent: "#f4aec7", background: "#fff0f6" },
+  },
+};
+
 export const demoInvitations = [
   demoInvitation,
   pinkVibesDemoInvitation,
@@ -415,6 +428,7 @@ export const demoInvitations = [
   javaVibesDemoInvitation,
   sundaVibesDemoInvitation,
   royalMaroonDemoInvitation,
+  blushRoseDemoInvitation,
 ];
 
 export const demoGreetings: Greeting[] = [

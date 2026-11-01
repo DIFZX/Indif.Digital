@@ -41,6 +41,7 @@ function getCategoryForSlug(slug: string): TemplateCategory {
     clean === "greeny-flowers" ||
     clean === "mustard-black" ||
     clean === "royal-maroon" ||
+    clean === "blush-rose" ||
     clean.includes("green") ||
     clean.includes("mustard")
   ) {
@@ -120,6 +121,15 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Nuansa marun dan ivory dengan monogram klasik, floral anggrek, lanskap Nusantara, serta fitur RSVP dan dashboard lengkap.",
     thumbnail_path: "/media/mockups/mockup-royal-maroon-v2.webp",
     preview_path: "/royal-maroon?to=Tamu%20Undangan",
+    category: "minimalis",
+  },
+  {
+    id: "00000000-0000-0000-0000-000000000009",
+    slug: "blush-rose",
+    name: "Pinky Bloom",
+    description: "Tema minimalis romantis bernuansa pink dan merah mawar, dengan bingkai lengkung, ilustrasi floral, serta animasi lembut.",
+    thumbnail_path: "/media/mockups/mockup-blush-rose.webp",
+    preview_path: "/blush-rose?to=Tamu%20Undangan",
     category: "minimalis",
   },
 ];

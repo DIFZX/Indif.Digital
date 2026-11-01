@@ -6,6 +6,16 @@
 
 ## Images
 
+### Pinky Bloom
+
+`blush-rose/rose-pink-red-v1.webp` - original transparent pink-and-red rose ornament generated for this project with built-in OpenAI imagegen. The exact prompt is in `blush-rose/ASSET-PROMPT.md`. `blush-rose/petal-divider.svg` and `blush-rose/love-seal.svg` are original code-drawn ornaments.
+
+`blush-rose/*.webp` - decorative blush papers, rose ornaments, and bank-card background adapted from the Special 08 reference supplied by the project owner: https://inv.punakawandigital.id/spesial-08/ (original assets under `/wp-content/uploads/2026/06/`). Optimized and hosted locally. The couple's photos, gallery, music, names, dates, story, and other wedding details come from the project's existing Sunda Vibes invitation.
+
+`blush-rose/fonts/photograph.woff2` (Photograph) and `blush-rose/fonts/anydore.woff2` (Anydore) - locally hosted typography from the same supplied design reference (`/wp-content/uploads/useanyfont/`). No reference-site couple photos, wedding data, messages, or music are used.
+
+`mockups/mockup-blush-rose.webp` - generated from a browser capture of the actual Pinky Bloom invitation in the project's phone-frame layout.
+
 ### Royal Maroon
 
 `royal-maroon/*.webp` - decorative backgrounds and floral ornament adapted from the Premium 07 design reference supplied by the project owner: https://inv.punakawandigital.id/premium-07/ (original assets under `/wp-content/uploads/2026/06/`). Portraits, couple photos, gallery, and music reuse the project's existing `java-vibes` media; no reference-site wedding photos or couple data are used.

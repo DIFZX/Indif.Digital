@@ -1,0 +1,220 @@
+@font-face { font-family: "Blush Photograph"; src: url("/media/blush-rose/fonts/photograph.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Blush Anydore"; src: url("/media/blush-rose/fonts/anydore.woff2") format("woff2"); font-display: swap; }
+
+.experience {
+  --br-wine: #b51e40;
+  --br-blush: #f4aec7;
+  --br-paper: #fff0f6;
+  --br-ink: #62263b;
+  --br-muted: #805065;
+  color: var(--br-ink);
+  background: var(--br-paper);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.85;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+.experience *, .experience *::before, .experience *::after { box-sizing: border-box; }
+.experience p, .experience h1, .experience h2, .experience h3 { margin: 0; overflow-wrap: anywhere; }
+.experience a { color: inherit; }
+.experience button, .experience input, .experience select, .experience textarea { font: inherit; }
+.experience :focus-visible { outline: 2px solid var(--br-wine); outline-offset: 5px; }
+.experience section { scroll-margin-top: 20px; }
+.experience :global(.reveal) { transition-duration: .9s, .9s, .7s; }
+.experience :global(.reveal-left) { transform: translateX(-24px); }
+.experience :global(.reveal-right) { transform: translateX(24px); }
+.experience :global(.reveal-scale) { transform: scale(.96); }
+.experience :global(.reveal.is-visible) { transform: none; }
+.eyebrow { color: var(--br-wine); font-family: Georgia, serif; font-size: 11px; font-weight: 500; line-height: 1.6; letter-spacing: .16em; text-transform: uppercase; }
+.coupleName { font-family: "Blush Photograph", "Segoe Script", cursive; font-size: clamp(43px, 11vw, 57px); font-weight: 400; line-height: 1.4; color: var(--br-wine); }
+.sectionTitle { color: var(--br-wine); font-family: "Blush Anydore", Georgia, serif; font-size: clamp(27px, 7vw, 35px); font-weight: 400; line-height: 1.4; margin: 9px 0 22px !important; }
+.sectionIntro { max-width: 390px; margin: 0 auto 30px !important; color: var(--br-muted); }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; max-width: 100%; padding: 11px 23px; border: 1px solid #d64c72; border-radius: 30px; background: linear-gradient(145deg, #db4e79, var(--br-wine)); color: #fff !important; font-size: 11px !important; font-weight: 600; line-height: 1.6; text-align: center; text-decoration: none; cursor: pointer; box-shadow: 0 5px 18px #b51e4024; transition: transform .25s, box-shadow .25s; }
+.button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px #72172724; }
+.button:disabled { opacity: .65; cursor: wait; transform: none; }
+.button svg { width: 16px; height: 16px; }
+
+/* Photo cover, with the same blush fade and corner roses as the reference. */
+.cover { position: fixed; inset: 0; z-index: 100; overflow-y: auto; background: #efabc3; transition: opacity .85s, visibility .85s; }
+.coverPanel { position: relative; min-height: 100svh; width: min(100%, 520px); margin: auto; background: linear-gradient(180deg, #fff0f660, #ffdcecbb), url("/media/blush-rose/cover-paper.webp") center / cover no-repeat; overflow: hidden; }
+.coverPhoto { position: relative; width: 100%; height: 55svh; min-height: 240px; mask-image: linear-gradient(#000 60%, transparent 100%); }
+.coverPhoto > img { object-fit: cover; object-position: center 42%; animation: coverDrift 9s ease-out both; }
+.coverContent { position: relative; z-index: 2; text-align: center; padding: 0 25px 95px; margin-top: -4px; animation: coverEntrance 1s .15s both; }
+.coverContent .eyebrow { text-transform: none; letter-spacing: .02em; font-size: 13px; }
+.coverContent h1 { margin: 5px 0 13px; }
+.guestSalutation { font-family: Georgia, serif; font-size: 12px; color: var(--br-wine); }
+.guestName { margin: 8px 0 16px !important; font-family: Georgia, serif; font-size: 18px; color: var(--br-ink); }
+.coverFlowers { position: absolute; top: -30px; right: -30px; z-index: 1; width: 210px; height: 200px; transform: rotate(180deg); pointer-events: none; }
+.coverFlowers > img { display: block; width: 100%; height: auto; animation: petalSway 7s ease-in-out infinite alternate; transform-origin: bottom left; }
+.coverPanel::after { content: ""; position: absolute; left: -22px; bottom: -12px; width: 205px; height: 195px; background: url("/media/blush-rose/rose-pink-red-v1.webp") center / contain no-repeat; pointer-events: none; }
+.experience[data-opened="true"] .cover { opacity: 0; visibility: hidden; pointer-events: none; }
+.stage { outline: none; }
+.experience[data-opened="false"] .stage { visibility: hidden; }
+
+/* A full-height editorial photo beside the portrait invitation on desktop. */
+.showcase { position: fixed; inset: 0 520px 0 0; overflow: hidden; background: #573039; color: #fff2f0; }
+.showcase > img { object-fit: cover; object-position: center 40%; }
+.showcaseShade { position: absolute; inset: 0; background: linear-gradient(180deg, #9a244510 15%, #841b4055 55%, #710f30ed); }
+.showcaseCopy { position: absolute; bottom: 12%; left: 8%; right: 8%; }
+.showcaseCopy .eyebrow { color: #fff2f0; font-size: 10px; }
+.showcaseCopy h2 { color: #fff2f0; font-family: "Blush Photograph", cursive; font-size: clamp(65px, 6vw, 100px); font-weight: 400; line-height: 1.5; margin: 12px 0; }
+.showcaseCopy > p:last-child { font-family: Georgia, serif; font-size: 16px; }
+.showcaseBrand { position: absolute; left: 8%; bottom: 5%; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; opacity: .8; }
+.panel { position: relative; width: 520px; margin-left: auto; box-shadow: -10px 0 55px #58273122; }
+
+.hero { position: relative; min-height: 100svh; padding: 54px 28px 100px; overflow: hidden; text-align: center; background: radial-gradient(ellipse at 50% 30%, #fff8fbcc 15%, #ffd9e88c 80%), url("/media/blush-rose/cover-paper.webp") center / cover no-repeat; }
+.heroContent { position: relative; z-index: 2; }
+.heroContent > .eyebrow { font-size: 14px; letter-spacing: .05em; }
+.heroPortrait { position: relative; width: min(64vw, 245px); aspect-ratio: 1; margin: 28px auto 26px; border: 6px solid #fff8fc; outline: 1px solid #d75c82; outline-offset: 5px; border-radius: 50%; box-shadow: 0 12px 28px #ad315733; }
+.heroPortrait > img { object-fit: cover; border-radius: inherit; }
+.hero .coupleName { margin-bottom: 10px; }
+.petalDivider { display: block; width: min(70%, 220px); height: auto; margin: 0 auto 12px; }
+.heroIntro { max-width: 340px; margin: 0 auto 16px !important; color: var(--br-ink); font-size: 12px; }
+.heroDate { width: fit-content; margin: 18px auto 15px !important; padding: 5px 13px; border: 1px solid #e8a5bb; border-radius: 20px; background: #fff9fbb8; color: var(--br-wine); font-family: Georgia, serif; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+.hero .button { padding: 8px 18px; }
+.scrollCue { display: flex; flex-direction: column; gap: 3px; width: fit-content; margin: 24px auto 0; color: var(--br-wine); text-decoration: none; font-size: 8px; letter-spacing: .17em; text-transform: uppercase; }
+.scrollCue span:last-child { font-size: 20px; animation: scrollFloat 2.2s ease-in-out infinite; }
+.experience[data-opened="true"] .heroContent > * { animation: coverEntrance .9s both; }
+.experience[data-opened="true"] .heroContent > :nth-child(2) { animation-delay: .12s; }
+.experience[data-opened="true"] .heroContent > :nth-child(3) { animation-delay: .25s; }
+.experience[data-opened="true"] .heroContent > :nth-child(4) { animation-delay: .38s; }
+.experience[data-opened="true"] .heroContent > :nth-child(5) { animation-delay: .5s; }
+.experience[data-opened="true"] .heroContent > :nth-child(6) { animation-delay: .6s; }
+.hero::after, .storySection::after { content: ""; position: absolute; bottom: -1px; left: 0; right: 0; height: 38px; background: var(--br-blush); mask: url("/media/blush-rose/soft-wave.svg") center / 100% 100% no-repeat; pointer-events: none; }
+.countdown { display: flex; align-items: center; justify-content: center; gap: 9px; }
+.countdown > div { display: flex; flex-direction: column; justify-content: center; min-width: 54px; min-height: 59px; padding: 7px 8px; border: 1px solid #e39db5; border-radius: 16px 16px 11px 11px; color: var(--br-wine); background: linear-gradient(145deg, #fff8fb, #ffdce9); box-shadow: 0 4px 12px #a72e4e12; }
+.countdown strong { font-family: Georgia, serif; font-size: 22px; line-height: 1.1; font-weight: 400; }
+.countdown span { font-size: 9px; line-height: 1.5; color: #96506a; }
+
+/* Layered roses move subtly, independently of the text. */
+.floralCorner { position: absolute; width: 170px; height: 170px; pointer-events: none; z-index: 1; }
+.floralCorner img { position: absolute; height: auto; }
+.spray { width: 100%; left: 0; bottom: 0; transform-origin: bottom left; animation: petalSway 8s ease-in-out infinite alternate; }
+.heroFlowers { left: -18px; bottom: 12px; width: 190px; height: 180px; }
+.portraitFlowers { left: -48px; bottom: -26px; width: 140px; height: 133px; }
+
+.section { position: relative; padding: 65px 30px; text-align: center; }
+.coupleSection { background: linear-gradient(180deg, var(--br-blush), #ffc5d9 70%, #ffdae8); padding-top: 36px; padding-bottom: 40px; }
+.salutation { margin: 10px 0 13px !important; font-family: Georgia, serif; font-size: 18px; color: #4e1824; }
+.opening { margin: 0 auto 42px !important; color: #48212b; max-width: 380px; }
+.person { position: relative; max-width: 320px; margin: auto; padding: 22px 18px; border: 1px solid #fff5fa; border-radius: 160px 160px 26px 26px; background: linear-gradient(180deg, #fff9fc95, #fff4f8dc); box-shadow: 0 12px 28px #ad315712; }
+.personPhoto { position: relative; width: min(56vw, 220px); aspect-ratio: 3 / 4; margin: 0 auto 24px; border: 3px solid #fff5fa; border-radius: 120px 120px 18px 18px; overflow: hidden; box-shadow: 0 6px 14px #a9345630; }
+.personFloral { position: absolute; width: 110px; height: auto; right: -13px; top: min(57vw, 218px); transform: rotate(-18deg); pointer-events: none; }
+.personPhoto img { object-fit: cover; object-position: center 25%; transition: transform 1s; }
+.person:hover .personPhoto img { transform: scale(1.035); }
+.personLabel { font-size: 9px; letter-spacing: .2em; color: #b51e40; text-transform: uppercase; }
+.person h3 { margin: 5px 0 12px; color: var(--br-wine); font-family: "Blush Anydore", Georgia, serif; font-size: 27px; font-weight: 400; line-height: 1.5; }
+.person > p:last-of-type { color: #48212b; max-width: 285px; margin: auto; }
+.personRose { display: block; width: 44px; height: auto; margin: 16px auto 0; }
+.ampersand { display: block; padding: 15px 0 28px; font-family: "Blush Photograph", cursive; font-size: 70px; line-height: 1.2; color: #5f2434; }
+.quote { position: relative; margin: 70px 0 5px; padding: 47px 23px 28px; border: 1px solid #e29cb4; border-radius: 22px; outline: 3px solid #fff4f8b0; outline-offset: 5px; background: #fff7fbe8; color: var(--br-muted); font-size: 12px; line-height: 1.8; }
+.quote > img { position: absolute; top: -33px; left: calc(50% - 32px); }
+.quote cite { display: block; margin-top: 15px; font-style: normal; color: var(--br-wine); font-size: 11px; }
+
+.storySection { padding-top: 35px; padding-bottom: 60px; background: linear-gradient(#ffdae8, #ffe8f0); color: #62263b; }
+.storySection .eyebrow { color: #5d2634; }
+.storySection .sectionTitle { display: inline-block; padding: 8px 18px; color: var(--br-wine); font-family: "Blush Anydore", Georgia, serif; font-size: clamp(26px, 7vw, 34px); }
+.storySection::after { background: var(--br-wine); }
+.storyPhoto { position: relative; width: 100%; aspect-ratio: 4 / 3; margin: 0 0 35px; border: 3px solid #fff9f4; border-radius: 22px; overflow: hidden; box-shadow: 0 5px 14px #63354133; }
+.storyPhoto img { object-fit: cover; }
+.timeline { position: relative; max-width: 370px; margin: auto; padding-left: 22px; text-align: left; }
+.timeline::before { content: ""; position: absolute; left: 5px; top: 16px; bottom: 35px; width: 1px; background: #d9648b77; }
+.timeline article { padding: 24px 20px; margin-bottom: 18px; position: relative; border: 1px solid #fff9fc; border-radius: 20px; background: #fff7fbad; box-shadow: 0 5px 15px #a934560a; }
+.timeline article::before { content: ""; position: absolute; left: -22px; top: 30px; width: 9px; height: 9px; border: 2px solid #fff2f7; border-radius: 50%; background: var(--br-wine); box-shadow: 0 0 0 1px #c34b70; }
+.storyIndex { position: absolute; right: 17px; top: 10px; color: #ecc1d0; font: italic 42px Georgia, serif; line-height: 1; }
+.storyYear { position: relative; font-size: 10px; letter-spacing: .15em; color: var(--br-wine); }
+.timeline h3 { position: relative; margin: 7px 0 13px; font-family: "Blush Anydore", Georgia, serif; color: var(--br-wine); font-size: 24px; font-weight: 400; }
+.timeline p { font-size: 12px; line-height: 1.85; }
+.eventsSection { background: linear-gradient(160deg, var(--br-wine), #891331); }
+.eventsSection .eyebrow { color: #ffd0e0; }
+.eventsSection .sectionTitle { color: #fff5fa; }
+.eventsSection .sectionIntro { color: #ffe4ed; }
+.eventCard { position: relative; overflow: hidden; margin: 30px auto 0; padding: 35px 23px; background: linear-gradient(160deg, #fff8fc, #ffe3ed); border: 2px solid #fff5fa; border-radius: 100px 100px 25px 25px; box-shadow: 0 10px 25px #4608182b; }
+.eventCard > :not(.eventFloral) { position: relative; z-index: 1; }
+.eventFloral { position: absolute; width: 135px; height: auto; bottom: -14px; left: -26px; opacity: .43; pointer-events: none; }
+.eventIcon { display: grid; place-items: center; width: 49px; height: 49px; margin: 0 auto 10px; border: 1px solid #e2a0b7; border-radius: 50%; background: #ffe2ed; color: var(--br-wine); }
+.eventCard h3 { margin-bottom: 20px; font-family: "Blush Anydore", Georgia, serif; color: var(--br-wine); font-size: 32px; font-weight: 400; }
+.eventDate { font-size: 13px; font-weight: 600; margin-bottom: 5px !important; }
+.eventCard > p { color: var(--br-muted); }
+.eventTime { display: inline-block; padding: 5px 12px; border-radius: 18px; background: #f8c5d8; font-size: 11px; margin-top: 10px !important; color: #8c2340 !important; }
+.fineLine { width: 40px; height: 1px; background: #b9909b; margin: 22px auto; }
+.venue { color: var(--br-wine) !important; font-weight: 600; margin-bottom: 8px !important; }
+.address { font-size: 12px; margin-bottom: 22px !important; }
+.gallerySection { background: linear-gradient(180deg, #ffc4dadd, #fff0f5d9), url("/media/blush-rose/gallery-paper.webp") center / cover no-repeat; }
+.gallerySection :global(.gallery-grid) { margin-top: 28px; gap: 9px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gallerySection :global(.gallery-grid button) { border: 2px solid #fff4f2; border-radius: 16px; box-shadow: 0 3px 8px #572a3b20; }
+.gallerySection :global(.gallery-featured) { aspect-ratio: 4 / 3; }
+.gallerySection :global(.gallery-grid img) { object-position: center 30%; }
+.giftSection { background: linear-gradient(180deg, #fff0f5b8, #ffe5efda), url("/media/blush-rose/paper.webp") center / cover no-repeat; }
+.bankCard { position: relative; width: 100%; max-width: 370px; margin: 25px auto 0; padding: 25px 23px 12px; text-align: left; border: 1px solid #e3a4ba; border-radius: 20px; background: linear-gradient(125deg, #fff3f9e8, #f6b1c8c2), url("/media/blush-rose/bank.webp") center / cover; box-shadow: 0 12px 28px #ad31571a; color: #76233e; }
+.bankName { display: block; font: italic 700 28px Georgia, serif; color: #25587a; }
+.bankChip { position: absolute; top: 26px; right: 25px; color: #8c6b2b; }
+.bankChip svg { width: 30px; height: 30px; }
+.bankCard strong { display: block; margin: 25px 0 5px; font-family: Georgia, serif; font-size: clamp(20px, 6vw, 27px); letter-spacing: .08em; overflow-wrap: anywhere; }
+.bankCard > p { margin-bottom: 19px; }
+.bankCard .button { min-height: 40px; padding: 8px 16px; }
+.copyStatus { min-height: 22px; margin: 9px 0 0 !important; font-size: 11px; }
+.wishesSection { background: linear-gradient(155deg, #f8b6cd, #ffe3ed); }
+.guestbook { margin-top: 27px; }
+.form { display: grid; gap: 15px; padding: 27px 22px; background: #fff7fbe8; border: 1px solid #fff; border-radius: 23px; box-shadow: 0 10px 25px #ae345514; text-align: left; }
+.form label { display: grid; gap: 7px; color: #65404b; font-size: 11px; font-weight: 600; }
+.form input, .form textarea, .form select { width: 100%; min-width: 0; padding: 11px 12px; border: 1px solid #d2bbc2; border-radius: 8px; color: #4c2633; background: #fffafa; font-size: 16px; font-weight: 400; line-height: 1.5; }
+.form textarea { resize: vertical; }
+.form input:disabled { background: #e5dadc; color: #837277; }
+.form .button { width: 100%; margin-top: 5px; }
+.formStatus { padding: 12px; border-radius: 8px; font-size: 12px; background: #f4e9e8; color: #803147; }
+.formStatus[data-type="success"] { background: #e8eee6; color: #355c3b; }
+.greetings { max-height: 500px; overflow-y: auto; margin-top: 27px; text-align: left; scrollbar-width: thin; scrollbar-color: #b88e9b transparent; }
+.greetingsCount { margin-bottom: 16px !important; color: #673b48; font-size: 11px; }
+.greeting { padding: 17px 0; border-top: 1px solid #ba96a14a; }
+.greeting > div { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.greeting strong { font-size: 13px; color: #623042; overflow-wrap: anywhere; }
+.greeting p { margin: 9px 0; font-size: 12px; overflow-wrap: anywhere; }
+.greeting time { color: #7b626a; font-size: 10px; }
+.attendance { display: inline-block; border-radius: 20px; padding: 1px 7px; background: #e7dadd; color: #794455; font-size: 9px; }
+.attendance[data-attending="true"] { background: #e6ece0; color: #486142; }
+.footer { position: relative; overflow: hidden; padding: 55px 33px 135px; text-align: center; background: linear-gradient(155deg, #b51e40f0, #811330ed), url("/media/blush-rose/closing-paper.webp") center / cover no-repeat; }
+.footer > :global(.reveal) { position: relative; z-index: 1; }
+.footerFloral { position: absolute; left: -40px; bottom: 0; width: 260px; height: auto; opacity: .55; pointer-events: none; }
+.closingPortrait { position: relative; width: 160px; aspect-ratio: 1; border-radius: 50%; border: 3px solid #fff9f6; margin: 0 auto 30px; box-shadow: 0 5px 20px #71334622; overflow: hidden; }
+.closingPortrait img { object-fit: cover; }
+.footer p { color: #ffe7ef; font-size: 12px; }
+.closingGreeting { margin-top: 20px !important; }
+.footer .coupleName { margin-top: 20px; color: #fff5fa; }
+.brand { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 36px; }
+.brand > span { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; color: #ffd2e2; }
+.brand a { display: inline-flex; padding: 3px 12px; border-radius: 8px; background: #fff5f8; }
+.brand img { width: 125px; height: auto; }
+
+.navigation { position: fixed; bottom: max(12px, env(safe-area-inset-bottom)); right: 20px; z-index: 50; width: min(calc(100% - 30px), 480px); display: flex; justify-content: space-around; padding: 8px 12px; border: 1px solid #dfc8ce; border-radius: 20px; background: #fff8f4f5; box-shadow: 0 4px 24px #74364b24; backdrop-filter: blur(12px); }
+.navigation a { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 3px; min-width: 44px; min-height: 44px; padding: 3px 8px; border-radius: 12px; text-decoration: none; color: #97727e; transition: color .2s, background .2s; }
+.navigation a > span { font-size: 8px; line-height: 1.5; }
+.navigation a[aria-current="location"] { background: #efdfe2; color: var(--br-wine); }
+.musicToggle { position: fixed; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 80px); right: 24px; z-index: 50; display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 8px 12px; border: 1px solid #d5b9c1; border-radius: 30px; background: #fff5f0ed; color: #734651; box-shadow: 0 3px 15px #57334622; cursor: pointer; }
+.musicToggle span { font-size: 9px; }
+.musicToggle svg { width: 17px; height: 17px; }
+
+@keyframes coverDrift { from { transform: scale(1.06); } to { transform: scale(1); } }
+@keyframes coverEntrance { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes petalSway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+@keyframes scrollFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+@media (max-width: 900px) {
+  .showcase { display: none; }
+  .panel { width: min(100%, 520px); margin-inline: auto; }
+  .navigation { right: auto; left: 50%; transform: translateX(-50%); }
+  .musicToggle { right: max(18px, calc((100vw - 520px) / 2 + 20px)); }
+}
+@media (max-width: 360px) {
+  .section { padding-inline: 23px; }
+  .hero { padding: 60px 24px 95px; }
+  .heroPortrait { width: 210px; margin-top: 24px; margin-bottom: 35px; }
+  .coupleName { font-size: 43px; }
+  .navigation { padding-inline: 6px; }
+  .navigation a { padding-inline: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .experience *, .experience *::before, .experience *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .experience :global(.reveal) { opacity: 1; transform: none; filter: none; }
+}
