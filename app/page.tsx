@@ -23,7 +23,6 @@ function getCategoryForSlug(slug: string): TemplateCategory {
     clean === "netflix" ||
     clean === "java-vibes" ||
     clean === "sunda-vibes" ||
-    clean === "royal-maroon" ||
     clean.includes("netflix") ||
     clean.includes("java") ||
     clean.includes("sunda")
@@ -41,6 +40,7 @@ function getCategoryForSlug(slug: string): TemplateCategory {
   if (
     clean === "greeny-flowers" ||
     clean === "mustard-black" ||
+    clean === "royal-maroon" ||
     clean.includes("green") ||
     clean.includes("mustard")
   ) {
@@ -120,7 +120,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     description: "Nuansa marun dan ivory dengan monogram klasik, floral anggrek, lanskap Nusantara, serta fitur RSVP dan dashboard lengkap.",
     thumbnail_path: "/media/mockups/mockup-royal-maroon-v2.webp",
     preview_path: "/royal-maroon?to=Tamu%20Undangan",
-    category: "spesial",
+    category: "minimalis",
   },
 ];
 
