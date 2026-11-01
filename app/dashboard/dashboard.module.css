@@ -438,6 +438,29 @@
   display: block;
 }
 
+.inProgressBadge {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #f4cc7c;
+  border-radius: 999px;
+  background: #fff3d6;
+  color: #784409;
+  font-size: 0.72rem;
+  font-weight: 750;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+}
+
+.inProgressNote {
+  margin: 0 0 0.85rem;
+  color: #784409;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
 /* Card Content Body */
 .cardContent {
   padding: 1rem 0.85rem 1.15rem;
@@ -530,6 +553,14 @@
   background: #090909;
   color: #FFFFFF;
   border-color: #090909;
+}
+
+.btnPesanIcon:disabled {
+  display: inline-flex;
+  background: #f1f1f1;
+  border-color: #dedede;
+  color: #767676;
+  cursor: not-allowed;
 }
 
 /* Empty State */

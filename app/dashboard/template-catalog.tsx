@@ -167,6 +167,7 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
       {/* Compact Templates Grid (4 columns desktop, 2 columns mobile) */}
       <div className={styles.templateGrid}>
         {filteredTemplates.map((template) => {
+          const isInProgress = template.slug === "royal-maroon";
           const priceInfo = getTemplatePriceInfo(template.slug, template.category);
           const mockupSrc = getMockupThumbnail(template.slug, template.thumbnail_path);
 
@@ -183,20 +184,29 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
                   priority={template.slug === "java-vibes" || template.slug === "sunda-vibes"}
                 />
 
-                {/* Diagonal Ribbon Badge */}
-                <div className={styles.discountRibbon}>
-                  <span>{priceInfo.discountBadge}</span>
-                </div>
+                {isInProgress ? (
+                  <span className={styles.inProgressBadge}>Dalam Proses</span>
+                ) : (
+                  <div className={styles.discountRibbon}>
+                    <span>{priceInfo.discountBadge}</span>
+                  </div>
+                )}
               </div>
 
               {/* Card Body matching reference screenshot */}
               <div className={styles.cardContent}>
                 <h3 className={styles.cardTitle}>{template.name}</h3>
 
-                <div className={styles.cardPriceBox}>
-                  <span className={styles.originalPrice}>{priceInfo.originalPrice}</span>
-                  <span className={styles.promoPrice}>{priceInfo.promoPrice}</span>
-                </div>
+                {isInProgress ? (
+                  <p className={styles.inProgressNote} id={`template-status-${template.id}`}>
+                    Sedang disiapkan. Belum bisa dipesan.
+                  </p>
+                ) : (
+                  <div className={styles.cardPriceBox}>
+                    <span className={styles.originalPrice}>{priceInfo.originalPrice}</span>
+                    <span className={styles.promoPrice}>{priceInfo.promoPrice}</span>
+                  </div>
+                )}
 
                 <div className={styles.cardButtonRow}>
                   {template.preview_path && (
@@ -208,16 +218,27 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
                       Lihat Contoh
                     </Link>
                   )}
-                  <a
-                    className={styles.btnPesanIcon}
-                    href={orderUrl(template.name)}
-                    target="_blank"
-                    rel="noreferrer"
-                    title={`Pesan template ${template.name} via WhatsApp`}
-                    aria-label={`Pesan template ${template.name}`}
-                  >
-                    <span>Pesan</span>
-                  </a>
+                  {isInProgress ? (
+                    <button
+                      className={styles.btnPesanIcon}
+                      type="button"
+                      disabled
+                      aria-describedby={`template-status-${template.id}`}
+                    >
+                      Pesan
+                    </button>
+                  ) : (
+                    <a
+                      className={styles.btnPesanIcon}
+                      href={orderUrl(template.name)}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={`Pesan template ${template.name} via WhatsApp`}
+                      aria-label={`Pesan template ${template.name}`}
+                    >
+                      <span>Pesan</span>
+                    </a>
+                  )}
                 </div>
               </div>
             </article>
