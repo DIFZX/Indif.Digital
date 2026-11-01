@@ -5,6 +5,8 @@ import type { GiftInfo, Greeting } from "@/lib/types";
 import styles from "./royal-maroon.module.css";
 import { RoyalMaroonIcon } from "./royal-maroon-icons";
 
+const HERO_CONTENT_REVEAL_SECONDS = 7;
+
 const NAV_ITEMS = [
   { id: "pembuka", label: "Beranda", icon: "home" },
   { id: "mempelai", label: "Mempelai", icon: "couple" },
@@ -29,6 +31,8 @@ type ExperienceProps = {
 
 export function RoyalMaroonExperience({ bride, groom, guestName, musicPath, initiallyOpened, themeStyle, children }: ExperienceProps) {
   const [opened, setOpened] = useState(initiallyOpened);
+  const [heroContentVisible, setHeroContentVisible] = useState(false);
+  const ready = opened && heroContentVisible;
   const [playing, setPlaying] = useState(false);
   const [activeSection, setActiveSection] = useState("pembuka");
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -36,12 +40,54 @@ export function RoyalMaroonExperience({ bride, groom, guestName, musicPath, init
   const stageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (opened) return;
+    if (ready) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    openRef.current?.focus({ preventScroll: true });
+    if (!opened) openRef.current?.focus({ preventScroll: true });
     return () => { document.body.style.overflow = previousOverflow; };
+  }, [opened, ready]);
+
+  // Follow media time so buffering cannot reveal the names before second seven.
+  useEffect(() => {
+    const video = stageRef.current?.querySelector<HTMLVideoElement>("video[data-royal-opening]");
+    if (!opened || !video) return;
+
+    let frameId: number | undefined;
+    let fallbackTimer: number | undefined;
+    const reveal = () => setHeroContentVisible(true);
+    const checkTime = () => {
+      if (video.currentTime >= HERO_CONTENT_REVEAL_SECONDS) reveal();
+    };
+    const watchFrame = () => {
+      checkTime();
+      if (video.currentTime < HERO_CONTENT_REVEAL_SECONDS && video.requestVideoFrameCallback) {
+        frameId = video.requestVideoFrameCallback(watchFrame);
+      }
+    };
+
+    video.addEventListener("timeupdate", checkTime);
+    video.addEventListener("ended", reveal);
+    video.addEventListener("error", reveal);
+    watchFrame();
+    if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+      // Preloading may fail before the error listener attaches.
+      fallbackTimer = window.setTimeout(reveal, 0);
+    } else {
+      video.play().catch(reveal);
+    }
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      video.removeEventListener("timeupdate", checkTime);
+      video.removeEventListener("ended", reveal);
+      video.removeEventListener("error", reveal);
+      if (frameId !== undefined) video.cancelVideoFrameCallback(frameId);
+    };
   }, [opened]);
+
+  useEffect(() => {
+    if (ready && !initiallyOpened) stageRef.current?.focus({ preventScroll: true });
+  }, [ready, initiallyOpened]);
 
   useEffect(() => {
     if (!opened) return;
@@ -58,9 +104,15 @@ export function RoyalMaroonExperience({ bride, groom, guestName, musicPath, init
   }, [opened]);
 
   async function openInvitation() {
+    if (opened) return;
+    // Start from the tap gesture for inline playback on mobile browsers.
+    const video = stageRef.current?.querySelector<HTMLVideoElement>("video[data-royal-opening]");
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch(() => setHeroContentVisible(true));
+    }
     setOpened(true);
     window.scrollTo({ top: 0, behavior: "instant" });
-    window.requestAnimationFrame(() => stageRef.current?.focus({ preventScroll: true }));
     if (audioRef.current) {
       try { await audioRef.current.play(); } catch { setPlaying(false); }
     }
@@ -74,7 +126,7 @@ export function RoyalMaroonExperience({ bride, groom, guestName, musicPath, init
   }
 
   return (
-    <div className={styles.experience} style={themeStyle} data-opened={opened}>
+    <div className={styles.experience} style={themeStyle} data-opened={opened} data-hero-ready={ready}>
       <div className={styles.cover} role="dialog" aria-modal={!opened} aria-label={`Undangan ${bride} & ${groom}`} aria-hidden={opened} inert={opened}>
         <div className={styles.coverContent}>
           <Monogram bride={bride} groom={groom} />
@@ -86,8 +138,8 @@ export function RoyalMaroonExperience({ bride, groom, guestName, musicPath, init
         </div>
       </div>
       {musicPath && <audio ref={audioRef} src={musicPath} loop preload="none" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onError={() => setPlaying(false)} />}
-      <div ref={stageRef} tabIndex={-1} inert={!opened} aria-hidden={!opened} className={styles.stage}>{children}</div>
-      {opened && <>
+      <div ref={stageRef} tabIndex={-1} inert={!ready} aria-hidden={!ready} className={styles.stage}>{children}</div>
+      {ready && <>
         {musicPath && <button className={styles.musicToggle} type="button" onClick={toggleMusic} aria-label={playing ? "Matikan musik" : "Putar musik"} aria-pressed={playing}>
           <RoyalMaroonIcon name={playing ? "music" : "muted"} /><span>Musik {playing ? "On" : "Off"}</span>
         </button>}

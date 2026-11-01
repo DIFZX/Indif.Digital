@@ -46,7 +46,8 @@ export function RoyalMaroonInvitationView({ invitation, greetings, guestName, in
       </aside>
       <main className={styles.panel}>
         <section className={styles.hero} id="pembuka">
-          <div className={styles.heroContent}><Monogram bride={bride} groom={groom} /><p className={styles.eyebrow}>The Wedding of</p><h2>{coupleNames}</h2><p className={styles.heroDate}>{dateLabel}</p><a className={styles.scrollCue} href="#with-love"><span aria-hidden="true">↓</span><small>Scroll untuk membuka cerita</small></a></div>
+          <video className={styles.heroVideo} data-royal-opening src="/media/royal-maroon/Royal Maroon - Web 720p Compressed.mp4" poster="/media/royal-maroon/hero.webp" muted playsInline preload="auto" tabIndex={-1} aria-hidden="true" />
+          <div className={styles.heroContent}><Monogram bride={bride} groom={groom} /><p className={styles.eyebrow}>The Wedding of</p><h2><span>{bride}</span><span className={styles.heroAmpersand}>&amp;</span><span>{groom}</span></h2><p className={styles.heroDate}>{dateLabel}</p><a className={styles.scrollCue} href="#with-love"><span aria-hidden="true">↓</span><small>Scroll untuk membuka cerita</small></a></div>
         </section>
         <section className={`${styles.section} ${styles.quote}`} id="with-love">
           <Reveal><div className={styles.quotePortrait}><Image src={profile} alt={`Potret ${coupleNames}`} fill sizes="180px" /></div><p className={styles.eyebrow}>With Love</p><blockquote><p>“{invitation.quote_text}”</p>{invitation.quote_source && <cite>{invitation.quote_source}</cite>}</blockquote></Reveal>
