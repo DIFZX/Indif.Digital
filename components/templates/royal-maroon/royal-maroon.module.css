@@ -39,13 +39,16 @@
 .experience :global(.reveal-left) { transform: translateX(-22px); }
 .experience :global(.reveal-right) { transform: translateX(22px); }
 .eyebrow { color: var(--rm-primary); font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.weddingLabel { color: var(--rm-primary); font-family: var(--font-royal-wedding), "Brush Script MT", "Segoe Script", cursive; font-size: clamp(36px, 10vw, 50px); font-weight: 400; line-height: 1.5; letter-spacing: 0; text-transform: none; }
 .button { display: inline-flex; min-height: 44px; max-width: 100%; text-align: center; align-items: center; justify-content: center; gap: 12px; padding: 10px 23px; border: 1px solid transparent; border-radius: 30px; background: radial-gradient(ellipse at top, #a94d4f, var(--rm-primary)); color: #fff9f1 !important; font-size: 11px !important; font-weight: 700; letter-spacing: .1em; line-height: 1.7; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 14px #6b26281a; transition: transform .2s, box-shadow .2s; }
 .button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px #6b26282b; }
 .button:disabled { opacity: .65; cursor: wait; transform: none; }
 .cover { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; min-height: 100svh; overflow-y: auto; background: var(--rm-paper) url("/media/royal-maroon/cover-desktop.webp") center / cover no-repeat; text-align: center; transition: opacity .65s, visibility .65s; }
-.coverContent { width: min(calc(100% - 40px), 420px); margin: 24px auto; padding: 30px 26px; border: 1px solid #a77a55a6; border-radius: 160px 160px 24px 24px; background: #fff8f0f7; box-shadow: 0 18px 60px #49222326, inset 0 0 0 6px #ceb17217; animation: entrance .85s both; }
-.coverContent h1 { color: var(--rm-primary); margin: 16px 0 22px; font-size: clamp(27px, 6vw, 43px); line-height: 1.3; text-transform: uppercase; }
-.coverContent > .monogram { margin-bottom: 20px; transform: scale(.8); height: 125px; }
+.coverContent { width: min(calc(100% - 48px), 360px); margin: 24px auto; padding: 58px 26px 34px; border: 1px solid #a77a55a6; border-radius: 150px 150px 24px 24px; background: #fff8f0f7; box-shadow: 0 18px 60px #49222326, inset 0 0 0 6px #ceb17217; animation: entrance .85s both; }
+.coverContent h1 { color: var(--rm-primary); margin: 10px 0 24px; font-size: clamp(30px, 8vw, 40px); line-height: 1.2; text-transform: uppercase; }
+.coverNames { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.coverNames .coverAmpersand { font-family: "Royal Script", cursive; font-size: .7em; line-height: 1; text-transform: none; }
+.coverContent > .weddingLabel { font-size: clamp(34px, 9vw, 42px); }
 .guestSalutation { font-size: 14px; }
 .guestName { margin: 12px 0 27px !important; font-size: 18px; font-style: italic; font-weight: 700; overflow-wrap: anywhere; }
 .monogram { color: var(--rm-primary); position: relative; display: flex; justify-content: center; align-items: center; width: 170px; height: 150px; margin-inline: auto; line-height: 1; }
@@ -58,7 +61,7 @@
 .showcase { position: fixed; inset: 0 520px 0 0; overflow: hidden; color: #fff8ef; background: #3d1b1b; }
 .showcase > img { object-fit: cover; object-position: center 40%; }
 .showcaseShade { position: absolute; inset: 0; background: linear-gradient(180deg, #21110c24 15%, #21110c55 45%, #21110cf0); }
-.showcase .eyebrow { color: #fff3e4; }
+.showcase .weddingLabel { color: #fff3e4; font-size: clamp(40px, 4vw, 60px); }
 .showcaseCopy { position: absolute; left: 8%; right: 8%; bottom: 12%; }
 .showcaseCopy h2 { margin: 12px 0; font-size: clamp(40px, 5vw, 76px); line-height: 1.15; }
 .showcaseCopy > p:last-child { font-size: 18px; }
@@ -66,18 +69,14 @@
 .panel { position: relative; width: 520px; margin-left: auto; box-shadow: -8px 0 60px #1c0e1726; }
 .hero { position: relative; height: 100svh; min-height: 540px; overflow: hidden; isolation: isolate; background: var(--rm-paper) url("/media/royal-maroon/hero.webp") center / cover no-repeat; text-align: center; }
 .heroVideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.heroContent { position: absolute; z-index: 1; left: 50%; top: 43%; display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.5svh, 14px); width: 70%; color: var(--rm-primary); opacity: 0; visibility: hidden; transform: translate(-50%, calc(-50% + 14px)); transition: opacity .8s ease, transform .8s ease, visibility .8s; }
+.heroContent { position: absolute; z-index: 1; left: 50%; top: 46%; display: flex; flex-direction: column; align-items: center; gap: clamp(12px, 2svh, 20px); width: 74%; max-width: 380px; color: var(--rm-primary); opacity: 0; visibility: hidden; transform: translate(-50%, calc(-50% + 14px)); transition: opacity .8s ease, transform .8s ease, visibility .8s; }
 .experience[data-hero-ready="true"] .heroContent { opacity: 1; visibility: visible; transform: translate(-50%, -50%); }
 .experience[data-hero-ready="false"] .showcaseCopy, .experience[data-hero-ready="false"] .showcaseBrand { opacity: 0; visibility: hidden; }
 .showcaseCopy, .showcaseBrand { transition: opacity .8s ease, visibility .8s; }
-.heroContent > .monogram { width: 110px; height: 90px; flex-shrink: 0; }
-.heroContent > .monogram span:first-child { font-size: 88px; transform: translateX(5px); }
-.heroContent > .monogram span:last-child { font-size: 74px; left: 42px; top: 29px; }
-.heroContent > .eyebrow { font-size: 10px; letter-spacing: .18em; }
-.heroContent h2 { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 100%; color: var(--rm-primary); font-size: clamp(25px, 6.6vw, 36px); line-height: 1.2; text-transform: uppercase; text-wrap: balance; }
+.heroContent h2 { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%; color: var(--rm-primary); font-size: clamp(32px, 9.5vw, 46px); line-height: 1.2; text-transform: uppercase; text-wrap: balance; }
 .heroContent .heroAmpersand { font-family: "Royal Script", cursive; font-size: .8em; line-height: 1; text-transform: none; }
 .heroDate { color: var(--rm-primary); font-size: 13px; letter-spacing: .16em; }
-.scrollCue { display: flex; flex-direction: column; align-items: center; margin-top: 4px; gap: 3px; }
+.scrollCue { display: flex; flex-direction: column; align-items: center; margin-top: 8px; gap: 5px; }
 .scrollCue > span { font-size: 23px; line-height: 1.2; animation: float 2s ease-in-out infinite; }
 .scrollCue small { color: var(--rm-primary); font-size: 9px; font-style: italic; letter-spacing: .04em; }
 .section { padding: 85px 36px; text-align: center; background-size: cover; background-position: center; }
@@ -133,19 +132,17 @@
 .person h3 { color: var(--rm-primary); font-size: 19px; line-height: 1.4; text-transform: uppercase; }
 .parents { color: var(--rm-ink); max-width: 300px; margin: 12px auto 0 !important; font-size: 13px; line-height: 1.8; }
 .ampersand { display: grid; place-items: center; width: 64px; height: 64px; margin: 30px auto -10px; border: 1px solid #a77a5566; border-radius: 50%; background: var(--rm-surface); color: var(--rm-primary); font-family: "Royal Script", cursive; font-size: 42px; line-height: 1; }
-.events { background-image: url("/media/royal-maroon/events.webp"); padding-top: 80px; padding-bottom: 150px; }
+.events { background-image: url("/media/royal-maroon/events.webp"); padding-top: 80px; padding-bottom: 100px; }
 .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 340px; margin: 15px auto 25px; }
 .countdown > div { display: flex; flex-direction: column; padding: 9px 2px; border: 1px solid #7c252733; border-radius: 40px 40px 8px 8px; background: var(--rm-surface); }
 .countdown strong { font-size: 27px; font-weight: 400; line-height: 1.5; }
 .countdown span { font-size: 10px; }
-.eventCards { display: grid; gap: 35px; margin-top: 50px; }
-.eventCard { padding: 35px 24px; border: 1px solid #ab7c5d80; outline: 1px solid #ab7c5d40; outline-offset: -7px; border-radius: 160px 160px 8px 8px; background: var(--rm-surface); box-shadow: 0 12px 30px #722b2610; }
-.eventSymbol { display: flex; justify-content: center; color: var(--rm-primary); margin: 16px 0 20px; }
-.eventSymbol svg { width: 32px; height: 32px; }
-.eventCard h3 { color: var(--rm-primary); font-size: 26px; text-transform: uppercase; }
-.eventDate { display: flex; flex-direction: column; align-items: center; margin: 22px 0 16px; text-transform: uppercase; font-size: 13px; letter-spacing: .1em; }
-.eventDate strong { font-weight: 400; font-size: 75px; line-height: 1.3; }
-.eventDivider { height: 1px; width: 50px; margin: 24px auto; background: var(--rm-accent); }
+.eventCards { display: grid; gap: 24px; margin-top: 32px; }
+.eventCard { width: 100%; max-width: 380px; margin-inline: auto; padding: 40px 26px 30px; border: 1px solid #ab7c5d80; outline: 1px solid #ab7c5d40; outline-offset: -7px; border-radius: 110px 110px 16px 16px; background: var(--rm-surface); box-shadow: 0 12px 30px #722b2610; }
+.eventCard h3 { color: var(--rm-primary); font-size: clamp(23px, 6vw, 27px); line-height: 1.3; text-transform: uppercase; }
+.eventDate { display: flex; flex-direction: column; align-items: center; margin: 18px 0 12px; text-transform: uppercase; font-size: 12px; letter-spacing: .1em; }
+.eventDate strong { font-weight: 400; font-size: 64px; line-height: 1.2; }
+.eventDivider { height: 1px; width: 50px; margin: 20px auto; background: var(--rm-accent); }
 .venue { font-size: 15px; font-weight: 700; line-height: 1.6; text-transform: uppercase; }
 .address { margin: 10px 0 24px !important; font-size: 13px; }
 .story { background-image: linear-gradient(#50191deb, #50191deb), url("/media/royal-maroon/maroon.webp"); color: #fff0e5; }
@@ -224,9 +221,7 @@
   .panel { width: min(100%, 520px); margin-inline: auto; }
   .layout { background: #ead9cd; }
   .cover { background-image: url("/media/royal-maroon/cover.webp"); }
-  .coverContent { padding: 28px 22px; }
-  .coverContent h1 { font-size: 30px; }
-  .coverContent > .monogram { margin-bottom: 18px; }
+  .coverContent { padding: 54px 22px 30px; }
   .navigation { right: 50%; transform: translateX(50%); }
   .musicToggle { right: max(18px, calc((100vw - 520px) / 2 + 18px)); }
 }
@@ -234,8 +229,7 @@
 @media (max-width: 380px) {
   .section { padding-inline: 24px; }
   .hero { padding-inline: 20px; }
-  .coverContent { padding-inline: 16px; }
-  .coverContent h1 { font-size: 26px; }
+  .coverContent { padding-inline: 18px; }
   .personPortrait { width: 85%; }
   .portraitFlower { max-width: 100px; }
   .footer { padding-inline: 20px; }
@@ -244,9 +238,8 @@
 }
 
 @media (max-height: 650px) {
-  .coverContent > .monogram { transform: scale(.7); height: 100px; margin-bottom: 15px; }
   .coverContent h1 { margin: 12px 0; }
-  .coverContent { padding-top: 16px; padding-bottom: 24px; }
+  .coverContent { padding-top: 40px; padding-bottom: 24px; }
   .guestName { margin: 6px 0 18px !important; }
 }
 

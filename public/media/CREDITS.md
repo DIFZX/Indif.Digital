@@ -22,6 +22,8 @@
 
 `royal-maroon/fonts/monogram.woff2` (Romaunt Gaolines) and `royal-maroon/fonts/script.woff2` (Parisienne) - locally hosted typography from the same supplied design reference (`/wp-content/uploads/useanyfont/`).
 
+`components/templates/royal-maroon/fonts/water-brush-latin.woff2` - Water Brush by Robert Leuschke, hosted locally for the handwritten wedding heading. Source: https://github.com/googlefonts/water-brush and Google Fonts Latin WOFF2. SIL Open Font License 1.1; the license is included alongside the font as `OFL-Water-Brush.txt`.
+
 ### Blue Garden
 
 `blue-garden/backgrounds/blue-garden-paper-v1.png` - generated specifically for InDif Digital with OpenAI image generation. The artwork is original and contains no text, logos, people, or copied website assets.

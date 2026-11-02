@@ -7,7 +7,6 @@ import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
 import { Monogram, RoyalMaroonCountdown, RoyalMaroonExperience, RoyalMaroonGift, RoyalMaroonGuestbook } from "./royal-maroon-interactions";
 import styles from "./royal-maroon.module.css";
-import { RoyalMaroonIcon } from "./royal-maroon-icons";
 
 type Props = { invitation: Invitation; greetings: Greeting[]; guestName: string | null; initiallyOpened?: boolean };
 
@@ -41,13 +40,13 @@ export function RoyalMaroonInvitationView({ invitation, greetings, guestName, in
       <aside className={styles.showcase} aria-label={`Pernikahan ${coupleNames}`}>
         <Image src={cover} alt={`Foto ${coupleNames}`} fill sizes="(min-width: 901px) 65vw, 1px" priority />
         <div className={styles.showcaseShade} />
-        <div className={styles.showcaseCopy}><p className={styles.eyebrow}>The Wedding of</p><h2>{coupleNames}</h2><p>{longDate}</p></div>
+        <div className={styles.showcaseCopy}><p className={styles.weddingLabel}>The Wedding Of</p><h2>{coupleNames}</h2><p>{longDate}</p></div>
         <small className={styles.showcaseBrand}>{BRAND.name} · Digital Invitation</small>
       </aside>
       <main className={styles.panel}>
         <section className={styles.hero} id="pembuka">
           <video className={styles.heroVideo} data-royal-opening src="/media/royal-maroon/Royal Maroon - Web 720p Compressed.mp4" poster="/media/royal-maroon/hero.webp" muted playsInline preload="auto" tabIndex={-1} aria-hidden="true" />
-          <div className={styles.heroContent}><Monogram bride={bride} groom={groom} /><p className={styles.eyebrow}>The Wedding of</p><h2><span>{bride}</span><span className={styles.heroAmpersand}>&amp;</span><span>{groom}</span></h2><p className={styles.heroDate}>{dateLabel}</p><a className={styles.scrollCue} href="#with-love"><span aria-hidden="true">↓</span><small>Scroll untuk membuka cerita</small></a></div>
+          <div className={styles.heroContent}><p className={styles.weddingLabel}>The Wedding Of</p><h2><span>{bride}</span><span className={styles.heroAmpersand}>&amp;</span><span>{groom}</span></h2><p className={styles.heroDate}>{dateLabel}</p><a className={styles.scrollCue} href="#with-love"><span aria-hidden="true">↓</span><small>Scroll untuk membuka cerita</small></a></div>
         </section>
         <section className={`${styles.section} ${styles.quote}`} id="with-love">
           <Reveal><div className={styles.quotePortrait}><Image src={profile} alt={`Potret ${coupleNames}`} fill sizes="180px" /></div><p className={styles.eyebrow}>With Love</p><blockquote><p>“{invitation.quote_text}”</p>{invitation.quote_source && <cite>{invitation.quote_source}</cite>}</blockquote></Reveal>
@@ -64,8 +63,8 @@ export function RoyalMaroonInvitationView({ invitation, greetings, guestName, in
         </section>
         <section className={`${styles.section} ${styles.events}`} id="acara">
           <Reveal className={styles.introCard}><p className={styles.eyebrow}>Menuju hari bahagia</p><h2>Save The Date</h2><RoyalMaroonCountdown eventDate={invitation.event_date} ceremonyTime={invitation.ceremony_time} /><a href={calendarUrl(invitation)} className={styles.button} target="_blank" rel="noreferrer">Simpan tanggal <span aria-hidden="true">↗</span></a></Reveal>
-          <div className={styles.eventCards}>{[{ name: "Akad Nikah", time: invitation.ceremony_time, symbol: "couple" as const }, { name: "Resepsi", time: invitation.reception_time, symbol: "flower" as const }].map((event) => <Reveal key={event.name}><article className={styles.eventCard}>
-            <span className={styles.eventSymbol} aria-hidden="true"><RoyalMaroonIcon name={event.symbol} /></span><h3>{event.name}</h3><div className={styles.eventDate}><span>{format({ weekday: "long" })}</span><strong>{format({ day: "2-digit" })}</strong><span>{format({ month: "long", year: "numeric" })}</span></div><p>Pukul {event.time}</p><div className={styles.eventDivider} /><p className={styles.venue}>{invitation.venue_name}</p><p className={styles.address}>{invitation.venue_address}</p>{invitation.maps_url && <a className={styles.button} href={invitation.maps_url} target="_blank" rel="noreferrer">Lihat lokasi <span aria-hidden="true">↗</span></a>}
+          <div className={styles.eventCards}>{[{ name: "Akad Nikah", time: invitation.ceremony_time }, { name: "Resepsi", time: invitation.reception_time }].map((event) => <Reveal key={event.name}><article className={styles.eventCard}>
+            <h3>{event.name}</h3><div className={styles.eventDate}><span>{format({ weekday: "long" })}</span><strong>{format({ day: "2-digit" })}</strong><span>{format({ month: "long", year: "numeric" })}</span></div><p>Pukul {event.time}</p><div className={styles.eventDivider} /><p className={styles.venue}>{invitation.venue_name}</p><p className={styles.address}>{invitation.venue_address}</p>{invitation.maps_url && <a className={styles.button} href={invitation.maps_url} target="_blank" rel="noreferrer">Lihat lokasi <span aria-hidden="true">↗</span></a>}
           </article></Reveal>)}</div>
         </section>
         {invitation.story.length > 0 && <section className={`${styles.section} ${styles.story}`} id="kisah">

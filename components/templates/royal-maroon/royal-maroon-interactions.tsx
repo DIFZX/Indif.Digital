@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type R
 import type { GiftInfo, Greeting } from "@/lib/types";
 import styles from "./royal-maroon.module.css";
 import { RoyalMaroonIcon } from "./royal-maroon-icons";
+import { royalWeddingFont } from "./fonts";
 
 const HERO_CONTENT_REVEAL_SECONDS = 7;
 
@@ -126,12 +127,11 @@ export function RoyalMaroonExperience({ bride, groom, guestName, musicPath, init
   }
 
   return (
-    <div className={styles.experience} style={themeStyle} data-opened={opened} data-hero-ready={ready}>
+    <div className={`${styles.experience} ${royalWeddingFont.variable}`} style={themeStyle} data-opened={opened} data-hero-ready={ready}>
       <div className={styles.cover} role="dialog" aria-modal={!opened} aria-label={`Undangan ${bride} & ${groom}`} aria-hidden={opened} inert={opened}>
         <div className={styles.coverContent}>
-          <Monogram bride={bride} groom={groom} />
-          <p className={styles.eyebrow}>The Wedding of</p>
-          <h1>{bride} &amp; {groom}</h1>
+          <p className={styles.weddingLabel}>The Wedding Of</p>
+          <h1 className={styles.coverNames}><span>{bride}</span><span className={styles.coverAmpersand}>&amp;</span><span>{groom}</span></h1>
           <p className={styles.guestSalutation}>Kepada Bapak/Ibu/Saudara/i</p>
           <p className={styles.guestName}>{guestName || "Tamu Undangan"}</p>
           <button ref={openRef} className={styles.button} type="button" onClick={openInvitation}>Buka Undangan <span aria-hidden="true">↗</span></button>
