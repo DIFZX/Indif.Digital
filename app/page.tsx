@@ -8,6 +8,7 @@ import {
   type CatalogTemplate,
   type TemplateCategory,
 } from "./dashboard/template-catalog";
+import { isTemplateStatus } from "@/lib/template-status";
 import styles from "./dashboard/dashboard.module.css";
 
 export const metadata: Metadata = {
@@ -117,6 +118,7 @@ const fallbackTemplates: CatalogTemplate[] = [
   {
     id: "00000000-0000-0000-0000-000000000008",
     slug: "royal-maroon",
+    catalog_status: "in_progress",
     name: "Royal Maroon",
     description: "Nuansa marun dan ivory dengan monogram klasik, floral anggrek, lanskap Nusantara, serta fitur RSVP dan dashboard lengkap.",
     thumbnail_path: "/media/mockups/mockup-royal-maroon-v2.webp",
@@ -143,44 +145,23 @@ function orderUrl(templateName: string) {
 
 async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
   const supabase = getSupabase();
-  let dbTemplates: Omit<CatalogTemplate, "category">[] = [];
+  if (!supabase) return fallbackTemplates;
 
-  if (supabase) {
     const { data, error } = await supabase
       .from("templates")
-      .select("id, slug, name, description, thumbnail_path, preview_path")
+      .select("id, slug, name, description, thumbnail_path, preview_path, catalog_status")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      dbTemplates = data;
-    }
-  }
-
-  if (dbTemplates.length === 0) return fallbackTemplates;
-
-  const combined: CatalogTemplate[] = dbTemplates.map((dbT) => ({
-    ...dbT,
-    category: getCategoryForSlug(dbT.slug),
+  // Supabase is the source of truth. Empty catalogs and query failures must
+  // never resurrect deleted templates from the local demonstration data.
+  if (error || !data) return [];
+  return data.map((template) => ({
+    ...template,
+    category: getCategoryForSlug(template.slug),
+    catalog_status: isTemplateStatus(template.catalog_status) ? template.catalog_status : "maintenance",
   }));
-
-  for (const fallback of fallbackTemplates) {
-    const idx = combined.findIndex((t) => t.slug === fallback.slug);
-    if (idx === -1) {
-      combined.push(fallback);
-    } else {
-      combined[idx] = {
-        ...fallback,
-        ...combined[idx],
-        thumbnail_path: combined[idx].thumbnail_path || fallback.thumbnail_path,
-        preview_path: combined[idx].preview_path || fallback.preview_path,
-        category: getCategoryForSlug(combined[idx].slug),
-      };
-    }
-  }
-
-  return combined;
 }
 
 export default async function HomePage() {

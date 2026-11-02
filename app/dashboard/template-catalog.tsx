@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { resolveMediaUrl } from "@/lib/media";
+import { type TemplateStatus, TEMPLATE_STATUS_LABELS } from "@/lib/template-status";
 import styles from "./dashboard.module.css";
 
 export type TemplateCategory = "animasi" | "spesial" | "minimalis";
@@ -16,6 +17,7 @@ export type CatalogTemplate = {
   thumbnail_path: string | null;
   preview_path: string | null;
   category: TemplateCategory;
+  catalog_status?: TemplateStatus;
 };
 
 export type CategoryFilter = "all" | TemplateCategory;
@@ -168,7 +170,8 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
       {/* Compact Templates Grid (4 columns desktop, 2 columns mobile) */}
       <div className={styles.templateGrid}>
         {filteredTemplates.map((template) => {
-          const isInProgress = template.slug === "royal-maroon";
+          const status = template.catalog_status ?? "available";
+          const isUnavailable = status !== "available";
           const priceInfo = getTemplatePriceInfo(template.slug, template.category);
           const mockupSrc = getMockupThumbnail(template.slug, template.thumbnail_path);
 
@@ -185,8 +188,8 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
                   priority={template.slug === "java-vibes" || template.slug === "sunda-vibes"}
                 />
 
-                {isInProgress ? (
-                  <span className={styles.inProgressBadge}>Dalam Proses</span>
+                {isUnavailable ? (
+                  <span className={styles.inProgressBadge}>{TEMPLATE_STATUS_LABELS[status]}</span>
                 ) : (
                   <div className={styles.discountRibbon}>
                     <span>{priceInfo.discountBadge}</span>
@@ -198,9 +201,9 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
               <div className={styles.cardContent}>
                 <h3 className={styles.cardTitle}>{template.name}</h3>
 
-                {isInProgress ? (
+                {isUnavailable ? (
                   <p className={styles.inProgressNote} id={`template-status-${template.id}`}>
-                    Sedang disiapkan. Belum bisa dipesan.
+                    {status === "maintenance" ? "Sedang dalam perawatan. Pemesanan sementara ditutup." : "Sedang disiapkan. Belum bisa dipesan."}
                   </p>
                 ) : (
                   <div className={styles.cardPriceBox}>
@@ -219,7 +222,7 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
                       Lihat Contoh
                     </Link>
                   )}
-                  {isInProgress ? (
+                  {isUnavailable ? (
                     <button
                       className={styles.btnPesanIcon}
                       type="button"

@@ -2,7 +2,11 @@
 
 MVP platform undangan digital berbasis Next.js dan Supabase. Template, data undangan, path media, ucapan, dan RSVP tersimpan di database. File media saat ini berada di `public/media` dan direferensikan melalui path stabil seperti `/media/elegant/hero.svg`.
 
-Alur data publik: route `/{slug}` membaca undangan `published` dan template aktif melalui anon key. Form dikirim ke route server `/api/guest-response`, divalidasi dengan Zod, lalu ditulis ke tabel `rsvps` dan `greetings`. Tidak ada service-role key di frontend.
+Alur data publik: route `/{slug}` membaca undangan `published` beserta templatenya
+melalui anon key. Ketersediaan template di katalog penjualan diatur terpisah agar
+pengarsipan katalog tidak memutus undangan pelanggan. Form dikirim ke route server
+`/api/guest-response`, divalidasi dengan Zod, lalu ditulis ke tabel `rsvps` dan
+`greetings`. Tidak ada service-role key di frontend.
 
 ## Menjalankan lokal
 
@@ -19,7 +23,10 @@ Jalankan generator interaktif dari terminal project:
 
     npm run create-invitation
 
-Masukkan password akun admin Supabase saat diminta. Password ditampilkan sebagai tanda bintang dan tidak disimpan. Generator akan:
+Masukkan password akun owner Supabase saat diminta. Setelah migrasi CMS, generator
+memerlukan akun `owner` terpisah dan token CAPTCHA baru jika Auth CAPTCHA aktif;
+lihat [panduan CMS](docs/sales-cms-setup.md). Password ditampilkan sebagai tanda
+bintang dan tidak disimpan. Generator akan:
 
 1. Memastikan akun yang login terdaftar di `admin_profiles`.
 2. Menduplikasi data dari undangan sumber, misalnya `intan-dan-difa`.
@@ -43,6 +50,12 @@ Ketika R2 sudah digunakan:
 Path yang disimpan di Supabase tetap `/media/...`; jangan simpan domain Vercel atau domain R2 di setiap baris. Dengan demikian perpindahan provider cukup dilakukan melalui satu environment variable. URL absolut `https://...` tetap didukung untuk kebutuhan khusus dan tidak akan diubah resolver.
 
 ## Keamanan dan dashboard
+
+CMS admin penjualan tersedia di `/admin/login` untuk mengatur ketersediaan template
+dan menghapusnya dari katalog tanpa menghapus undangan pelanggan. Ikuti
+[panduan aktivasi CMS dan CAPTCHA](docs/sales-cms-setup.md) sebelum deployment.
+Login akan ditolak sampai environment, migrasi pembatas login, akun sales, dan
+CAPTCHA Supabase siap. Jalankan `npm.cmd run check:cms` untuk memeriksa kesiapan.
 
 Dashboard client tidak memakai akun atau password. Setiap undangan memperoleh magic link
 unik dengan format `/{slug}/dashboard/access?key={token}`. Setelah link dibuka,

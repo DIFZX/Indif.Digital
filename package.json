@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "create-invitation": "node scripts/create-invitation.mjs",
+    "create-admin": "node scripts/create-admin.mjs",
+    "check:cms": "node scripts/check-sales-cms.mjs",
+    "test:cms": "node --test tests/sales-cms.test.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
@@ -16,9 +19,10 @@
     "next": "16.4.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "zod": "4.4.3"
+    "zod": "4.6.7"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.14",
     "@next/env": "16.4.2",
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",

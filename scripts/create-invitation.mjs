@@ -215,7 +215,7 @@ async function main() {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const adminEmail = process.env.ADMIN_AUTH_EMAIL;
+  const adminEmail = process.env.INVITATION_OWNER_EMAIL || process.env.ADMIN_AUTH_EMAIL;
 
   if (!supabaseUrl || !publishableKey || !adminEmail) {
     throw new Error(
@@ -238,10 +238,13 @@ async function main() {
   const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
     email: adminEmail,
     password,
+    options: { captchaToken: process.env.INVITATION_OWNER_CAPTCHA_TOKEN },
   });
 
   if (authError || !authData.user) {
-    throw new Error("Login admin gagal. Periksa password Supabase Auth.");
+    throw new Error(authError?.code === "captcha_failed"
+      ? "CAPTCHA wajib. Isi INVITATION_OWNER_CAPTCHA_TOKEN dengan token Turnstile baru untuk menjalankan generator, atau gunakan Supabase Dashboard."
+      : "Login owner gagal. Periksa password Supabase Auth.");
   }
 
   let readline;
@@ -250,12 +253,12 @@ async function main() {
   try {
     const { data: adminProfile, error: profileError } = await supabase
       .from("admin_profiles")
-      .select("id, username")
+      .select("id, username, role")
       .eq("id", authData.user.id)
       .maybeSingle();
 
-    if (profileError || !adminProfile) {
-      throw new Error("Akun ini bukan admin InDif Digital.");
+    if (profileError || !adminProfile || adminProfile.role !== "owner") {
+      throw new Error("Generator memerlukan akun owner terpisah. Akun sales hanya mengelola katalog.");
     }
 
     console.log("Login berhasil sebagai " + adminProfile.username + ".\n");
