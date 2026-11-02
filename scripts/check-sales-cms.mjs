@@ -17,7 +17,7 @@ const options = {
 const publicClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, options);
 const secretClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY, options);
 const checks = await Promise.all([
-  publicClient.from("templates").select("id, catalog_status").limit(1),
+  publicClient.from("templates").select("id, catalog_status, category, price, promo_price, updated_at").limit(1),
   secretClient.from("admin_profiles").select("id, username, role").eq("role", "sales").limit(1),
   publicClient.auth.signInWithPassword({ email: `captcha-probe-${randomUUID()}@example.invalid`, password: randomUUID(), options: { captchaToken: "invalid-admin-captcha-probe" } }),
   secretClient.from("admin_login_limits").select("bucket").limit(0),

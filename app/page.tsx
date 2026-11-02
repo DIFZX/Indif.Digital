@@ -6,9 +6,9 @@ import { getSupabase } from "@/lib/supabase";
 import {
   TemplateCatalog,
   type CatalogTemplate,
-  type TemplateCategory,
 } from "./dashboard/template-catalog";
 import { isTemplateStatus } from "@/lib/template-status";
+import { isTemplateCategory } from "@/lib/catalog-settings";
 import styles from "./dashboard/dashboard.module.css";
 
 export const metadata: Metadata = {
@@ -17,39 +17,6 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
-
-function getCategoryForSlug(slug: string): TemplateCategory {
-  const clean = slug.toLowerCase().trim();
-  if (
-    clean === "netflix" ||
-    clean === "java-vibes" ||
-    clean === "sunda-vibes" ||
-    clean.includes("netflix") ||
-    clean.includes("java") ||
-    clean.includes("sunda")
-  ) {
-    return "spesial";
-  }
-  if (
-    clean === "pink-vibes" ||
-    clean === "blue-garden" ||
-    clean.includes("pink") ||
-    clean.includes("blue")
-  ) {
-    return "animasi";
-  }
-  if (
-    clean === "greeny-flowers" ||
-    clean === "mustard-black" ||
-    clean === "royal-maroon" ||
-    clean === "blush-rose" ||
-    clean.includes("green") ||
-    clean.includes("mustard")
-  ) {
-    return "minimalis";
-  }
-  return "minimalis";
-}
 
 const fallbackTemplates: CatalogTemplate[] = [
   {
@@ -60,6 +27,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-greeny-flowers.webp",
     preview_path: "/intan-dan-difa?to=Tamu%20Undangan",
     category: "minimalis",
+    price: 70000, promo_price: 35000,
   },
   {
     id: "00000000-0000-0000-0000-000000000002",
@@ -69,6 +37,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-pink-vibes.webp",
     preview_path: "/pink-vibes?to=Tamu%20Undangan",
     category: "animasi",
+    price: 100000, promo_price: 50000,
   },
   {
     id: "00000000-0000-0000-0000-000000000003",
@@ -78,6 +47,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-blue-garden.webp",
     preview_path: "/blue-garden?to=Tamu%20Undangan",
     category: "animasi",
+    price: 100000, promo_price: 50000,
   },
   {
     id: "00000000-0000-0000-0000-000000000004",
@@ -87,6 +57,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-netflix.webp",
     preview_path: "/netflix?to=Tamu%20Undangan",
     category: "spesial",
+    price: 120000, promo_price: 80000,
   },
   {
     id: "00000000-0000-0000-0000-000000000005",
@@ -96,6 +67,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-mustard-black.webp",
     preview_path: "/mustard-black?to=Tamu%20Undangan",
     category: "minimalis",
+    price: 70000, promo_price: 35000,
   },
   {
     id: "00000000-0000-0000-0000-000000000006",
@@ -105,6 +77,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-java-vibes.webp",
     preview_path: "/java-vibes?to=Tamu%20Undangan",
     category: "spesial",
+    price: 120000, promo_price: 80000,
   },
   {
     id: "00000000-0000-0000-0000-000000000007",
@@ -114,6 +87,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-sunda-vibes-v4-1.webp",
     preview_path: "/sunda-vibes?to=Tamu%20Undangan",
     category: "spesial",
+    price: 120000, promo_price: 80000,
   },
   {
     id: "00000000-0000-0000-0000-000000000008",
@@ -124,6 +98,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-royal-maroon-v2.webp",
     preview_path: "/royal-maroon?to=Tamu%20Undangan",
     category: "minimalis",
+    price: 70000, promo_price: 35000,
   },
   {
     id: "00000000-0000-0000-0000-000000000009",
@@ -133,6 +108,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     thumbnail_path: "/media/mockups/mockup-blush-rose.webp",
     preview_path: "/blush-rose?to=Tamu%20Undangan",
     category: "minimalis",
+    price: 70000, promo_price: 35000,
   },
 ];
 
@@ -147,19 +123,19 @@ async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
   const supabase = getSupabase();
   if (!supabase) return fallbackTemplates;
 
-    const { data, error } = await supabase
-      .from("templates")
-      .select("id, slug, name, description, thumbnail_path, preview_path, catalog_status")
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("templates")
+    .select("id, slug, name, description, thumbnail_path, preview_path, catalog_status, category, price, promo_price")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
 
   // Supabase is the source of truth. Empty catalogs and query failures must
   // never resurrect deleted templates from the local demonstration data.
   if (error || !data) return [];
   return data.map((template) => ({
     ...template,
-    category: getCategoryForSlug(template.slug),
+    category: isTemplateCategory(template.category) ? template.category : "minimalis",
     catalog_status: isTemplateStatus(template.catalog_status) ? template.catalog_status : "maintenance",
   }));
 }

@@ -1,7 +1,11 @@
 # CMS admin penjualan
 
-Halaman masuk: `/admin/login`. CMS hanya mengatur katalog penjualan: status Aktif,
-Maintenance, Dalam Proses, hapus dari katalog, dan pulihkan dari arsip.
+Halaman masuk: `/admin/login`. Dashboard menampilkan kartu template ringkas,
+pencarian, filter kategori, serta tab katalog dan arsip. Tombol **Kelola** membuka
+popup untuk kategori tema, harga normal, harga promo opsional, switch Maintenance
+dan Dalam Proses, hapus dari katalog, serta pulihkan dari arsip. Kedua switch mati
+berarti template siap dipesan. Klik **Simpan perubahan** untuk menerapkan pengaturan.
+Harga promo boleh dikosongkan; kategori baru tidak mengubah harga secara otomatis.
 Login mendukung beberapa akun sales dengan username masing-masing. Username
 tidak membedakan huruf besar dan kecil. Maintenance/Dalam Proses tetap terlihat
 dengan tombol Pesan nonaktif. Hapus memakai
@@ -13,7 +17,8 @@ RSVP, dan magic link dashboard pelanggan tetap utuh.
 Untuk proyek yang sudah memiliki tabel undangan dan dashboard, terapkan
 `supabase/migrations/20261102120000_sales_cms_and_login_protection.sql`
 `supabase/migrations/20261102123000_register_legacy_sales_templates.sql`, dan
-`supabase/migrations/20261102133000_support_multiple_sales_admins.sql`
+`supabase/migrations/20261102133000_support_multiple_sales_admins.sql`, lalu
+`supabase/migrations/20261102143000_add_catalog_prices_and_categories.sql`
 melalui SQL Editor Supabase atau workflow migrasi yang sesuai. Terapkan sebelum
 merilis kode CMS. Jika query katalog gagal, aplikasi tidak menampilkan katalog
 cadangan agar template yang dihapus tidak muncul kembali.
@@ -26,6 +31,10 @@ mendaftarkan Sunda Vibes dan Mustard Black yang sebelumnya tampil dari data
 cadangan; baris template yang sudah ada tetap memakai pengaturan sebelumnya.
 Migrasi ketiga menambahkan username unik tanpa membedakan kapital dan resolver
 identitas login yang hanya bisa dijalankan oleh server.
+Migrasi keempat menyimpan harga dan kategori yang sebelumnya ditentukan dalam
+kode. Nilai awal mengikuti katalog sebelumnya, sedangkan status dan arsip yang
+sedang dipakai tetap dipertahankan. Akun sales hanya mendapat hak update tambahan
+untuk `category`, `price`, dan `promo_price`; aturan RLS tetap berlaku.
 Status terbaru ada di
 [catatan aktivasi](sales-cms-activation.md).
 
@@ -126,8 +135,11 @@ Tes keamanan lokal: `npm.cmd run test:cms`.
 Kemudian verifikasi di deployment HTTPS:
 
 - Buka `/admin` tanpa sesi: harus diarahkan ke `/admin/login`.
-- Selesaikan CAPTCHA, masuk dengan akun sales, lalu ubah Maintenance/Dalam Proses.
-  Periksa label dan tombol Pesan di website publik.
+- Selesaikan CAPTCHA, masuk dengan akun sales, klik Kelola, lalu ubah switch
+  Maintenance/Dalam Proses dan simpan. Periksa label dan tombol Pesan di website publik.
+- Dalam popup yang sama, ubah harga dan kategori tema, lalu simpan. Periksa harga
+  dan posisi template di menu kategori publik. Kosongkan harga promo untuk
+  menampilkan harga normal tanpa label diskon atau harga coret.
 - Hapus satu template contoh, pastikan hilang dari katalog, tetapi undangan pelanggan
   dengan template yang sama tetap bisa dibuka. Pulihkan melalui tab Diarsipkan.
 - Periksa cookie `indif-sales-auth` dan `indif-sales-session`: HttpOnly, Secure,
@@ -158,5 +170,8 @@ Lihat [dokumentasi rate limits](https://supabase.com/docs/guides/auth/rate-limit
 Pengamanan ini mengurangi risiko brute force; bukan jaminan kebal semua serangan.
 
 Perubahan katalog dicatat oleh trigger database di `template_catalog_events`
-(aktor, sebelum/sesudah, waktu), yang tidak bisa diubah/dibaca akun sales.
+(aktor, sebelum/sesudah termasuk kategori dan harga, waktu), yang tidak bisa diubah/dibaca akun sales.
 Pemeriksaan log dilakukan lewat Supabase Dashboard oleh pemilik proyek.
+Penyimpanan memakai versi `updated_at` agar dua admin tidak saling menimpa edit.
+Jika muncul pemberitahuan perubahan oleh admin lain, tutup lalu buka kembali
+popup untuk memuat versi terbaru sebelum menyimpan ulang.

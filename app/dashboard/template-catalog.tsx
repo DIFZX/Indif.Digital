@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { resolveMediaUrl } from "@/lib/media";
+import { getCatalogPriceInfo, getTemplateThumbnail, type TemplateCategory } from "@/lib/catalog-settings";
 import { type TemplateStatus, TEMPLATE_STATUS_LABELS } from "@/lib/template-status";
 import styles from "./dashboard.module.css";
 
-export type TemplateCategory = "animasi" | "spesial" | "minimalis";
+export type { TemplateCategory } from "@/lib/catalog-settings";
 
 export type CatalogTemplate = {
   id: string;
@@ -17,6 +17,8 @@ export type CatalogTemplate = {
   thumbnail_path: string | null;
   preview_path: string | null;
   category: TemplateCategory;
+  price: number;
+  promo_price: number | null;
   catalog_status?: TemplateStatus;
 };
 
@@ -35,49 +37,6 @@ const CATEGORIES: { id: CategoryFilter; label: string }[] = [
   { id: "animasi", label: "Tema Animasi" },
   { id: "minimalis", label: "Tema Minimalis" },
 ];
-
-type PriceInfo = {
-  originalPrice: string;
-  promoPrice: string;
-  discountBadge: string;
-};
-
-function getTemplatePriceInfo(slug: string, category: TemplateCategory): PriceInfo {
-  if (category === "spesial" || slug === "java-vibes" || slug === "sunda-vibes" || slug === "netflix") {
-    return {
-      originalPrice: "Rp. 120.000",
-      promoPrice: "Rp. 80.000",
-      discountBadge: "DISC. 33,33%",
-    };
-  }
-  if (category === "animasi" || slug === "pink-vibes" || slug === "blue-garden") {
-    return {
-      originalPrice: "Rp. 100.000",
-      promoPrice: "Rp. 50.000",
-      discountBadge: "DISC. 50%",
-    };
-  }
-  return {
-    originalPrice: "Rp. 70.000",
-    promoPrice: "Rp. 35.000",
-    discountBadge: "DISC. 50%",
-  };
-}
-
-function getMockupThumbnail(slug: string, fallbackPath: string | null): string {
-  const map: Record<string, string> = {
-    "java-vibes": "/media/mockups/mockup-java-vibes.webp",
-    "royal-maroon": "/media/mockups/mockup-royal-maroon-v2.webp",
-    "blush-rose": "/media/mockups/mockup-blush-rose.webp",
-    "sunda-vibes": "/media/mockups/mockup-sunda-vibes-v4-1.webp",
-    "netflix": "/media/mockups/mockup-netflix.webp",
-    "blue-garden": "/media/mockups/mockup-blue-garden.webp",
-    "pink-vibes": "/media/mockups/mockup-pink-vibes.webp",
-    "mustard-black": "/media/mockups/mockup-mustard-black.webp",
-    "greeny-flowers": "/media/mockups/mockup-greeny-flowers.webp",
-  };
-  return map[slug] || resolveMediaUrl(fallbackPath) || `/media/mockups/mockup-${slug}.webp`;
-}
 
 export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] }) {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("all");
@@ -172,8 +131,8 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
         {filteredTemplates.map((template) => {
           const status = template.catalog_status ?? "available";
           const isUnavailable = status !== "available";
-          const priceInfo = getTemplatePriceInfo(template.slug, template.category);
-          const mockupSrc = getMockupThumbnail(template.slug, template.thumbnail_path);
+          const priceInfo = getCatalogPriceInfo(template.price, template.promo_price);
+          const mockupSrc = getTemplateThumbnail(template.slug, template.thumbnail_path);
 
           return (
             <article className={styles.templateCard} key={template.id}>
@@ -190,11 +149,11 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
 
                 {isUnavailable ? (
                   <span className={styles.inProgressBadge}>{TEMPLATE_STATUS_LABELS[status]}</span>
-                ) : (
+                ) : priceInfo.discountBadge ? (
                   <div className={styles.discountRibbon}>
                     <span>{priceInfo.discountBadge}</span>
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* Card Body matching reference screenshot */}
@@ -207,8 +166,8 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
                   </p>
                 ) : (
                   <div className={styles.cardPriceBox}>
-                    <span className={styles.originalPrice}>{priceInfo.originalPrice}</span>
-                    <span className={styles.promoPrice}>{priceInfo.promoPrice}</span>
+                    {priceInfo.originalPrice && <span className={styles.originalPrice}>{priceInfo.originalPrice}</span>}
+                    <span className={styles.promoPrice}>{priceInfo.currentPrice}</span>
                   </div>
                 )}
 

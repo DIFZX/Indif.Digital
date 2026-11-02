@@ -34,6 +34,8 @@ before(async () => {
   await db.exec(await migration("20261019210000_add_client_dashboard_magic_links"));
   await db.exec(await migration("20261102120000_sales_cms_and_login_protection"));
   await db.exec(await migration("20261102133000_support_multiple_sales_admins"));
+  await db.exec("insert into templates(slug,name,is_active) values ('java-vibes','Java Vibes',false),('blue-garden','Blue Garden',false)");
+  await db.exec(await migration("20261102143000_add_catalog_prices_and_categories"));
   await db.exec(`
     insert into auth.users(id,email,email_confirmed_at) values
       ('${salesId}','sales@example.invalid',now()), ('${ownerId}','owner@example.invalid',now()),
@@ -269,10 +271,11 @@ test("catalog server actions reauthorize direct requests before touching the dat
     "@/lib/admin-auth": { requireAdmin: async () => { calls++; throw new Error("Unauthorized"); } },
     "@/lib/supabase/server": { createClient: () => { throw new Error("Database should not be reached"); } },
     "@/lib/admin-security": { clearAdminSession: async () => {} },
-    "@/lib/template-status": { isTemplateStatus: () => true },
+    "@/lib/template-status": { TEMPLATE_STATUSES: ["available", "maintenance", "in_progress"] },
+    "@/lib/catalog-settings": { MAX_TEMPLATE_PRICE: 1_000_000_000, TEMPLATE_CATEGORY_IDS: ["spesial", "animasi", "minimalis"] },
   });
-  for (const action of [actions.setTemplateStatus, actions.setTemplateVisibility]) await assert.rejects(action({},new FormData()), /Unauthorized/);
-  assert.equal(calls,2);
+  await assert.rejects(actions.saveTemplateSettings({},new FormData()), /Unauthorized/);
+  assert.equal(calls,1);
 });
 
 test("untrusted forwarding headers cannot evade the login bucket", async () => {
@@ -349,4 +352,88 @@ test("legacy catalog registration is repeatable and preserves existing archived 
   assert.equal(registered.rows[1].catalog_status,"maintenance");
   const after = (await db.query("select (select count(*) from invitations)::int as invitations, (select count(*) from rsvps)::int as rsvps")).rows[0];
   assert.deepEqual(after,before);
+});
+
+test("price migration preserves public prices and categories, including archived templates", async () => {
+  const rows = (await db.query("select slug,category,price,promo_price from templates where slug in ('java-vibes','blue-garden','greeny-flowers') order by slug")).rows;
+  assert.deepEqual(rows, [
+    { slug: "blue-garden", category: "animasi", price: 100000, promo_price: 50000 },
+    { slug: "greeny-flowers", category: "minimalis", price: 70000, promo_price: 35000 },
+    { slug: "java-vibes", category: "spesial", price: 120000, promo_price: 80000 },
+  ]);
+});
+
+test("sales can save prices and move categories; audit includes actor and full before/after settings", async () => {
+  const before = (await db.query("select category,price,promo_price from templates where slug='greeny-flowers'")).rows[0];
+  await asRole("authenticated", salesId, "update templates set category='spesial',price=155000,promo_price=95000 where slug='greeny-flowers'");
+  const audit = (await db.query("select actor_id,previous_state,next_state from template_catalog_events order by id desc limit 1")).rows[0];
+  assert.equal(audit.actor_id, salesId);
+  for (const key of ["category","price","promo_price"]) assert.equal(audit.previous_state[key],before[key]);
+  assert.equal(audit.next_state.category,"spesial");
+  assert.equal(audit.next_state.price,155000);
+  assert.equal(audit.next_state.promo_price,95000);
+  const customerBefore = (await db.query("select (select jsonb_agg(i) from invitations i) as invitations,(select jsonb_agg(r) from rsvps r) as rsvps,(select jsonb_agg(a) from invitation_dashboard_access a) as access")).rows[0];
+  await asRole("authenticated", salesTwoId, "update templates set category='minimalis' where slug='greeny-flowers'");
+  const publicRow = (await asRole("anon",null,"select category,price,promo_price from templates where slug='greeny-flowers' and is_active")).rows[0];
+  assert.deepEqual(publicRow,{category:"minimalis",price:155000,promo_price:95000});
+  const customerAfter = (await db.query("select (select jsonb_agg(i) from invitations i) as invitations,(select jsonb_agg(r) from rsvps r) as rsvps,(select jsonb_agg(a) from invitation_dashboard_access a) as access")).rows[0];
+  assert.deepEqual(customerAfter,customerBefore);
+});
+
+test("new catalog fields enforce sales-only writes and database price constraints", async () => {
+  await assert.rejects(asRole("anon",null,"update templates set category='spesial',price=90000,promo_price=null"),/permission denied/);
+  const stranger = await asRole("authenticated",strangerId,"update templates set category='spesial',price=90000,promo_price=null returning id");
+  assert.equal(stranger.rows.length,0);
+  for (const patch of ["category='other'","price=-1,promo_price=null","price=1000000001,promo_price=null","price=50000,promo_price=60000","promo_price=-1"]) {
+    await assert.rejects(asRole("authenticated",salesId,`update templates set ${patch} where slug='greeny-flowers'`),/check constraint/,patch);
+  }
+  await asRole("authenticated",salesId,"update templates set promo_price=null where slug='greeny-flowers'");
+  assert.equal((await asRole("anon",null,"select promo_price from templates where slug='greeny-flowers'")).rows[0].promo_price,null);
+});
+
+test("versioned writes prevent one sales admin overwriting another admin's newer settings", async () => {
+  const current = (await db.query("select id,updated_at::text as version from templates where slug='greeny-flowers'")).rows[0];
+  await asRole("authenticated",salesTwoId,"update templates set price=160000 where slug='greeny-flowers'");
+  const stale = await asRole("authenticated",salesId,`update templates set price=1 where id='${current.id}' and updated_at='${current.version}' returning id`);
+  assert.equal(stale.rows.length,0);
+  assert.equal((await db.query("select price from templates where slug='greeny-flowers'")).rows[0].price,160000);
+});
+
+test("settings action validates untrusted form fields, uses a version guard and only saves allowed fields", async () => {
+  let writes = 0, patch, result = { data: {id:salesId},error:null };
+  const filters = [], paths = [];
+  const query = { update(value) { writes++; patch=value; return this; }, eq(key,value) { filters.push([key,value]); return this; }, select() { return this; }, async maybeSingle() { return result; } };
+  const actions = await loadTs("app/admin/actions.ts", {
+    "next/navigation": { redirect: () => {} }, "next/cache": { revalidatePath: (path) => paths.push(path) },
+    "@/lib/admin-auth": { requireAdmin: async () => ({supabase:{from:() => query}}) },
+    "@/lib/supabase/server": {}, "@/lib/admin-security": {},
+    "@/lib/template-status": { TEMPLATE_STATUSES: ["available","maintenance","in_progress"] },
+    "@/lib/catalog-settings": { MAX_TEMPLATE_PRICE:1_000_000_000,TEMPLATE_CATEGORY_IDS:["spesial","animasi","minimalis"] },
+  });
+  const valid = { templateId:salesId,updatedAt:"2026-11-02T01:00:00.123456+00:00",category:"minimalis",price:"150000",promoPrice:"90000",catalogStatus:"maintenance",intent:"save" };
+  const form = (overrides={}) => { const data = new FormData(); for(const [key,value] of Object.entries({...valid,...overrides})) data.set(key,value); return data; };
+  for (const invalid of [{price:"-1"},{price:"12.5"},{price:"1e5"},{price:"1000000001"},{price:""},{promoPrice:"150001"},{promoPrice:"-1"},{category:"admin"},{catalogStatus:"other"},{intent:"delete"},{templateId:"invalid"},{updatedAt:"invalid"}]) {
+    assert.ok((await actions.saveTemplateSettings({},form(invalid))).error,JSON.stringify(invalid));
+  }
+  assert.equal(writes,0);
+  const extra = form(); extra.set("name","Unauthorized rename"); extra.set("is_active","false");
+  assert.equal((await actions.saveTemplateSettings({},extra)).success,true);
+  assert.deepEqual(patch,{category:"minimalis",price:150000,promo_price:90000,catalog_status:"maintenance"});
+  assert.deepEqual(filters,[["id",salesId],["updated_at",valid.updatedAt]]);
+  assert.deepEqual(paths,["/admin","/"]);
+  await actions.saveTemplateSettings({},form({intent:"archive",promoPrice:""}));
+  assert.equal(patch.is_active,false); assert.equal(patch.promo_price,null);
+  await actions.saveTemplateSettings({},form({intent:"restore"})); assert.equal(patch.is_active,true);
+  result = {data:null,error:null}; assert.match((await actions.saveTemplateSettings({},form())).error,/admin lain/);
+  result = {data:null,error:{message:"sensitive database detail"}};
+  const failure = await actions.saveTemplateSettings({},form()); assert.match(failure.error,/belum berhasil/); assert.ok(!failure.error.includes("sensitive"));
+});
+
+test("catalog discounts reflect actual prices and omit misleading discounts for no-promo or equal prices", async () => {
+  const {getCatalogPriceInfo} = await loadTs("lib/catalog-settings.ts", {"@/lib/media":{resolveMediaUrl:value=>value}});
+  assert.deepEqual(getCatalogPriceInfo(150000,null),{currentPrice:"Rp 150.000",originalPrice:null,discountBadge:null});
+  assert.deepEqual(getCatalogPriceInfo(150000,150000),{currentPrice:"Rp 150.000",originalPrice:null,discountBadge:null});
+  assert.deepEqual(getCatalogPriceInfo(0,null),{currentPrice:"Rp 0",originalPrice:null,discountBadge:null});
+  assert.deepEqual(getCatalogPriceInfo(0,0),{currentPrice:"Rp 0",originalPrice:null,discountBadge:null});
+  assert.deepEqual(getCatalogPriceInfo(100000,75000),{currentPrice:"Rp 75.000",originalPrice:"Rp 100.000",discountBadge:"DISC. 25%"});
 });

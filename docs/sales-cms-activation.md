@@ -14,6 +14,17 @@
 - Migrasi `20261102133000_support_multiple_sales_admins` mendukung beberapa akun
   sales. Username unik tanpa membedakan kapital, dan pemetaan username ke identitas
   Auth hanya tersedia untuk server. Akun yang sudah terdaftar tetap dapat login.
+- Migrasi `20261102143000_add_catalog_prices_and_categories` sudah diterapkan.
+  Harga normal, harga promo opsional, dan kategori tema kini tersimpan di database
+  dan dibaca oleh katalog publik. Pemindahan kategori tidak menghitung ulang harga.
+- Dashboard memakai kartu template ringkas dengan tombol Kelola. Semua pengaturan
+  ada di popup yang sama, termasuk switch status, harga, kategori, arsip dan pemulihan.
+  Pencarian, filter kategori, serta tampilan dua kolom di HP sudah diuji lewat browser
+  lokal dengan Supabase/Auth/Turnstile simulasi, tanpa mengubah katalog produksi.
+- Hak update harga dan kategori, validasi promo, audit aktor/sebelum/sesudah, serta
+  penolakan edit dengan versi lama sudah diverifikasi langsung di database produksi.
+  Semua penulisan uji di-rollback. Pengaturan aktif/arsip dan status yang sedang
+  dipakai tetap dipertahankan.
 - Secret key server Supabase sudah disimpan di `.env.local`; file ini diabaikan
   Git dan nilai key tidak dicetak dalam log atau ditulis di dokumen.
 - Pemeriksaan langsung membuktikan akun sales tidak dapat membaca RSVP privat,
@@ -36,7 +47,8 @@ desain website yang sudah ada:
 | Ucapan | 26 | 26 |
 | Tautan dashboard pelanggan | 7 | 7 |
 
-Seluruh 19 tes otomatis keamanan, login multiakun, dan registrasi katalog lulus. Setelah pengaturan
+Seluruh 25 tes otomatis keamanan, login multiakun, pengaturan harga/kategori,
+perlindungan edit bersamaan, dan registrasi katalog lulus. Setelah pengaturan
 Cloudflare dan Supabase diperbarui oleh pemilik proyek, pemeriksaan langsung ke
 Auth API membuktikan CAPTCHA produksi aktif: token palsu ditolak dengan kode
 `captcha_failed`. Site key publik yang diberikan pemilik sudah disimpan sebagai
