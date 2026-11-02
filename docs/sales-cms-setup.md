@@ -2,7 +2,9 @@
 
 Halaman masuk: `/admin/login`. CMS hanya mengatur katalog penjualan: status Aktif,
 Maintenance, Dalam Proses, hapus dari katalog, dan pulihkan dari arsip.
-Maintenance/Dalam Proses tetap terlihat dengan tombol Pesan nonaktif. Hapus memakai
+Login mendukung beberapa akun sales dengan username masing-masing. Username
+tidak membedakan huruf besar dan kecil. Maintenance/Dalam Proses tetap terlihat
+dengan tombol Pesan nonaktif. Hapus memakai
 arsip (`is_active=false`), sehingga data template, undangan yang sudah dipesan,
 RSVP, dan magic link dashboard pelanggan tetap utuh.
 
@@ -10,7 +12,8 @@ RSVP, dan magic link dashboard pelanggan tetap utuh.
 
 Untuk proyek yang sudah memiliki tabel undangan dan dashboard, terapkan
 `supabase/migrations/20261102120000_sales_cms_and_login_protection.sql`
-dan `supabase/migrations/20261102123000_register_legacy_sales_templates.sql`
+`supabase/migrations/20261102123000_register_legacy_sales_templates.sql`, dan
+`supabase/migrations/20261102133000_support_multiple_sales_admins.sql`
 melalui SQL Editor Supabase atau workflow migrasi yang sesuai. Terapkan sebelum
 merilis kode CMS. Jika query katalog gagal, aplikasi tidak menampilkan katalog
 cadangan agar template yang dihapus tidak muncul kembali.
@@ -21,6 +24,8 @@ hanya untuk meloloskan `db push`. Migrasi CMS sudah diterapkan langsung dan dica
 bersama perubahan skema dalam satu transaksi per migrasi. Migrasi kedua hanya
 mendaftarkan Sunda Vibes dan Mustard Black yang sebelumnya tampil dari data
 cadangan; baris template yang sudah ada tetap memakai pengaturan sebelumnya.
+Migrasi ketiga menambahkan username unik tanpa membedakan kapital dan resolver
+identitas login yang hanya bisa dijalankan oleh server.
 Status terbaru ada di
 [catatan aktivasi](sales-cms-activation.md).
 
@@ -64,15 +69,14 @@ untuk deployment. Jangan commit secret.
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=https://PROJECT.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=PUBLIC_KEY
-ADMIN_USERNAME=USERNAME_ADMIN
-ADMIN_AUTH_EMAIL=EMAIL_ADMIN
 SUPABASE_SECRET_KEY=SERVER_SECRET_KEY
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=SITE_KEY_WIDGET
 ```
 
 Ambil `SUPABASE_SECRET_KEY` dari Supabase Project Settings → API Keys → Secret keys.
 Legacy `SUPABASE_SERVICE_ROLE_KEY` juga didukung. Kunci ini hanya di server untuk
-RPC pembatas login; bukan client Supabase yang dipakai mengubah template.
+RPC pembatas login dan pencarian identitas username; bukan client Supabase yang
+dipakai mengubah template.
 Perubahan template selalu memakai sesi akun sales dan melewati RLS.
 
 Site key bersifat publik. Secret key Supabase dan password tidak boleh memakai
@@ -81,9 +85,10 @@ ke bundle frontend pada saat build. Jangan menyalin file `.env.local` ke aset pu
 
 ## 4. Buat akun admin
 
-Jika akun sudah ada di Supabase Auth dan `admin_profiles`, gunakan username/email
-akun itu pada environment. Setelah migrasi, role harus `sales`. Tidak ada menu
-registrasi publik dan metadata signup tidak dapat memberi hak admin.
+Setiap akun harus terdaftar di Supabase Auth dan mempunyai baris `admin_profiles`
+dengan role `sales`. Login mencocokkan username dengan identitas Auth melalui RPC
+khusus server, kemudian memverifikasi password dan CAPTCHA melalui Supabase Auth.
+Tidak ada menu registrasi publik dan metadata signup tidak dapat memberi hak admin.
 
 Untuk akun baru, script lokal memakai API admin Supabase, membuat user terkonfirmasi
 dan profil sales tanpa mengirim email. Email yang sudah terdaftar tidak ditimpa.
@@ -102,8 +107,11 @@ try {
 }
 ```
 
-Username/email default mengikuti `ADMIN_USERNAME` dan `ADMIN_AUTH_EMAIL`.
-`ADMIN_SETUP_USERNAME` dan `ADMIN_SETUP_EMAIL` dapat digunakan sebagai override.
+Isi `ADMIN_SETUP_USERNAME` dan `ADMIN_SETUP_EMAIL` untuk akun yang akan dibuat.
+`ADMIN_USERNAME` dan `ADMIN_AUTH_EMAIL` dapat dipakai sebagai default opsional
+script provisioning; kedua variabel itu tidak membatasi akun yang boleh login CMS.
+Masing-masing akun memakai email Auth sendiri. Akun tanpa kotak email nyata
+memerlukan pemilik proyek untuk mengatur ulang password melalui Supabase.
 Gunakan password unik minimal 16 karakter, simpan dalam password manager, dan
 matikan **Allow new users to sign up** di Supabase Auth bila registrasi tidak dipakai.
 Password tidak ditulis ke file oleh script. Jangan menyimpan password setup di `.env`.

@@ -3,10 +3,11 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
-import { consumeAdminLoginAttempt, getAdminLoginConfiguration, isAuthCaptchaEnforced, startAdminSession } from "@/lib/admin-security";
+import { randomUUID } from "node:crypto";
+import { consumeAdminLoginAttempt, getAdminLoginConfiguration, isAuthCaptchaEnforced, resolveAdminLogin, startAdminSession } from "@/lib/admin-security";
 
 const loginSchema = z.object({
-  username: z.string().trim().min(3).max(40),
+  username: z.string().trim().min(3).max(40).regex(/^[a-zA-Z0-9_.-]+$/),
   password: z.string().min(1).max(256),
   captchaToken: z.string().min(1).max(2048),
 });
@@ -25,12 +26,14 @@ export async function loginAdmin(formData: FormData) {
   if (!parsed.success) redirect("/admin/login?error=invalid");
   if (!(await isAuthCaptchaEnforced())) redirect("/admin/login?error=unavailable");
   const { username, password, captchaToken } = parsed.data;
+  const identity = await resolveAdminLogin(username);
+  if (identity.status === "unavailable") redirect("/admin/login?error=unavailable");
 
   const supabase = await createClient();
   // Both unknown usernames and wrong passwords follow the provider's CAPTCHA
   // verification and use the same error response (no username enumeration).
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: username.toLowerCase() === config.username.toLowerCase() ? config.email : "invalid-admin@example.invalid",
+    email: identity.status === "found" ? identity.email : `unknown-admin-${randomUUID()}@example.invalid`,
     password,
     options: { captchaToken },
   });
@@ -42,7 +45,7 @@ export async function loginAdmin(formData: FormData) {
     .eq("id", data.user.id)
     .maybeSingle();
 
-  if (!profile || profile.role !== "sales" || profile.username.toLowerCase() !== config.username.toLowerCase()) {
+  if (identity.status !== "found" || data.user.id !== identity.userId || !profile || profile.role !== "sales" || profile.username.toLowerCase() !== username.toLowerCase()) {
     await supabase.auth.signOut({ scope: "local" });
     redirect("/admin/login?error=invalid");
   }

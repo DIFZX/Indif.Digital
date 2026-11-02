@@ -11,6 +11,9 @@
   diarsipkan sebelumnya. Pengaturan template yang sudah ada tetap dipertahankan.
 - Akun admin yang sudah ada mempunyai role `sales`. Username dan email sesuai
   konfigurasi lokal, dan email akun sudah terkonfirmasi.
+- Migrasi `20261102133000_support_multiple_sales_admins` mendukung beberapa akun
+  sales. Username unik tanpa membedakan kapital, dan pemetaan username ke identitas
+  Auth hanya tersedia untuk server. Akun yang sudah terdaftar tetap dapat login.
 - Secret key server Supabase sudah disimpan di `.env.local`; file ini diabaikan
   Git dan nilai key tidak dicetak dalam log atau ditulis di dokumen.
 - Pemeriksaan langsung membuktikan akun sales tidak dapat membaca RSVP privat,
@@ -33,7 +36,7 @@ desain website yang sudah ada:
 | Ucapan | 26 | 26 |
 | Tautan dashboard pelanggan | 7 | 7 |
 
-Seluruh 14 tes otomatis keamanan dan registrasi katalog lulus. Setelah pengaturan
+Seluruh 19 tes otomatis keamanan, login multiakun, dan registrasi katalog lulus. Setelah pengaturan
 Cloudflare dan Supabase diperbarui oleh pemilik proyek, pemeriksaan langsung ke
 Auth API membuktikan CAPTCHA produksi aktif: token palsu ditolak dengan kode
 `captcha_failed`. Site key publik yang diberikan pemilik sudah disimpan sebagai

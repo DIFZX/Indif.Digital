@@ -9,6 +9,7 @@ const require = createRequire(import.meta.url);
 const salesId = "11111111-1111-4111-8111-111111111111";
 const ownerId = "22222222-2222-4222-8222-222222222222";
 const strangerId = "33333333-3333-4333-8333-333333333333";
+const salesTwoId = "44444444-4444-4444-8444-444444444444";
 let db;
 const migration = (name) => readFile(new URL(`../supabase/migrations/${name}.sql`, import.meta.url), "utf8");
 
@@ -17,7 +18,7 @@ before(async () => {
   await db.exec(`
     create role anon; create role authenticated; create role service_role bypassrls;
     create schema auth;
-    create table auth.users(id uuid primary key);
+    create table auth.users(id uuid primary key, email text, email_confirmed_at timestamptz);
     create function auth.uid() returns uuid language sql stable as
       $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
     grant usage on schema public, auth to anon, authenticated, service_role;
@@ -32,9 +33,12 @@ before(async () => {
   await db.exec(await migration("20261019190000_secure_dashboard_and_add_views"));
   await db.exec(await migration("20261019210000_add_client_dashboard_magic_links"));
   await db.exec(await migration("20261102120000_sales_cms_and_login_protection"));
+  await db.exec(await migration("20261102133000_support_multiple_sales_admins"));
   await db.exec(`
-    insert into auth.users values ('${salesId}'), ('${ownerId}'), ('${strangerId}');
-    insert into admin_profiles(id,username,role) values ('${salesId}','sales','sales'), ('${ownerId}','owner','owner');
+    insert into auth.users(id,email,email_confirmed_at) values
+      ('${salesId}','sales@example.invalid',now()), ('${ownerId}','owner@example.invalid',now()),
+      ('${strangerId}','stranger@example.invalid',now()), ('${salesTwoId}','sales-two@example.invalid',now());
+    insert into admin_profiles(id,username,role) values ('${salesId}','sales','sales'), ('${ownerId}','owner','owner'), ('${salesTwoId}','SalesTwo','sales');
     insert into rsvps(invitation_id,guest_name,attendance) select id,'Private RSVP','attending' from invitations limit 1;
     insert into greetings(invitation_id,guest_name,message) select id,'Private greeting','Private message' from invitations limit 1;
     insert into invitation_views(invitation_id,visitor_id) select id,'${salesId}' from invitations limit 1;
@@ -42,6 +46,29 @@ before(async () => {
     insert into invitations(template_id,slug,status,bride_name,bride_short_name,groom_name,groom_short_name,event_date,ceremony_time,reception_time,venue_name,venue_address,opening_text,cover_path)
     values ((select id from templates where slug='draft-only'),'private-draft','draft','A','A','B','B','2027-01-01','08:00','10:00','Venue','Address','Hello','/media/test.webp');
   `);
+});
+
+test("private username resolution supports multiple sales admins and case-insensitive login", async () => {
+  for (const [username,id] of [[" SALES ",salesId],["salestwo",salesTwoId],["SALESTWO",salesTwoId]]) {
+    const result = await asRole("service_role", null, `select user_id from resolve_sales_admin_login('${username}')`);
+    assert.equal(result.rows[0].user_id,id);
+  }
+  for (const role of ["anon","authenticated"]) {
+    await assert.rejects(asRole(role,salesId,"select * from resolve_sales_admin_login('sales')"),/permission denied/);
+  }
+});
+
+test("owner, unknown and unconfirmed accounts cannot resolve as sales logins", async () => {
+  for (const username of ["owner","stranger","not-existing"]) {
+    assert.equal((await asRole("service_role",null,`select * from resolve_sales_admin_login('${username}')`)).rows.length,0);
+  }
+  await db.exec(`update auth.users set email_confirmed_at=null where id='${salesTwoId}'`);
+  assert.equal((await asRole("service_role",null,"select * from resolve_sales_admin_login('SalesTwo')")).rows.length,0);
+  await db.exec(`update auth.users set email_confirmed_at=now() where id='${salesTwoId}'`);
+});
+
+test("administrator usernames cannot differ only by letter case", async () => {
+  await assert.rejects(db.exec(`insert into admin_profiles(id,username,role) values ('${strangerId}','SALES','sales')`),/unique constraint/);
 });
 
 after(async () => { await db?.close(); });
@@ -134,6 +161,7 @@ async function loadTs(file, replacements) {
 
 test("login never sends real credentials without rate limit and CAPTCHA enforcement", async () => {
   let attempt = "allowed", captcha = true, signIns = 0;
+  let identity = { status: "found", userId: salesId, email: "sales@example.invalid" };
   const redirects = [];
   const actions = await loadTs("app/admin/login/actions.ts", {
     "next/navigation": { redirect: (url) => { redirects.push(url); throw new Error(`redirect:${url}`); } },
@@ -141,6 +169,7 @@ test("login never sends real credentials without rate limit and CAPTCHA enforcem
       getAdminLoginConfiguration: () => ({ username: "sales", email: "sales@example.invalid" }),
       consumeAdminLoginAttempt: async () => attempt,
       isAuthCaptchaEnforced: async () => captcha,
+      resolveAdminLogin: async () => identity,
     },
     "@/lib/supabase/server": { createClient: async () => ({ auth: { signInWithPassword: async () => { signIns++; return { error: { code: "invalid_credentials" }, data: {} }; } } }) },
   });
@@ -156,9 +185,61 @@ test("login never sends real credentials without rate limit and CAPTCHA enforcem
   await assert.rejects(actions.loginAdmin(form), /error=invalid/);
   assert.equal(signIns, 0);
   form.set("captchaToken", "test-token");
+  identity = { status: "unavailable" };
+  await assert.rejects(actions.loginAdmin(form), /error=unavailable/);
+  assert.equal(signIns,0);
+  identity = { status: "found", userId: salesId, email: "sales@example.invalid" };
   await assert.rejects(actions.loginAdmin(form), /error=invalid/);
   assert.equal(signIns, 1);
-  assert.equal(redirects.length, 5);
+  assert.equal(redirects.length, 6);
+});
+
+test("login authenticates both registered usernames with the corresponding provider identity", async () => {
+  const identities = {
+    firstadmin: { userId: salesId, username: "FirstAdmin", email: "first@example.invalid" },
+    secondadmin: { userId: salesTwoId, username: "SecondAdmin", email: "second@example.invalid" },
+  };
+  let active;
+  const sessions = [], signIns = [];
+  const query = { select() { return this; }, eq() { return this; }, async maybeSingle() { return { data: { id: active.userId, username: active.username, role: "sales" } }; } };
+  const actions = await loadTs("app/admin/login/actions.ts", {
+    "next/navigation": { redirect: (url) => { throw new Error(`redirect:${url}`); } },
+    "@/lib/admin-security": {
+      getAdminLoginConfiguration: () => ({}), consumeAdminLoginAttempt: async () => "allowed", isAuthCaptchaEnforced: async () => true,
+      resolveAdminLogin: async (username) => ({ status: "found", ...identities[username.toLowerCase()] }),
+      startAdminSession: async (id) => sessions.push(id),
+    },
+    "@/lib/supabase/server": { createClient: async () => ({
+      auth: { signInWithPassword: async (credentials) => { signIns.push(credentials); active = Object.values(identities).find(identity => identity.email===credentials.email); return { data: { user: { id: active.userId } }, error: null }; } },
+      from: () => query,
+    }) },
+  });
+  for (const username of ["firstadmin","SECONDADMIN"]) {
+    const form = new FormData(); form.set("username",username); form.set("password","test-password-only"); form.set("captchaToken","verified-test-token");
+    await assert.rejects(actions.loginAdmin(form),/redirect:\/admin$/);
+  }
+  assert.deepEqual(sessions,[salesId,salesTwoId]);
+  assert.deepEqual(signIns.map(credentials=>credentials.email),["first@example.invalid","second@example.invalid"]);
+  assert.ok(signIns.every(credentials=>credentials.options.captchaToken==="verified-test-token"));
+});
+
+test("a resolved username cannot sign in as a different provider user", async () => {
+  let signedOut = false, sessionIssued = false;
+  const query = { select() { return this; }, eq() { return this; }, async maybeSingle() { return { data: { username: "sales", role: "sales" } }; } };
+  const actions = await loadTs("app/admin/login/actions.ts", {
+    "next/navigation": { redirect: (url) => { throw new Error(url); } },
+    "@/lib/admin-security": {
+      getAdminLoginConfiguration: () => ({}), consumeAdminLoginAttempt: async () => "allowed", isAuthCaptchaEnforced: async () => true,
+      resolveAdminLogin: async () => ({ status: "found", userId: salesId, email: "sales@example.invalid" }),
+      startAdminSession: async () => { sessionIssued=true; },
+    },
+    "@/lib/supabase/server": { createClient: async () => ({
+      auth: { signInWithPassword: async () => ({ data: { user: { id: salesTwoId } } }), signOut: async () => { signedOut=true; } }, from: () => query,
+    }) },
+  });
+  const form = new FormData(); form.set("username","sales"); form.set("password","test-password-only"); form.set("captchaToken","test-token");
+  await assert.rejects(actions.loginAdmin(form),/error=invalid/);
+  assert.equal(signedOut,true); assert.equal(sessionIssued,false);
 });
 
 test("admin guard rejects missing, expired and owner sessions", async () => {

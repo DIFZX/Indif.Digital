@@ -39,12 +39,35 @@ export function getAdminLoginConfiguration() {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const secretKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  const username = process.env.ADMIN_USERNAME;
-  const email = process.env.ADMIN_AUTH_EMAIL;
-  if (!url || !anonKey || !secretKey || !siteKey || !username || !email) return null;
+  if (!url || !anonKey || !secretKey || !siteKey) return null;
   // Cloudflare test widgets must never be usable on the production login.
   if (process.env.NODE_ENV === "production" && /^[123]x0{20}/.test(siteKey)) return null;
-  return { url, anonKey, secretKey, siteKey, username, email };
+  return { url, anonKey, secretKey, siteKey };
+}
+
+function createAdminServiceClient(config: NonNullable<ReturnType<typeof getAdminLoginConfiguration>>) {
+  return createClient(config.url, config.secretKey, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    global: { fetch: (url, options) => fetch(url, { ...options, signal: AbortSignal.timeout(8_000), cache: "no-store" }) },
+  });
+}
+
+type AdminLoginIdentity =
+  | { status: "found"; userId: string; email: string }
+  | { status: "not-found" | "unavailable" };
+
+export async function resolveAdminLogin(username: string): Promise<AdminLoginIdentity> {
+  const config = getAdminLoginConfiguration();
+  if (!config) return { status: "unavailable" };
+  try {
+    const { data, error } = await createAdminServiceClient(config).rpc("resolve_sales_admin_login", { login_username: username });
+    if (error || !Array.isArray(data) || data.length > 1) return { status: "unavailable" };
+    if (data.length === 0) return { status: "not-found" };
+    if (typeof data[0].user_id !== "string" || typeof data[0].email !== "string") return { status: "unavailable" };
+    return { status: "found", userId: data[0].user_id, email: data[0].email };
+  } catch {
+    return { status: "unavailable" };
+  }
 }
 
 export async function consumeAdminLoginAttempt() {
@@ -56,10 +79,7 @@ export async function consumeAdminLoginAttempt() {
   const forwarded = process.env.VERCEL === "1" ? requestHeaders.get("x-vercel-forwarded-for")?.trim() : null;
   const ip = forwarded && isIP(forwarded) ? forwarded : "shared-untrusted-network";
   const ipHash = createHmac("sha256", config.secretKey).update(ip).digest("hex");
-  const service = createClient(config.url, config.secretKey, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    global: { fetch: (url, options) => fetch(url, { ...options, signal: AbortSignal.timeout(8_000), cache: "no-store" }) },
-  });
+  const service = createAdminServiceClient(config);
 
   try {
     const { data, error } = await service.rpc("consume_admin_login_attempt", { ip_hash: ipHash });
