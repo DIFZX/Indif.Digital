@@ -74,6 +74,12 @@ tidak disimpan. Terapkan migration berikut secara berurutan sebelum deployment:
 1. `supabase/migrations/20261019190000_secure_dashboard_and_add_views.sql`
 2. `supabase/migrations/20261019210000_add_client_dashboard_magic_links.sql`
 
+Jika halaman contoh Sunda Vibes sebelumnya hanya tersedia melalui data lokal,
+terapkan `supabase/migrations/20261103090000_register_sunda_vibes_invitation.sql`
+setelah template Sunda Vibes terdaftar. Migrasi ini mencatat isi preview yang sama
+agar RSVP dan dashboard pribadinya bisa dipakai. Migrasi tidak mengganti undangan
+yang sudah ada, pengaturan katalog, respons tamu, atau kunci dashboard lama.
+
 Untuk melihat link dashboard undangan yang sudah ada, jalankan query ini di SQL Editor
 Supabase setelah kedua migration selesai:
 

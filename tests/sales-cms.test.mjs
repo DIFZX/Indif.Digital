@@ -437,3 +437,43 @@ test("catalog discounts reflect actual prices and omit misleading discounts for 
   assert.deepEqual(getCatalogPriceInfo(0,0),{currentPrice:"Rp 0",originalPrice:null,discountBadge:null});
   assert.deepEqual(getCatalogPriceInfo(100000,75000),{currentPrice:"Rp 75.000",originalPrice:"Rp 100.000",discountBadge:"DISC. 25%"});
 });
+
+test("Sunda registration creates an isolated RSVP dashboard and preserves existing data, catalog settings and shared keys on reapplication", async () => {
+  // Bring this deliberately small fixture up to the existing invitation-content schema.
+  await db.exec(await migration("20260819145200_add_invitation_profile_path"));
+  await db.exec("alter table invitations add column bride_photo_path text, add column groom_photo_path text");
+  await db.exec(await migration("20260819172828_add_invitation_story_image_path"));
+  await db.exec(await migration("20260820103657_add_invitation_custom_texts"));
+  const snapshot=async()=> (await db.query("select (select jsonb_agg(t order by id) from templates t) as templates,(select jsonb_agg(i order by id) from invitations i where slug<>'sunda-vibes') as invitations,(select jsonb_agg(r order by id) from rsvps r) as rsvps,(select jsonb_agg(g order by id) from greetings g) as greetings,(select jsonb_agg(a order by invitation_id) from invitation_dashboard_access a) as access")).rows[0];
+  const before=await snapshot();
+  const registration=await migration("20261103090000_register_sunda_vibes_invitation");
+  await db.exec(registration);
+  const invitation=(await db.query("select * from invitations where slug='sunda-vibes'")).rows[0];
+  const access=(await db.query(`select access_token from invitation_dashboard_access where invitation_id='${invitation.id}'`)).rows[0];
+  assert.equal(invitation.id,"00000000-0000-0000-0000-000000000107");
+  assert.equal(invitation.status,"published");
+  assert.equal(invitation.bride_short_name,"Dita");
+  assert.equal(invitation.groom_short_name,"Fajar");
+  assert.equal(invitation.bride_photo_path,"/media/sunda-vibes/The Bride.jpg");
+  assert.equal(invitation.music_path,"/media/sunda-vibes/audio.mp3");
+  assert.ok(access.access_token);
+  const after=await snapshot();
+  assert.deepEqual({...after,access:before.access},{...before});
+  const originalKeys=(await db.query("select jsonb_agg(a order by invitation_id) as access from invitation_dashboard_access a where invitation_id<>(select id from invitations where slug='sunda-vibes')")).rows[0].access;
+  assert.deepEqual(originalKeys,before.access);
+  assert.equal((await asRole("anon",null,`select verify_invitation_dashboard_access('sunda-vibes','${access.access_token}') as valid`)).rows[0].valid,true);
+  const dashboard=(await asRole("anon",null,`select get_invitation_dashboard_data('${invitation.id}','${access.access_token}') as data`)).rows[0].data;
+  assert.deepEqual(dashboard.rsvps,[]);
+  assert.deepEqual(dashboard.greetings,[]);
+  assert.equal((await asRole("anon",null,`select get_invitation_dashboard_data('${invitation.id}','invalid-token') as data`)).rows[0].data,null);
+  await asRole("anon",null,`insert into rsvps(invitation_id,guest_name,attendance,guest_count) values ('${invitation.id}','Sunda test guest','attending',2)`);
+  await assert.rejects(asRole("anon",null,"select * from rsvps"),/permission denied/);
+  const privateData=(await asRole("anon",null,`select get_invitation_dashboard_data('${invitation.id}','${access.access_token}') as data`)).rows[0].data;
+  assert.equal(privateData.rsvps.length,1);assert.equal(privateData.rsvps[0].guest_count,2);
+  await db.exec("update invitations set venue_name='Owner updated venue' where slug='sunda-vibes'");
+  await db.exec(registration);
+  assert.equal((await db.query("select venue_name from invitations where slug='sunda-vibes'")).rows[0].venue_name,"Owner updated venue");
+  assert.equal((await db.query(`select access_token from invitation_dashboard_access where invitation_id='${invitation.id}'`)).rows[0].access_token,access.access_token);
+  assert.equal((await db.query(`select count(*)::int as count from rsvps where invitation_id='${invitation.id}'`)).rows[0].count,1);
+  assert.deepEqual((await snapshot()).templates,before.templates);
+});
