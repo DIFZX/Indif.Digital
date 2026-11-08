@@ -32,6 +32,7 @@ before(async () => {
   await db.exec(await migration("20260820172612_add_greeting_attendance"));
   await db.exec(await migration("20261019190000_secure_dashboard_and_add_views"));
   await db.exec(await migration("20261019210000_add_client_dashboard_magic_links"));
+  await db.exec(await migration("20261108120000_add_private_share_message"));
   await db.exec(await migration("20261102120000_sales_cms_and_login_protection"));
   await db.exec(await migration("20261102133000_support_multiple_sales_admins"));
   await db.exec("insert into templates(slug,name,is_active) values ('java-vibes','Java Vibes',false),('blue-garden','Blue Garden',false)");
@@ -719,4 +720,98 @@ test("Pixel walk cycle alternates both steps and returns to standing", async () 
   const { walkingFrame } = await loadTs("components/templates/adventure-wedding-pixel/world.ts", {});
   assert.equal(walkingFrame(0), 0);
   assert.deepEqual([1, 10, 19, 28, 37].map(walkingFrame), [1, 0, 2, 0, 1]);
+});
+
+test("guest messages replace repeated markers once, preserve custom wording, and always include the personal link", async () => {
+  const { renderGuestShareMessage, DEFAULT_SHARE_MESSAGE } = await loadTs("lib/invitation-share-message.ts", {});
+  const invitation = { bride_name: "Bride Full", groom_name: "Groom Full", bride_short_name: "Bride", groom_short_name: "Groom", event_date: "2026-09-30", venue_name: "Wedding Venue" };
+  const link = "https://inv.example.invalid/wedding?to=Keluarga%20%26%20Sahabat";
+  const rendered = renderGuestShareMessage("Halo {nama_tamu}!\n{nama_tamu}, sampai jumpa di {lokasi}.\n{nama_mempelai}\n{nama_panggilan}\n{tanggal}\n{link_undangan}", invitation, "  Keluarga & Sahabat 💛  ", link);
+  assert.match(rendered, /Halo Keluarga & Sahabat 💛!/);
+  assert.match(rendered, /Bride Full & Groom Full\nBride & Groom\nRabu, 30 September 2026/);
+  assert.equal(rendered.split(link).length - 1, 1);
+  assert.equal(renderGuestShareMessage("Hai {nama_tamu}", invitation, "{lokasi} $&", link), `Hai {lokasi} $&\n\n${link}`);
+  assert.equal(renderGuestShareMessage(" \n\t ", invitation, "", link), "");
+  assert.match(renderGuestShareMessage(DEFAULT_SHARE_MESSAGE, invitation, "", link), /\[Nama Tamu\]/);
+  assert.equal(renderGuestShareMessage("Teks bebas {penanda_lain}", invitation, "", link), `Teks bebas {penanda_lain}\n\n${link}`);
+});
+
+test("private share-message migration is repeatable and preserves invitation keys, RSVP and existing messages", async () => {
+  const before = (await db.query("select (select jsonb_agg(a order by invitation_id) from invitation_dashboard_access a) as access,(select jsonb_agg(r order by id) from rsvps r) as rsvps,(select jsonb_agg(g order by id) from greetings g) as greetings")).rows[0];
+  const sql = await migration("20261108120000_add_private_share_message");
+  await db.exec(sql);
+  const after = (await db.query("select (select jsonb_agg(a order by invitation_id) from invitation_dashboard_access a) as access,(select jsonb_agg(r order by id) from rsvps r) as rsvps,(select jsonb_agg(g order by id) from greetings g) as greetings")).rows[0];
+  assert.deepEqual(after, before);
+});
+
+test("share-message writes require the correct invitation key, stay private, and reject blank or oversized text", async () => {
+  const invitation = (await db.query("select i.id,i.slug,a.access_token from invitations i join invitation_dashboard_access a on a.invitation_id=i.id where i.slug='adventure-wedding-pixel'")).rows[0];
+  const wrongKey = (await db.query("select access_token from invitation_dashboard_access where invitation_id='00000000-0000-0000-0000-000000000107'")).rows[0].access_token;
+  async function save(slug, token, message, role = "anon", userId = null) {
+    await db.exec(`set role ${role}; select set_config('request.jwt.claim.sub','${userId || ""}',false)`);
+    try { return (await db.query("select save_invitation_share_message($1,$2,$3) as saved", [slug, token, message])).rows[0].saved; }
+    finally { await db.exec("reset role; select set_config('request.jwt.claim.sub','',false)"); }
+  }
+  const text = "Halo {nama_tamu}!\nKami menunggu kehadiranmu 💛\n{link_undangan}";
+  assert.equal(await save(invitation.slug, invitation.access_token, text), true);
+  for (const message of [null, "", " \n\t ", "x".repeat(6001)]) assert.equal(await save(invitation.slug, invitation.access_token, message), false);
+  for (const token of ["invalid", strangerId, wrongKey]) assert.equal(await save(invitation.slug, token, "Cannot overwrite"), false);
+  assert.equal(await save("sunda-vibes", invitation.access_token, "Cross-invitation"), false);
+  assert.equal(await save("private-draft", invitation.access_token, "Draft"), false);
+  assert.equal(await save(invitation.slug, wrongKey, "Sales role is insufficient", "authenticated", salesId), false);
+  assert.equal((await asRole("anon", null, `select get_invitation_dashboard_data('${invitation.id}','invalid') as payload`)).rows[0].payload, null);
+  const authorized = (await asRole("anon", null, `select get_invitation_dashboard_data('${invitation.id}','${invitation.access_token}') as payload`)).rows[0].payload;
+  assert.equal(authorized.share_message_template, text);
+  assert.ok(Array.isArray(authorized.rsvps) && Array.isArray(authorized.greetings));
+  assert.ok(Number.isInteger(authorized.view_count));
+  await assert.rejects(asRole("anon", null, "select share_message_template from invitation_dashboard_access"), /permission denied/);
+  assert.equal((await asRole("authenticated", salesId, "select share_message_template from invitation_dashboard_access")).rows.length, 0);
+  await assert.rejects(asRole("anon", null, "update invitation_dashboard_access set share_message_template='Bypass'"), /permission denied/);
+  await assert.rejects(asRole("authenticated", salesId, "update invitation_dashboard_access set share_message_template='Bypass'"), /permission denied/);
+});
+
+test("share-message action validates input, authorizes every call, and saves the template returned by the private dashboard loader", async () => {
+  const { MAX_SHARE_MESSAGE_LENGTH } = await loadTs("lib/invitation-share-message.ts", {});
+  const invitation = (await db.query("select i.id,i.slug,a.access_token from invitations i join invitation_dashboard_access a on a.invitation_id=i.id where i.slug='adventure-wedding-pixel'")).rows[0];
+  const access = await loadTs("lib/client-dashboard-access.ts", { "server-only": {}, "next/headers": {}, "next/navigation": {}, "@/lib/invitations": {}, "@/lib/supabase/server": {} });
+  let cookieValue, calls = 0, verificationError = false;
+  const invalidated = [];
+  const client = { async rpc(name, args) {
+    calls++;
+    if (verificationError) return { data: null, error: { message: "Unavailable" } };
+    await db.exec("set role anon");
+    try {
+      const result = name === "save_invitation_share_message"
+        ? await db.query("select save_invitation_share_message($1,$2,$3) as payload", [args.target_slug, args.dashboard_token, args.message_template])
+        : await db.query("select get_invitation_dashboard_data($1,$2) as payload", [args.target_invitation_id, args.dashboard_token]);
+      return { data: result.rows[0].payload, error: null };
+    } finally { await db.exec("reset role"); }
+  } };
+  const actions = await loadTs("app/[slug]/dashboard/actions.ts", {
+    "next/headers": { cookies: async () => ({ get: name => { assert.equal(name, `indif-dashboard-${invitation.slug}`); return cookieValue ? { value: cookieValue } : undefined; } }) },
+    "next/cache": { revalidatePath: (...args) => invalidated.push(args) },
+    "@/lib/client-dashboard-access": access,
+    "@/lib/invitation-share-message": { MAX_SHARE_MESSAGE_LENGTH },
+    "@/lib/supabase/server": { createClient: async () => client },
+  });
+  for (const [slug, message] of [["../admin", "Message"], [invitation.slug, " \n "], [invitation.slug, "x".repeat(6001)]]) assert.equal((await actions.saveInvitationShareMessage(slug, message)).success, false);
+  for (const token of [undefined, "malformed"]) {
+    cookieValue = token;
+    assert.equal((await actions.saveInvitationShareMessage(invitation.slug, "Message")).success, false);
+  }
+  assert.equal(calls, 0);
+  cookieValue = strangerId;
+  assert.equal((await actions.saveInvitationShareMessage(invitation.slug, "Message")).success, false);
+  cookieValue = invitation.access_token;
+  verificationError = true;
+  assert.equal((await actions.saveInvitationShareMessage(invitation.slug, "Message")).success, false);
+  assert.deepEqual(invalidated, []);
+  verificationError = false;
+  const text = "Salam hangat, {nama_tamu}.\nIni kata-kata pilihan kami.\n{link_undangan}";
+  assert.deepEqual(await actions.saveInvitationShareMessage(invitation.slug, text), { success: true, message: text });
+  assert.deepEqual(invalidated, [[`/${invitation.slug}/dashboard`, "layout"]]);
+  const loader = await loadTs("lib/invitations.ts", { "@/lib/demo": { demoInvitations: [], demoGreetings: [], javaVibesDemoGreetings: [] }, "@/lib/supabase": { getSupabase: () => client } });
+  const dashboard = await loader.getInvitationDashboardData(invitation.id, invitation.access_token, client);
+  assert.equal(dashboard.shareMessageTemplate, text);
+  assert.ok(dashboard.initialRSVPs.every(row => row.invitation_id === invitation.id));
 });

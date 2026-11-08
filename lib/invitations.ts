@@ -81,13 +81,14 @@ type DashboardPayload = {
   greetings: DashboardGreetingRow[];
   rsvps: DashboardRSVPRow[];
   view_count: number;
+  share_message_template?: string | null;
 };
 
 export async function getInvitationDashboardData(
   invitationId: string,
   dashboardToken: string,
   supabase: SupabaseClient,
-): Promise<{ initialRSVPs: GuestRSVP[]; viewCount: number } | null> {
+): Promise<{ initialRSVPs: GuestRSVP[]; viewCount: number; shareMessageTemplate: string | null } | null> {
   const { data, error } = await supabase.rpc("get_invitation_dashboard_data", {
     target_invitation_id: invitationId,
     dashboard_token: dashboardToken,
@@ -143,6 +144,7 @@ export async function getInvitationDashboardData(
   return {
     initialRSVPs,
     viewCount: Number.isFinite(parsedViewCount) ? parsedViewCount : 0,
+    shareMessageTemplate: typeof payload.share_message_template === "string" ? payload.share_message_template : null,
   };
 }
 

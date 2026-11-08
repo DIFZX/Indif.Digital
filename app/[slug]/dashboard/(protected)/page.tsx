@@ -1,4 +1,5 @@
+import { ClientDashboard } from "@/components/client-dashboard/client-dashboard";
+
 export default function CustomerDashboardPage() {
-  // The protected group layout renders the dashboard after verifying access.
-  return null;
+  return <ClientDashboard section="dashboard" />;
 }

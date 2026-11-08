@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { ClientDashboard } from "@/components/client-dashboard/client-dashboard";
+import { ClientDashboardShell } from "@/components/client-dashboard/client-dashboard-shell";
 import { requireClientDashboard } from "@/lib/client-dashboard-access";
 
 export const dynamic = "force-dynamic";
@@ -19,16 +19,16 @@ export default async function CustomerDashboardLayout({ children, params }: Layo
   // Only dashboard content uses this layout. The access-required page must
   // remain outside it so guests without a cookie do not redirect to themselves.
   const { slug } = await params;
-  const { invitation, initialRSVPs, viewCount } = await requireClientDashboard(slug);
+  const { invitation, initialRSVPs, viewCount, shareMessageTemplate } = await requireClientDashboard(slug);
 
   return (
-    <>
-      <ClientDashboard
-        invitation={invitation}
-        initialRSVPs={initialRSVPs}
-        viewCount={viewCount}
-      />
+    <ClientDashboardShell
+      invitation={invitation}
+      initialRSVPs={initialRSVPs}
+      viewCount={viewCount}
+      shareMessageTemplate={shareMessageTemplate}
+    >
       {children}
-    </>
+    </ClientDashboardShell>
   );
 }

@@ -1,37 +1,27 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
-import type { GuestRSVP, Invitation } from "@/lib/types";
+import { DEFAULT_SHARE_MESSAGE, MAX_SHARE_MESSAGE_LENGTH, SHARE_MESSAGE_FIELDS, renderGuestShareMessage } from "@/lib/invitation-share-message";
+import { saveInvitationShareMessage } from "@/app/[slug]/dashboard/actions";
+import { useClientDashboard } from "./client-dashboard-shell";
 import styles from "./client-dashboard.module.css";
-
-type ClientDashboardProps = {
-  invitation: Invitation;
-  initialRSVPs: GuestRSVP[];
-  viewCount: number;
-};
 
 export type DashboardSection = "dashboard" | "bagikan" | "ucapan" | "acara" | "bantuan";
 export type AttendanceFilter = "all" | "attending" | "not_attending" | "unsure";
 
-export function ClientDashboard({
-  invitation,
-  initialRSVPs,
-  viewCount,
-}: ClientDashboardProps) {
+export function ClientDashboard({ section: activeTab }: { section: DashboardSection }) {
+  const {
+    invitation, initialRSVPs, viewCount, shareMessageTemplate, guestShareName, setGuestShareName,
+    messageDraft, setMessageDraft, savedMessage, setSavedMessage,
+  } = useClientDashboard();
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const dashboardBaseUrl = `/${invitation.slug}/dashboard`;
-  const section = pathname.slice(dashboardBaseUrl.length).split("/").filter(Boolean)[0];
-  const activeTab: DashboardSection =
-    section === "bagikan" || section === "ucapan" || section === "acara" || section === "bantuan"
-      ? section
-      : "dashboard";
   const attendanceParam = searchParams.get("attendance");
   const routeAttendanceFilter: AttendanceFilter =
     attendanceParam === "attending" || attendanceParam === "not_attending" || attendanceParam === "unsure"
@@ -39,8 +29,12 @@ export function ClientDashboard({
       : "all";
   const [searchQuery, setSearchQuery] = useState("");
   const attendanceFilter = routeAttendanceFilter;
-  const [guestShareName, setGuestShareName] = useState("");
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const messageInput = useRef<HTMLTextAreaElement>(null);
+  const [isSaving, startSaving] = useTransition();
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const messageChanged = messageDraft !== savedMessage;
 
   const rsvps = initialRSVPs;
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -55,19 +49,6 @@ export function ClientDashboard({
   });
 
   const coupleNames = `${invitation.bride_short_name} & ${invitation.groom_short_name}`;
-  const registeredGuestPlaceholder = 98;
-
-  useEffect(() => {
-    const dashboardRoutes = [
-      dashboardBaseUrl,
-      `${dashboardBaseUrl}/bagikan`,
-      `${dashboardBaseUrl}/ucapan`,
-      `${dashboardBaseUrl}/acara`,
-      `${dashboardBaseUrl}/bantuan`,
-    ];
-
-    dashboardRoutes.forEach((route) => router.prefetch(route));
-  }, [dashboardBaseUrl, router]);
 
   // Countdown Calculation
   useEffect(() => {
@@ -201,35 +182,49 @@ export function ClientDashboard({
   };
 
   // Personalized Share Link Generation
-  const productionBaseUrl = BRAND.websiteUrl || "https://indifdigital.my.id";
-  const baseUrl =
-    typeof window !== "undefined" &&
-    !window.location.hostname.includes("localhost") &&
-    !window.location.hostname.includes("127.0.0.1")
-      ? window.location.origin
-      : productionBaseUrl;
-  const invitationUrl = `${baseUrl}/${invitation.slug}`;
+  const invitationUrl = `${BRAND.invitationBaseUrl}/${invitation.slug}`;
   const personalizedUrl = guestShareName.trim()
     ? `${invitationUrl}?to=${encodeURIComponent(guestShareName.trim())}`
     : invitationUrl;
 
 
-  const shareTextTemplate = `Kepada Yth.
-*${guestShareName.trim() || "[Nama Tamu]"}*
+  const shareTextTemplate = renderGuestShareMessage(messageDraft, invitation, guestShareName, personalizedUrl);
 
-Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada hari bahagia pernikahan kami:
+  const insertMessageField = (token: string) => {
+    const input = messageInput.current;
+    const start = input?.selectionStart ?? messageDraft.length;
+    const end = input?.selectionEnd ?? start;
+    const next = messageDraft.slice(0, start) + token + messageDraft.slice(end);
+    if (next.length > MAX_SHARE_MESSAGE_LENGTH) {
+      showToast("Pesan maksimal 6.000 karakter.");
+      return;
+    }
+    setMessageDraft(next);
+    setSaveError(null);
+    requestAnimationFrame(() => {
+      input?.focus();
+      input?.setSelectionRange(start + token.length, start + token.length);
+    });
+  };
 
-*${invitation.bride_name} & ${invitation.groom_name}*
-📅 ${new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(new Date(invitation.event_date))}
-📍 ${invitation.venue_name}
-
-Informasi lengkap serta reservasi kehadiran dapat diakses melalui link undangan berikut:
-${personalizedUrl}
-
-Merupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir. Terima kasih.
-
-Salam hangat,
-*${coupleNames}*`;
+  const saveShareMessage = () => {
+    const snapshot = messageDraft;
+    setSaveError(null);
+    setSaveFeedback(null);
+    startSaving(async () => {
+      try {
+        const result = await saveInvitationShareMessage(invitation.slug, snapshot);
+        if (!result.success) {
+          setSaveError(result.error);
+          return;
+        }
+        setSavedMessage(result.message);
+        setSaveFeedback("Pesan tersimpan untuk undangan ini.");
+      } catch {
+        setSaveError("Pesan belum tersimpan. Periksa koneksi dan coba lagi.");
+      }
+    });
+  };
 
   // Bulletproof copy to clipboard with async Clipboard API + textarea execCommand fallback
   const copyToClipboard = async (text: string, successLabel: string, key?: string) => {
@@ -278,39 +273,13 @@ Salam hangat,
   };
 
   return (
-    <div className={styles.dashboardWrapper}>
+    <>
       {toastMessage && (
         <aside className={styles.toastNotification} role="status">
           <span>✨</span>
           <span>{toastMessage}</span>
         </aside>
       )}
-
-      <div className={styles.phoneContainer}>
-        {/* Top Header */}
-        <header className={styles.topBar}>
-          <Link href={`/${invitation.slug}`} className={styles.backButton}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-            <span>Kembali</span>
-          </Link>
-
-          <Link href={`/${invitation.slug}`} className={styles.brandLink}>
-            <Image
-              src={BRAND.logoPath}
-              alt={BRAND.name}
-              width={120}
-              height={28}
-              className={styles.brandLogo}
-              priority
-            />
-          </Link>
-          <div className={styles.brandBadge}>
-            <span className={styles.pulseDot} />
-            <span>Undangan Online</span>
-          </div>
-        </header>
 
         {/* Hero Card with Countdown & Couple Details (Shown on Dashboard tab) */}
         {activeTab === "dashboard" && (
@@ -398,10 +367,10 @@ Salam hangat,
 
             <div className={styles.statList}>
               {/* Tamu Terdaftar */}
-              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/bagikan`)}>
+              <Link className={styles.statCard} href={`${dashboardBaseUrl}/ucapan`}>
                 <div className={styles.statCardLeft}>
-                  <span className={styles.statCardTitle}>Tamu Terdaftar</span>
-                  <span className={styles.statCardValue}>{registeredGuestPlaceholder}</span>
+                  <span className={styles.statCardTitle}>Respons Tamu</span>
+                  <span className={styles.statCardValue}>{rsvps.length}</span>
                 </div>
                 <div className={styles.statCardRight}>
                   <div className={`${styles.statIconBadge} ${styles.badgeAmber}`}>
@@ -416,10 +385,10 @@ Salam hangat,
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </div>
-              </div>
+              </Link>
 
               {/* Undangan Dibuka */}
-              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}>
+              <Link className={styles.statCard} href={`${dashboardBaseUrl}/ucapan`}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Undangan Dibuka</span>
                   <span className={styles.statCardValue}>{viewCount}</span>
@@ -435,10 +404,10 @@ Salam hangat,
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </div>
-              </div>
+              </Link>
 
               {/* Total Ucapan */}
-              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}>
+              <Link className={styles.statCard} href={`${dashboardBaseUrl}/ucapan`}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Total Ucapan</span>
                   <span className={styles.statCardValue}>{totalMessages}</span>
@@ -453,10 +422,10 @@ Salam hangat,
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </div>
-              </div>
+              </Link>
 
               {/* Bersedia Hadir */}
-              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan?attendance=attending`)}>
+              <Link className={styles.statCard} href={`${dashboardBaseUrl}/ucapan?attendance=attending`}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Bersedia Hadir</span>
                   <span className={styles.statCardValue}>{attendingList.length}</span>
@@ -471,10 +440,10 @@ Salam hangat,
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </div>
-              </div>
+              </Link>
 
               {/* Belum Bisa Hadir */}
-              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan?attendance=not_attending`)}>
+              <Link className={styles.statCard} href={`${dashboardBaseUrl}/ucapan?attendance=not_attending`}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Belum Bisa Hadir</span>
                   <span className={styles.statCardValue}>{notAttendingList.length}</span>
@@ -490,10 +459,10 @@ Salam hangat,
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </div>
-              </div>
+              </Link>
 
               {/* Estimasi Porsi Katering */}
-              <div className={styles.statCard} onClick={() => router.push(`${dashboardBaseUrl}/ucapan`)}>
+              <Link className={styles.statCard} href={`${dashboardBaseUrl}/ucapan`}>
                 <div className={styles.statCardLeft}>
                   <span className={styles.statCardTitle}>Estimasi Porsi Katering</span>
                   <span className={styles.statCardValue}>{totalPax} Porsi</span>
@@ -512,7 +481,7 @@ Salam hangat,
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </div>
-              </div>
+              </Link>
             </div>
 
             <p className={styles.infoFootnote}>
@@ -526,9 +495,9 @@ Salam hangat,
           <div className={styles.contentArea}>
             <div className={styles.sectionHeader}>
               <div>
-                <h2 className={styles.sectionTitle}>Generator Link Tamu</h2>
+                <h1 className={styles.sectionTitle}>Generator Link Tamu</h1>
                 <p className={styles.sectionSubtitle}>
-                  Kustomisasi nama tamu dan bagikan pesan undangan via WhatsApp
+                  Tulis nama tamu, sesuaikan pesan, lalu bagikan undangan.
                 </p>
               </div>
             </div>
@@ -543,6 +512,8 @@ Salam hangat,
                   type="text"
                   placeholder="Contoh: Bapak Bambang & Keluarga"
                   value={guestShareName}
+                  autoComplete="off"
+                  maxLength={200}
                   onChange={(e) => setGuestShareName(e.target.value)}
                   className={styles.formInput}
                 />
@@ -576,22 +547,48 @@ Salam hangat,
                 <span className={styles.previewLinkText}>{personalizedUrl}</span>
               </div>
 
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Pratinjau Pesan WhatsApp:</label>
-                <div
-                  className={styles.previewMessageBox}
-                  onClick={() => copyToClipboard(shareTextTemplate, "Teks undangan dan link berhasil disalin!", "text")}
-                  title="Klik untuk menyalin seluruh teks"
-                  style={{ cursor: "pointer" }}
-                >
-                  {shareTextTemplate}
+              <div className={styles.messageEditor}>
+                <div className={styles.editorHeading}>
+                  <label htmlFor="shareMessageInput" className={styles.formLabel}>Kata-kata undangan</label>
+                  <button type="button" className={styles.textButton} onClick={() => { setMessageDraft(DEFAULT_SHARE_MESSAGE); setSaveError(null); setSaveFeedback(null); }} disabled={isSaving || messageDraft === DEFAULT_SHARE_MESSAGE}>Teks awal</button>
                 </div>
+                <p id="shareMessageHint" className={styles.fieldHint}>Edit sesuka Anda. Gunakan tombol berikut untuk menyisipkan nama, tanggal, atau link otomatis.</p>
+                <div className={styles.messageFields} role="group" aria-label="Sisipkan data otomatis">
+                  {SHARE_MESSAGE_FIELDS.map(field => (
+                    <button key={field.token} type="button" className={styles.fieldButton} onClick={() => insertMessageField(field.token)}>{field.label}</button>
+                  ))}
+                </div>
+                <textarea
+                  ref={messageInput}
+                  id="shareMessageInput"
+                  className={`${styles.formInput} ${styles.messageTextarea}`}
+                  value={messageDraft}
+                  onChange={event => { setMessageDraft(event.target.value); setSaveError(null); setSaveFeedback(null); }}
+                  maxLength={MAX_SHARE_MESSAGE_LENGTH}
+                  rows={11}
+                  aria-describedby="shareMessageHint shareMessageStatus"
+                  placeholder="Tulis pesan undangan Anda di sini..."
+                />
+                <div className={styles.editorFooter}>
+                  <span className={styles.characterCount}>{messageDraft.length.toLocaleString("id-ID")} / 6.000 karakter</span>
+                  <button type="button" className={styles.btnSaveMessage} disabled={isSaving || !messageChanged || !messageDraft.trim()} onClick={saveShareMessage}>{isSaving ? "Menyimpan..." : "Simpan pesan"}</button>
+                </div>
+                <p id="shareMessageStatus" className={saveError ? styles.saveError : styles.fieldHint} role={saveError ? "alert" : "status"}>
+                  {saveError ?? (isSaving ? "Menyimpan pesan untuk undangan ini..." : messageChanged ? "Ada perubahan yang belum disimpan." : saveFeedback ?? (shareMessageTemplate ? "Pesan tersimpan untuk undangan ini." : "Simpan perubahan agar pesannya tersedia di perangkat lain."))}
+                </p>
+              </div>
+
+              <div className={styles.formGroup}>
+                <h3 id="sharePreviewLabel" className={styles.previewTitle}>Pratinjau pesan WhatsApp</h3>
+                <p className={styles.fieldHint}>Link personal tetap disertakan saat pesan dibagikan.</p>
+                <div className={styles.previewMessageBox} aria-labelledby="sharePreviewLabel">{shareTextTemplate || "Tulis pesan untuk melihat pratinjau."}</div>
               </div>
 
               <div className={styles.shareBtnGroup}>
                 <button
                   type="button"
                   className={`${styles.btnPrimary} ${copiedKey === "text" ? styles.btnCopiedActive : ""}`}
+                  disabled={!shareTextTemplate}
                   onClick={() => copyToClipboard(shareTextTemplate, "Teks undangan dan link berhasil disalin!", "text")}
                 >
                   {copiedKey === "text" ? (
@@ -611,10 +608,12 @@ Salam hangat,
                 </button>
 
                 <a
-                  href={`https://wa.me/?text=${encodeURIComponent(shareTextTemplate)}`}
+                  href={shareTextTemplate ? `https://wa.me/?text=${encodeURIComponent(shareTextTemplate)}` : undefined}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.btnSuccess}
+                  aria-disabled={!shareTextTemplate}
+                  tabIndex={shareTextTemplate ? undefined : -1}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zM12.05 20.2c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.204 8.204 0 0 1-1.26-4.42c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.24-8.22 8.24zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44s-.56-1.35-.77-1.85c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.78 2.71 4.3 3.8.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.11-.23-.17-.48-.29z"/>
@@ -631,7 +630,7 @@ Salam hangat,
           <div className={styles.contentArea}>
             <div className={styles.sectionHeader}>
               <div>
-                <h2 className={styles.sectionTitle}>Ucapan & RSVP</h2>
+                <h1 className={styles.sectionTitle}>Ucapan & RSVP</h1>
                 <p className={styles.sectionSubtitle}>Daftar ucapan doa dan konfirmasi kehadiran para tamu</p>
               </div>
             </div>
@@ -804,7 +803,7 @@ Salam hangat,
           <div className={styles.contentArea}>
             <div className={styles.sectionHeader}>
               <div>
-                <h2 className={styles.sectionTitle}>Rundown & Lokasi</h2>
+                <h1 className={styles.sectionTitle}>Rundown & Lokasi</h1>
                 <p className={styles.sectionSubtitle}>Detail acara pernikahan dan rekening hadiah digital</p>
               </div>
             </div>
@@ -892,7 +891,7 @@ Salam hangat,
           <div className={styles.contentArea}>
             <div className={styles.sectionHeader}>
               <div>
-                <h2 className={styles.sectionTitle}>Pusat Bantuan</h2>
+                <h1 className={styles.sectionTitle}>Pusat Bantuan</h1>
                 <p className={styles.sectionSubtitle}>Tim InDif Digital siap membantu kelancaran undangan Anda</p>
               </div>
             </div>
@@ -933,95 +932,6 @@ Salam hangat,
           </div>
         )}
 
-        {/* Bottom Navigation Bar (5 Tabs) */}
-        <nav className={styles.bottomNav} aria-label="Navigasi Menu Dashboard">
-          <div className={styles.navContainer}>
-            <Link
-              href={dashboardBaseUrl}
-              prefetch
-              className={`${styles.navItem} ${activeTab === "dashboard" ? styles.navItemActive : ""}`}
-              aria-current={activeTab === "dashboard" ? "page" : undefined}
-            >
-              <div className={styles.navIconWrapper}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect width="7" height="7" x="3" y="3" rx="1" />
-                  <rect width="7" height="7" x="14" y="3" rx="1" />
-                  <rect width="7" height="7" x="14" y="14" rx="1" />
-                  <rect width="7" height="7" x="3" y="14" rx="1" />
-                </svg>
-              </div>
-              <span className={styles.navLabel}>Dashboard</span>
-            </Link>
-
-            <Link
-              href={`${dashboardBaseUrl}/bagikan`}
-              prefetch
-              className={`${styles.navItem} ${activeTab === "bagikan" ? styles.navItemActive : ""}`}
-              aria-current={activeTab === "bagikan" ? "page" : undefined}
-            >
-              <div className={styles.navIconWrapper}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <line x1="19" y1="8" x2="19" y2="14" />
-                  <line x1="22" y1="11" x2="16" y2="11" />
-                </svg>
-              </div>
-              <span className={styles.navLabel}>Bagikan</span>
-            </Link>
-
-            <Link
-              href={`${dashboardBaseUrl}/ucapan`}
-              prefetch
-              className={`${styles.navItem} ${activeTab === "ucapan" ? styles.navItemActive : ""}`}
-              aria-current={activeTab === "ucapan" ? "page" : undefined}
-            >
-              <div className={styles.navIconWrapper}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-                </svg>
-                {totalMessages > 0 && (
-                  <span className={styles.navBadgeCount}>{totalMessages}</span>
-                )}
-              </div>
-              <span className={styles.navLabel}>Ucapan</span>
-            </Link>
-
-            <Link
-              href={`${dashboardBaseUrl}/acara`}
-              prefetch
-              className={`${styles.navItem} ${activeTab === "acara" ? styles.navItemActive : ""}`}
-              aria-current={activeTab === "acara" ? "page" : undefined}
-            >
-              <div className={styles.navIconWrapper}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-              </div>
-              <span className={styles.navLabel}>Acara</span>
-            </Link>
-
-            <Link
-              href={`${dashboardBaseUrl}/bantuan`}
-              prefetch
-              className={`${styles.navItem} ${activeTab === "bantuan" ? styles.navItemActive : ""}`}
-              aria-current={activeTab === "bantuan" ? "page" : undefined}
-            >
-              <div className={styles.navIconWrapper}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                  <line x1="12" y1="17" x2="12.01" y2="17" />
-                </svg>
-              </div>
-              <span className={styles.navLabel}>Bantuan</span>
-            </Link>
-          </div>
-        </nav>
-      </div>
-    </div>
+    </>
   );
 }

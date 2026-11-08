@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import type { DashboardSection } from "@/components/client-dashboard/client-dashboard";
+import { ClientDashboard, type DashboardSection } from "@/components/client-dashboard/client-dashboard";
 
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-};
-
-// These sections share the protected dashboard layout without changing URLs.
+// Each route renders its page inside the shared, protected dashboard shell.
 const dashboardSections = new Set<DashboardSection>([
   "bagikan",
   "ucapan",
@@ -18,6 +14,12 @@ type PageProps = {
   params: Promise<{ slug: string; section: string }>;
 };
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { section } = await params;
+  const titles: Record<string, string> = { bagikan: "Generator Link Tamu", ucapan: "Ucapan & RSVP", acara: "Rundown & Lokasi", bantuan: "Pusat Bantuan" };
+  return { title: `${titles[section] ?? "Dashboard"} | InDif Digital`, robots: { index: false, follow: false } };
+}
+
 export default async function CustomerDashboardSectionPage({
   params,
 }: PageProps) {
@@ -27,5 +29,5 @@ export default async function CustomerDashboardSectionPage({
     notFound();
   }
 
-  return null;
+  return <ClientDashboard section={section as DashboardSection} />;
 }
