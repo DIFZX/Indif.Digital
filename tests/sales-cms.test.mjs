@@ -161,6 +161,74 @@ async function loadTs(file, replacements) {
   return testModule.exports;
 }
 
+async function loadDashboardAccessRoute(createClient) {
+  const access = await loadTs("lib/client-dashboard-access.ts", {
+    "server-only": {},
+    "next/headers": {},
+    "next/navigation": {},
+    "@/lib/invitations": {},
+    "@/lib/supabase/server": {},
+  });
+  return loadTs("app/[slug]/dashboard/access/route.ts", {
+    "@/lib/client-dashboard-access": access,
+    "@/lib/supabase/server": { createClient },
+  });
+}
+
+test("dashboard links are reusable, set a scoped Lax cookie, and reject a different invitation's key", async () => {
+  const { NextRequest } = require("next/server");
+  const access = (await db.query("select i.slug,a.access_token from invitations i join invitation_dashboard_access a on a.invitation_id=i.id where i.status='published' limit 1")).rows[0];
+  const route = await loadDashboardAccessRoute(async () => ({
+    async rpc(name, args) {
+      assert.equal(name, "verify_invitation_dashboard_access");
+      await db.exec("set role anon");
+      try {
+        const result = await db.query("select verify_invitation_dashboard_access($1,$2) as valid", [args.target_slug, args.dashboard_token]);
+        return { data: result.rows[0].valid, error: null };
+      } finally { await db.exec("reset role"); }
+    },
+  }));
+  const base = "https://inv.example.invalid";
+  for (let visit = 0; visit < 2; visit++) {
+    const response = await route.GET(new NextRequest(`${base}/${access.slug}/dashboard/access?key=${access.access_token}`), { params: Promise.resolve({ slug: access.slug }) });
+    assert.equal(response.status, 307);
+    assert.equal(response.headers.get("location"), `${base}/${access.slug}/dashboard`);
+    assert.equal(response.headers.get("cache-control"), "private, no-store");
+    assert.equal(response.headers.get("referrer-policy"), "no-referrer");
+    const cookie = response.cookies.get(`indif-dashboard-${access.slug}`);
+    assert.equal(cookie.value, access.access_token);
+    assert.equal(cookie.path, `/${access.slug}/dashboard`);
+    assert.equal(cookie.httpOnly, true);
+    assert.equal(cookie.secure, process.env.NODE_ENV === "production");
+    assert.equal(cookie.sameSite, "lax", "External top-level links must retain access during the redirect");
+    assert.equal(cookie.maxAge, 60 * 60 * 24 * 180);
+    assert.match(response.headers.get("set-cookie"), /SameSite=lax/i);
+  }
+  const denied = await route.GET(new NextRequest(`${base}/private-draft/dashboard/access?key=${access.access_token}`), { params: Promise.resolve({ slug: "private-draft" }) });
+  assert.equal(denied.headers.get("location"), `${base}/private-draft/dashboard/access-required?error=invalid`);
+  assert.equal(denied.headers.get("set-cookie"), null);
+});
+
+test("dashboard entry never sets access cookies for missing, malformed, rejected or unverifiable keys", async () => {
+  const { NextRequest } = require("next/server");
+  let verifications = 0, result = { data: false, error: null };
+  const route = await loadDashboardAccessRoute(async () => ({
+    async rpc() { verifications++; return result; },
+  }));
+  const base = "https://inv.example.invalid/netflix/dashboard";
+  async function expectDenied(query) {
+    const response = await route.GET(new NextRequest(`${base}/access${query}`), { params: Promise.resolve({ slug: "netflix" }) });
+    assert.equal(response.headers.get("location"), `${base}/access-required?error=invalid`);
+    assert.equal(response.headers.get("set-cookie"), null);
+  }
+  for (const query of ["", "?key=", "?key=not-a-private-key"]) await expectDenied(query);
+  assert.equal(verifications, 0);
+  await expectDenied(`?key=${strangerId}`);
+  result = { data: true, error: { message: "Verification unavailable" } };
+  await expectDenied(`?key=${strangerId}`);
+  assert.equal(verifications, 2);
+});
+
 test("login never sends real credentials without rate limit and CAPTCHA enforcement", async () => {
   let attempt = "allowed", captcha = true, signIns = 0;
   let identity = { status: "found", userId: salesId, email: "sales@example.invalid" };

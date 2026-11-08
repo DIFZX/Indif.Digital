@@ -39,7 +39,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
   response.cookies.set(getDashboardCookieName(slug), dashboardToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    // Keep the cookie on the dashboard redirect when a client follows an external link.
+    sameSite: "lax",
     path: `/${slug}/dashboard`,
     maxAge: 60 * 60 * 24 * 180,
   });
