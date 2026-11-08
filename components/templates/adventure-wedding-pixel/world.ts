@@ -29,7 +29,7 @@ export const LOCATIONS: { id: Section; label: string; title: string; x: number; 
   { id: "events", label: "Acara", title: "Hari yang kita nantikan", x: 310, y: 616 },
   { id: "gallery", label: "Galeri", title: "Album perjalanan", x: 590, y: 758 },
   { id: "rsvp", label: "RSVP", title: "Titip doa & kabar hadir", x: 166, y: 760 },
-  { id: "gift", label: "Hadiah", title: "Kotak tanda kasih", x: 360, y: 1040 },
+  { id: "gift", label: "Hadiah", title: "Kotak tanda kasih", x: 440, y: 822 },
 ];
 
 export function nearestLocation(point: Point) {

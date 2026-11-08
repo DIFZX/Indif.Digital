@@ -143,7 +143,7 @@ export function PixelWorld({ active, character, input, position, onAnimalTouch, 
           ctx.beginPath(); ctx.ellipse(location.x, location.y + 23, 32 + phase * 24, 19 + phase * 14, 0, 0, Math.PI * 2); ctx.stroke();
           ctx.restore();
           ctx.fillStyle = "#543622"; ctx.fillRect(location.x - 3, location.y - 2, 6, 16);
-          ctx.font = "600 12px 'Adventure Pixel', monospace";
+          ctx.font = "700 12px Arial, sans-serif";
           const signWidth = Math.max(66, ctx.measureText(location.label.toUpperCase()).width + 21);
           ctx.fillStyle = "#35271f"; ctx.fillRect(location.x - signWidth / 2 - 2, location.y - 24, signWidth + 4, 27);
           ctx.fillStyle = selected ? "#f3ce76" : "#fff0d1"; ctx.fillRect(location.x - signWidth / 2, location.y - 22, signWidth, 23);

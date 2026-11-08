@@ -90,7 +90,7 @@ export function drawWildlife(ctx: CanvasRenderingContext2D, seconds: number, pla
     }
     if (selected || reacting) {
       const text = animal.kind === "cat" ? reacting ? "Milo · Purrr…" : "Milo" : animal.kind === "rabbit" ? reacting ? "Mochi · Hop hop!" : "Mochi" : reacting ? "Menari untukmu!" : "Kupu-kupu";
-      ctx.font = "500 11px 'Adventure Pixel', monospace";
+      ctx.font = "600 11px Arial, sans-serif";
       const width = ctx.measureText(text).width + 16;
       const bubbleX = animal.x;
       ctx.fillStyle = "#503a29"; ctx.fillRect(bubbleX - width / 2 - 1, animal.y - 62, width + 2, 23);

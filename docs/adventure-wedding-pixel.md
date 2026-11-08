@@ -69,3 +69,11 @@ Current animation/contact QA: `scratch/pixel-cinematic-check.cjs`, with separate
 Starting the adventure shows a blurred garden and loading bar for a minimum 700ms, finishing as soon as the map is ready after that minimum. The overlay is capped at 2.5s so navigation remains usable if a network asset fails. A dismissible welcome card then says “Jelajahi undangan pernikahan kami” and “Datangi ikon untuk membuka info”. The previous “Ikuti lingkaran” message is removed. The navbar uses five original imagegen icons, four visible at once with accessible arrows and native scrolling. Landscape uses a vertical strip.
 
 Interactive is available in the public category tabs, admin sidebar, admin category filter, editor options and validated server action. The database constraint accepts the category without broadening sales permissions. The dashboard content routes use a protected route group, leaving the access-required page outside the authentication guard and fixing its production redirect loop.
+
+## Readability and catalog mockup revision
+
+Interface text now uses system sans-serif fonts throughout; map signs and animal labels use Arial. The pixel font is no longer loaded. Very narrow phones show three navigation items at a time so the labels can stay readable; all sections remain reachable with arrows.
+
+The Hadiah sign and its interaction/checkpoint move to (440,822), above the booth's right side. Animal notifications appear below the HUD so they do not cover the sign. Browser checks cover sign visibility against controls, navigation and visible status messages at 320/390 CSS pixels in Chromium and WebKit.
+
+The public and admin sales cards share `public/media/mockups/mockup-adventure-wedding-pixel.webp`: two phone frames containing actual screenshots of the updated cover and game on a forest-green backdrop. The original cover thumbnail remains a fallback. This presentation revision requires no database migration or RSVP/dashboard permission change.

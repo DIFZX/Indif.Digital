@@ -47,7 +47,7 @@ export function getCatalogPriceInfo(price: number, promoPrice: number | null) {
 
 export function getTemplateThumbnail(slug: string, fallbackPath: string | null) {
   const mockups: Record<string, string> = {
-    "adventure-wedding-pixel": "/media/adventure-wedding-pixel/thumbnail.webp",
+    "adventure-wedding-pixel": "/media/mockups/mockup-adventure-wedding-pixel.webp",
     "java-vibes": "/media/mockups/mockup-java-vibes.webp",
     "royal-maroon": "/media/mockups/mockup-royal-maroon-v2.webp",
     "blush-rose": "/media/mockups/mockup-blush-rose.webp",
