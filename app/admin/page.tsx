@@ -16,9 +16,11 @@ export const metadata: Metadata = {
 };
 export const dynamic = "force-dynamic";
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ view?: string; category?: string }> }) {
   const { supabase, profile } = await requireAdmin();
-  const archived = (await searchParams).view === "archived";
+  const query = await searchParams;
+  const archived = query.view === "archived";
+  const category = isTemplateCategory(query.category) ? query.category : "all";
   const { data, error } = await supabase.from("templates")
     .select("id, slug, name, thumbnail_path, preview_path, is_active, catalog_status, category, price, promo_price, updated_at")
     .order("sort_order", { ascending: true }).order("created_at", { ascending: false });
@@ -41,7 +43,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <aside className={styles.sidebar}>
         <div><Link href="/admin" className={styles.brand}><Image src={BRAND.logoPath} alt={BRAND.name} width={400} height={150} priority /></Link><p className={styles.sidebarLabel}>Admin penjualan</p></div>
         <nav className={styles.sideNav} aria-label="Navigasi admin">
-          <Link href="/admin" aria-current="page"><AdminIcon name="grid" /> Katalog template</Link>
+          <Link href="/admin" aria-current={category === "all" ? "page" : undefined}><AdminIcon name="grid" /> Katalog template</Link>
+          <Link href="/admin?category=interactive" aria-current={category === "interactive" ? "page" : undefined}><AdminIcon name="gamepad" /> Interactive</Link>
           <Link href="/" target="_blank" rel="noopener noreferrer"><AdminIcon name="external" /> Website penjualan</Link>
         </nav>
         <div className={styles.sidebarBottom}>
@@ -56,7 +59,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         </header>
         <section className={styles.metrics} aria-label="Ringkasan katalog">{metrics.map((metric) => <article key={metric.label}><span className={styles.metricIcon}><AdminIcon name={metric.icon} /></span><div><small>{metric.label}</small><strong>{metric.count}</strong></div></article>)}</section>
         {error ? <p className={styles.errorNotice} role="alert">Katalog gagal dimuat. Periksa koneksi dan pastikan migrasi harga serta kategori sudah diterapkan.</p>
-          : <TemplateManager key={archived ? "archived" : "catalog"} templates={templates} archived={archived} />}
+          : <TemplateManager key={`${archived ? "archived" : "catalog"}-${category}`} templates={templates} archived={archived} initialCategory={category} />}
       </div>
     </main>
   );

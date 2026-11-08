@@ -14,6 +14,7 @@ import { JavaVibesInvitationView } from "@/components/templates/java-vibes/java-
 import { SundaVibesInvitationView } from "@/components/templates/sunda-vibes/sunda-vibes-invitation";
 import { RoyalMaroonInvitationView } from "@/components/templates/royal-maroon/royal-maroon-invitation";
 import { BlushRoseInvitationView } from "@/components/templates/blush-rose/blush-rose-invitation";
+import { AdventureWeddingPixelInvitation } from "@/components/templates/adventure-wedding-pixel/adventure-wedding-pixel-invitation";
 import { BRAND } from "@/lib/brand";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
@@ -273,6 +274,10 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
 }
 
 export function InvitationView(props: InvitationViewProps) {
+  if (props.invitation.template.slug === "adventure-wedding-pixel") {
+    return <AdventureWeddingPixelInvitation {...props} />;
+  }
+
   if (props.invitation.template.slug === "blush-rose") {
     return <BlushRoseInvitationView {...props} />;
   }

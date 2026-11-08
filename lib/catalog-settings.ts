@@ -1,10 +1,10 @@
 import { resolveMediaUrl } from "@/lib/media";
 import type { TemplateStatus } from "@/lib/template-status";
 
-export const TEMPLATE_CATEGORY_IDS = ["spesial", "animasi", "minimalis"] as const;
+export const TEMPLATE_CATEGORY_IDS = ["spesial", "animasi", "minimalis", "interactive"] as const;
 export type TemplateCategory = (typeof TEMPLATE_CATEGORY_IDS)[number];
 export const TEMPLATE_CATEGORY_LABELS: Record<TemplateCategory, string> = {
-  spesial: "Tema Spesial", animasi: "Tema Animasi", minimalis: "Tema Minimalis",
+  spesial: "Tema Spesial", animasi: "Tema Animasi", minimalis: "Tema Minimalis", interactive: "Interactive",
 };
 export const MAX_TEMPLATE_PRICE = 1_000_000_000;
 const numberFormatter = new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 });
@@ -47,6 +47,7 @@ export function getCatalogPriceInfo(price: number, promoPrice: number | null) {
 
 export function getTemplateThumbnail(slug: string, fallbackPath: string | null) {
   const mockups: Record<string, string> = {
+    "adventure-wedding-pixel": "/media/adventure-wedding-pixel/thumbnail.webp",
     "java-vibes": "/media/mockups/mockup-java-vibes.webp",
     "royal-maroon": "/media/mockups/mockup-royal-maroon-v2.webp",
     "blush-rose": "/media/mockups/mockup-blush-rose.webp",

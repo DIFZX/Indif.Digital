@@ -408,7 +408,7 @@ test("settings action validates untrusted form fields, uses a version guard and 
     "@/lib/admin-auth": { requireAdmin: async () => ({supabase:{from:() => query}}) },
     "@/lib/supabase/server": {}, "@/lib/admin-security": {},
     "@/lib/template-status": { TEMPLATE_STATUSES: ["available","maintenance","in_progress"] },
-    "@/lib/catalog-settings": { MAX_TEMPLATE_PRICE:1_000_000_000,TEMPLATE_CATEGORY_IDS:["spesial","animasi","minimalis"] },
+    "@/lib/catalog-settings": { MAX_TEMPLATE_PRICE:1_000_000_000,TEMPLATE_CATEGORY_IDS:["spesial","animasi","minimalis","interactive"] },
   });
   const valid = { templateId:salesId,updatedAt:"2026-11-02T01:00:00.123456+00:00",category:"minimalis",price:"150000",promoPrice:"90000",catalogStatus:"maintenance",intent:"save" };
   const form = (overrides={}) => { const data = new FormData(); for(const [key,value] of Object.entries({...valid,...overrides})) data.set(key,value); return data; };
@@ -424,6 +424,8 @@ test("settings action validates untrusted form fields, uses a version guard and 
   await actions.saveTemplateSettings({},form({intent:"archive",promoPrice:""}));
   assert.equal(patch.is_active,false); assert.equal(patch.promo_price,null);
   await actions.saveTemplateSettings({},form({intent:"restore"})); assert.equal(patch.is_active,true);
+  assert.equal((await actions.saveTemplateSettings({},form({category:"interactive"}))).success,true);
+  assert.equal(patch.category,"interactive");
   result = {data:null,error:null}; assert.match((await actions.saveTemplateSettings({},form())).error,/admin lain/);
   result = {data:null,error:{message:"sensitive database detail"}};
   const failure = await actions.saveTemplateSettings({},form()); assert.match(failure.error,/belum berhasil/); assert.ok(!failure.error.includes("sensitive"));
@@ -476,4 +478,177 @@ test("Sunda registration creates an isolated RSVP dashboard and preserves existi
   assert.equal((await db.query(`select access_token from invitation_dashboard_access where invitation_id='${invitation.id}'`)).rows[0].access_token,access.access_token);
   assert.equal((await db.query(`select count(*)::int as count from rsvps where invitation_id='${invitation.id}'`)).rows[0].count,1);
   assert.deepEqual((await snapshot()).templates,before.templates);
+});
+
+test("Adventure Wedding Pixel copies Sunda content, isolates RSVP, and keeps catalog activation and shared keys intact", async () => {
+  const registration = await migration("20261107090000_add_adventure_wedding_pixel");
+  const source = (await db.query("select * from invitations where slug='sunda-vibes'")).rows[0];
+  const existing = (await db.query("select jsonb_agg(a order by invitation_id) as keys from invitation_dashboard_access a")).rows[0].keys;
+  await db.exec(registration);
+  const invitation = (await db.query("select * from invitations where slug='adventure-wedding-pixel'")).rows[0];
+  const template = (await db.query("select * from templates where slug='adventure-wedding-pixel'")).rows[0];
+  const key = (await db.query("select access_token from invitation_dashboard_access where invitation_id=$1", [invitation.id])).rows[0].access_token;
+  assert.equal(invitation.id, "00000000-0000-0000-0000-000000000110");
+  assert.equal(invitation.template_id, template.id);
+  assert.equal(template.is_active, true);
+  assert.equal(template.catalog_status, "available");
+  for (const field of ["bride_name", "bride_short_name", "bride_parents", "bride_photo_path", "groom_name", "groom_short_name", "groom_parents", "groom_photo_path", "event_date", "ceremony_time", "reception_time", "venue_name", "venue_address", "maps_url", "opening_text", "quote_text", "quote_source", "story", "story_image_path", "cover_path", "profile_path", "gallery_paths", "music_path", "gift_info", "closing_text", "closing_greeting"]) {
+    assert.deepEqual(invitation[field], source[field], field);
+  }
+  assert.deepEqual((await db.query("select jsonb_agg(a order by invitation_id) as keys from invitation_dashboard_access a where invitation_id<>$1", [invitation.id])).rows[0].keys, existing);
+  assert.equal((await asRole("anon", null, "select t.slug from templates t join invitations i on t.id=i.template_id where i.slug='adventure-wedding-pixel'")).rows.length, 1);
+  assert.equal((await asRole("anon", null, `select verify_invitation_dashboard_access('adventure-wedding-pixel','${key}') as valid`)).rows[0].valid, true);
+  await db.query("update invitations set bride_short_name='Owner edit' where id=$1", [invitation.id]);
+  await db.exec(registration);
+  assert.equal((await db.query("select bride_short_name from invitations where id=$1", [invitation.id])).rows[0].bride_short_name, "Owner edit");
+  assert.equal((await db.query("select access_token from invitation_dashboard_access where invitation_id=$1", [invitation.id])).rows[0].access_token, key);
+  await db.query("update invitations set bride_short_name=$1 where id=$2", [source.bride_short_name, invitation.id]);
+});
+
+test("Interactive migration publishes the category without changing other catalog entries or dashboard keys", async () => {
+  const snapshot = async () => (await db.query("select slug,category,is_active,catalog_status,price,promo_price from templates where slug<>'adventure-wedding-pixel' order by slug")).rows;
+  const before = await snapshot();
+  const access = (await db.query("select jsonb_agg(a order by invitation_id) as keys from invitation_dashboard_access a")).rows[0].keys;
+  const sql = await migration("20261108090000_add_interactive_catalog_category");
+  await db.exec(sql);
+  await db.exec(sql);
+  const theme = (await asRole("anon",null,"select category,is_active,catalog_status from templates where slug='adventure-wedding-pixel'")).rows[0];
+  assert.deepEqual(theme,{category:"interactive",is_active:true,catalog_status:"available"});
+  assert.deepEqual(await snapshot(), before);
+  assert.deepEqual((await db.query("select jsonb_agg(a order by invitation_id) as keys from invitation_dashboard_access a")).rows[0].keys,access);
+  await assert.rejects(asRole("anon",null,"update templates set category='interactive' where slug='adventure-wedding-pixel'"),/permission denied/);
+  await asRole("authenticated",salesId,"update templates set category='minimalis' where slug='adventure-wedding-pixel'");
+  await asRole("authenticated",salesId,"update templates set category='interactive' where slug='adventure-wedding-pixel'");
+  const audit=(await db.query("select actor_id from template_catalog_events where template_id='00000000-0000-0000-0000-000000000010' order by id desc limit 1")).rows[0];
+  assert.equal(audit.actor_id,salesId);
+  const {isTemplateCategory,TEMPLATE_CATEGORY_LABELS}=await loadTs("lib/catalog-settings.ts",{"@/lib/media":{resolveMediaUrl:value=>value}});
+  assert.equal(isTemplateCategory("interactive"),true);
+  assert.equal(TEMPLATE_CATEGORY_LABELS.interactive,"Interactive");
+});
+
+test("Pixel RSVP uses the real API handler, persists both attendance states, and is read only through its private dashboard token", async () => {
+  await db.exec(await migration("20260820171050_enable_auto_approve_greetings"));
+  const invitationId = "00000000-0000-0000-0000-000000000110";
+  const sourceCount = (await db.query("select count(*)::int as count from rsvps where invitation_id<>$1", [invitationId])).rows[0].count;
+  async function anonymousQuery(sql, params) {
+    await db.exec("set role anon");
+    try { return await db.query(sql, params); } finally { await db.exec("reset role"); }
+  }
+  const client = {
+    from(table) {
+      assert.ok(["invitations", "rsvps", "greetings"].includes(table));
+      let record = null, filter = null, columns = "*";
+      const run = async () => {
+        try {
+          let rows;
+          if (record) {
+            const entries = Object.entries(record);
+            const returning = table === "greetings" ? ` returning ${columns}` : "";
+            rows = (await anonymousQuery(`insert into ${table}(${entries.map(([name]) => name).join(",")}) values(${entries.map((_, index) => `$${index + 1}`).join(",")})${returning}`, entries.map(([, value]) => value))).rows;
+          } else rows = (await anonymousQuery(`select ${columns} from ${table} where ${filter[0]}=$1`, [filter[1]])).rows;
+          return { data: rows[0] ?? null, error: null };
+        } catch (error) { return { data: null, error }; }
+      };
+      return { select(value) { columns = value; return this; }, eq(column, value) { filter = [column, value]; return this; }, insert(value) { record = value; return this; }, maybeSingle: run, single: run, then(resolve, reject) { return run().then(resolve, reject); } };
+    },
+    async rpc(name, args) {
+      assert.equal(name, "get_invitation_dashboard_data");
+      return { data: (await anonymousQuery("select get_invitation_dashboard_data($1,$2) as payload", [args.target_invitation_id, args.dashboard_token])).rows[0].payload, error: null };
+    },
+  };
+  const api = await loadTs("app/api/guest-response/route.ts", { "@/lib/supabase": { getSupabase: () => client } });
+  for (const [name, attendance, guestCount] of [["Pixel guest attending", "attending", 3], ["Pixel guest absent", "not_attending", 7]]) {
+    const response = await api.POST(new Request("http://localhost/api/guest-response", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ invitationId, guestName: name, attendance, guestCount, message: `A real local SQL test for ${name}.` }) }));
+    assert.equal(response.status, 201);
+    assert.equal((await response.json()).greeting.guest_name, name);
+  }
+  const key = (await db.query("select access_token from invitation_dashboard_access where invitation_id=$1", [invitationId])).rows[0].access_token;
+  const loader = await loadTs("lib/invitations.ts", { "@/lib/demo": { demoInvitations: [], demoGreetings: [], javaVibesDemoGreetings: [] }, "@/lib/supabase": { getSupabase: () => client } });
+  const dashboard = await loader.getInvitationDashboardData(invitationId, key, client);
+  assert.equal(dashboard.initialRSVPs.length, 2);
+  assert.equal(dashboard.initialRSVPs.find(row => row.attendance === "attending").guest_count, 3);
+  assert.equal(dashboard.initialRSVPs.find(row => row.attendance === "not_attending").guest_count, 0);
+  assert.ok(dashboard.initialRSVPs.every(row => row.invitation_id === invitationId && row.message.includes("real local SQL")));
+  assert.equal(await loader.getInvitationDashboardData(invitationId, "invalid", client), null);
+  const sundaKey = (await db.query("select access_token from invitation_dashboard_access where invitation_id='00000000-0000-0000-0000-000000000107'")).rows[0].access_token;
+  assert.equal(await loader.getInvitationDashboardData(invitationId, sundaKey, client), null);
+  await assert.rejects(anonymousQuery("select * from rsvps", []), /permission denied/);
+  assert.equal((await db.query("select count(*)::int as count from rsvps where invitation_id<>$1", [invitationId])).rows[0].count, sourceCount);
+});
+
+test("Pixel movement normalizes diagonals, rejects obstacles, and exposes nearby destinations", async () => {
+  const { advancePlayer, canWalk, nearestLocation, SPAWN } = await loadTs("components/templates/adventure-wedding-pixel/world.ts", {});
+  const straight = advancePlayer(SPAWN, { x: 1, y: 0 }, .02);
+  const diagonal = advancePlayer(SPAWN, { x: 1, y: 1 }, .02);
+  assert.ok(Math.abs(Math.hypot(straight.x - SPAWN.x, straight.y - SPAWN.y) - Math.hypot(diagonal.x - SPAWN.x, diagonal.y - SPAWN.y)) < .00001);
+  assert.equal(canWalk(384, 528), false);
+  assert.equal(canWalk(650, 350), false);
+  assert.equal(canWalk(650, 430), true);
+  assert.equal(canWalk(-1, 500), false);
+  assert.equal(nearestLocation(SPAWN).id, "events");
+  assert.equal(nearestLocation({ x: 166, y: 760 }).id, "rsvp");
+  assert.deepEqual(advancePlayer(SPAWN, { x: 0, y: 0 }, 99), SPAWN);
+  assert.ok(advancePlayer(SPAWN, { x: 1, y: 0 }, 99).x - SPAWN.x < 6);
+});
+
+test("Pixel grass is explorable while solid scenery blocks feet and every destination stays reachable", async () => {
+  const { canWalk, advancePlayer, LOCATIONS, ANIMALS, SPAWN } = await loadTs("components/templates/adventure-wedding-pixel/world.ts", {});
+  for (const [x, y] of [[384, 528], [138, 417], [155, 690], [596, 693], [345, 920], [620, 880], [650, 350], [318, 1070], [450, 1070], [384, 210], [55, 879], [384, 735], [480, 789]]) {
+    assert.equal(canWalk(x, y), false, `Scenery must block feet at ${x},${y}`);
+  }
+  let player = { ...SPAWN };
+  for (let i = 0; i < 120; i++) player = advancePlayer(player, { x: 1, y: 0 }, .04);
+  for (const [x, y] of [[330, 660], [440, 660], [270, 665], [500, 385], [457, 814]]) assert.equal(canWalk(x, y), true, `Open lawn is walkable at ${x},${y}`);
+  assert.ok(player.x <= 520 && player.x > 450, "Crossing grass stops at the gallery structure");
+  const stopped = { ...player };
+  for (let i = 0; i < 100; i++) player = advancePlayer(player, { x: 1, y: 0 }, 10);
+  assert.deepEqual(player, stopped, "Frame stalls cannot tunnel through the boundary");
+  assert.deepEqual(advancePlayer(SPAWN, { x: NaN, y: 0 }, .02), SPAWN);
+  assert.deepEqual(advancePlayer(SPAWN, { x: 1, y: 0 }, -1), SPAWN);
+  const queue = [{ x: 384, y: 648 }], seen = new Set(["384,648"]);
+  for (let i = 0; i < queue.length; i++) {
+    const point = queue[i];
+    for (const [dx, dy] of [[4, 0], [-4, 0], [0, 4], [0, -4]]) {
+      const x = point.x + dx, y = point.y + dy, key = `${x},${y}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      if (canWalk(x, y) && canWalk(x - dx / 2, y - dy / 2)) queue.push({ x, y });
+    }
+  }
+  for (const destination of [...LOCATIONS, ...ANIMALS, { id: "bridge", x: 680, y: 430 }, { id: "entrance", x: 384, y: 1100 }]) {
+    assert.ok(queue.some(p => Math.hypot(p.x - destination.x, p.y - destination.y) < 24), `${destination.id} must be reachable on foot`);
+  }
+  assert.equal(LOCATIONS.length, 5);
+});
+
+test("Pixel animal contact triggers once, tolerates edge jitter, and rearms after leaving", async () => {
+  const { updateAnimalContacts, ANIMALS } = await loadTs("components/templates/adventure-wedding-pixel/world.ts", {});
+  assert.equal(ANIMALS.length, 5);
+  assert.equal(ANIMALS.find(a => a.id === "cat").x, 384);
+  for (const animal of ANIMALS) {
+    const touching = new Set();
+    const inside = { x: animal.x + animal.touchRadius - 2, y: animal.y };
+    assert.deepEqual(updateAnimalContacts({ x: animal.x + animal.touchRadius + 1, y: animal.y }, touching), []);
+    assert.deepEqual(updateAnimalContacts(inside, touching), [animal.id]);
+    assert.deepEqual(updateAnimalContacts(inside, touching), []);
+    updateAnimalContacts({ x: animal.x + animal.touchRadius + 8, y: animal.y }, touching);
+    assert.deepEqual(updateAnimalContacts(inside, touching), []);
+    updateAnimalContacts({ x: animal.x + animal.touchRadius + 15, y: animal.y }, touching);
+    assert.deepEqual(updateAnimalContacts(inside, touching), [animal.id]);
+  }
+});
+
+test("Pixel greeting animates raised hand poses, blinks both faces and respects reduced motion", async () => {
+  const { greetingFrame } = await loadTs("components/templates/adventure-wedding-pixel/couple-animation.ts", {});
+  assert.deepEqual([0, .3, .6].map(t => greetingFrame("groom", t)), [1, 2, 3]);
+  assert.equal(greetingFrame("groom", 4.6), 5);
+  assert.equal(greetingFrame("bride", 3), 5);
+  assert.equal(greetingFrame("bride", 1), 0);
+  for (const character of ["groom", "bride"]) assert.equal(greetingFrame(character, 4.6, true), 0);
+});
+
+test("Pixel walk cycle alternates both steps and returns to standing", async () => {
+  const { walkingFrame } = await loadTs("components/templates/adventure-wedding-pixel/world.ts", {});
+  assert.equal(walkingFrame(0), 0);
+  assert.deepEqual([1, 10, 19, 28, 37].map(walkingFrame), [1, 0, 2, 0, 1]);
 });

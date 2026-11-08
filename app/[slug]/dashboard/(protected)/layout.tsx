@@ -16,6 +16,8 @@ type LayoutProps = {
 };
 
 export default async function CustomerDashboardLayout({ children, params }: LayoutProps) {
+  // Only dashboard content uses this layout. The access-required page must
+  // remain outside it so guests without a cookie do not redirect to themselves.
   const { slug } = await params;
   const { invitation, initialRSVPs, viewCount } = await requireClientDashboard(slug);
 

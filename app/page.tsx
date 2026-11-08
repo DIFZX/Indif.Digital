@@ -22,6 +22,16 @@ export const dynamic = "force-dynamic";
 
 const fallbackTemplates: CatalogTemplate[] = [
   {
+    id: "00000000-0000-0000-0000-000000000010",
+    slug: "adventure-wedding-pixel",
+    name: "Adventure Wedding Pixel",
+    description: "Jelajahi taman pixel, temui hewan, dan bagikan kabar kehadiran lewat undangan interaktif.",
+    thumbnail_path: "/media/adventure-wedding-pixel/thumbnail.webp",
+    preview_path: "/adventure-wedding-pixel?to=Tamu%20Undangan",
+    category: "interactive",
+    price: 120000, promo_price: 80000,
+  },
+  {
     id: "00000000-0000-0000-0000-000000000001",
     slug: "greeny-flowers",
     name: "Greeny Flowers",

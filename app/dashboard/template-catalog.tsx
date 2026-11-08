@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getCatalogPriceInfo, getTemplateThumbnail, type TemplateCategory } from "@/lib/catalog-settings";
+import { getCatalogPriceInfo, getTemplateThumbnail, isTemplateCategory, TEMPLATE_CATEGORY_IDS, TEMPLATE_CATEGORY_LABELS, type TemplateCategory } from "@/lib/catalog-settings";
 import { type TemplateStatus, TEMPLATE_STATUS_LABELS } from "@/lib/template-status";
 import styles from "./dashboard.module.css";
 
@@ -33,9 +33,7 @@ function orderUrl(templateName: string) {
 
 const CATEGORIES: { id: CategoryFilter; label: string }[] = [
   { id: "all", label: "Semua Template" },
-  { id: "spesial", label: "Tema Spesial" },
-  { id: "animasi", label: "Tema Animasi" },
-  { id: "minimalis", label: "Tema Minimalis" },
+  ...TEMPLATE_CATEGORY_IDS.map(id => ({ id, label: TEMPLATE_CATEGORY_LABELS[id] })),
 ];
 
 export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] }) {
@@ -44,7 +42,7 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace("#", "").toLowerCase();
-      if (hash === "animasi" || hash === "spesial" || hash === "minimalis") {
+      if (isTemplateCategory(hash)) {
         setActiveCategory(hash);
       } else if (hash === "templates" || hash === "semua" || hash === "all") {
         setActiveCategory("all");
@@ -62,6 +60,7 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
       animasi: templates.filter((t) => t.category === "animasi").length,
       spesial: templates.filter((t) => t.category === "spesial").length,
       minimalis: templates.filter((t) => t.category === "minimalis").length,
+      interactive: templates.filter((t) => t.category === "interactive").length,
     };
   }, [templates]);
 
@@ -87,6 +86,8 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
         return "Koleksi Template Animasi Modern";
       case "minimalis":
         return "Koleksi Template Minimalis Elegan";
+      case "interactive":
+        return "Koleksi Undangan Interactive";
       default:
         return "Koleksi Pilihan Template Undangan Digital";
     }
@@ -97,6 +98,7 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
       <div id="animasi" className={styles.scrollAnchor} />
       <div id="spesial" className={styles.scrollAnchor} />
       <div id="minimalis" className={styles.scrollAnchor} />
+      <div id="interactive" className={styles.scrollAnchor} />
 
       {/* Modern Section Heading */}
       <div className={styles.sectionHeading}>

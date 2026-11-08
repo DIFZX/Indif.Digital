@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// These sections share the protected dashboard layout without changing URLs.
 const dashboardSections = new Set<DashboardSection>([
   "bagikan",
   "ucapan",

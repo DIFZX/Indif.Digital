@@ -1,0 +1,32 @@
+feature,area,priority,original,clone,notes
+Personalized invitation cover,entry,must,yes,yes,Sunda Vibes wedding fields
+Male and female character selection,entry,must,yes,yes,Original four-direction sprite sheet
+Explorable pixel garden,game,must,yes,yes,Original chunky 16-bit artwork at native 384x576
+Touch analogue joystick and action button,game,must,yes,yes,Pointer capture cancellation and blur recovery checked
+Keyboard WASD and arrows,game,must,yes,yes,
+Camera follows player and respects map bounds,game,must,yes,yes,
+Nearby signs open invitation sections,game,must,yes,yes,
+Quick navigation without movement,navigation,must,yes,yes,Four controls visible with arrows for all five
+Couple profiles and parents,couple,must,yes,yes,Sunda Vibes photos and data
+Wedding quotation and love story,couple,must,partial,yes,Existing story data retained
+Akad and reception details,events,must,yes,yes,
+Maps and calendar links,events,must,partial,yes,
+Photo gallery and lightbox,gallery,must,yes,yes,Next previous and Escape verified
+RSVP and greetings through existing API,rsvp,must,yes,yes,Real handler verified with local SQL; production migration pending
+Correct attending and non-attending guest counts,rsvp,must,yes,yes,3 attending and 0 absent persisted in SQL tests
+Private dashboard integration,dashboard,must,unknown,yes,Existing token RPC and isolated ID verified locally; production registration pending
+Failure and partial-save feedback,rsvp,must,unknown,yes,Failure and HTTP 207 preserve draft; browser QA responses simulated
+Bank account copy,gift,must,yes,yes,
+Music starts on user gesture,audio,should,yes,yes,CC0 romantic chiptune loop; playback and pause checked in Chromium and WebKit
+Photobox removed at owner request,photobox,should,partial,skip,No navigation panel upload export or building remains
+Mobile safe areas and keyboard accessibility,accessibility,must,partial,yes,320 to 1366 CSS pixels and landscape; physical devices untested
+Reduced motion and background pause,performance,must,unknown,yes,Idle canvas redraw avoided; input reset on blur and visibility changes
+Live guest multiplayer chat,chat,could,yes,skip,Requires additional backend beyond existing invitation contract
+Voice welcome and recorded wishes,audio,could,yes,skip,No supplied voice content or recording storage contract
+Reference proprietary art and guest data,assets,could,yes,skip,Reference screenshots are not shipped
+Open grass with solid object collisions,game,must,yes,yes,Foot radius and scenery polygons; connected destinations animals and bridge
+Pulsing checkpoint rings,game,must,yes,yes,Thin floor rings with reduced motion support
+Automatic animal contacts,game,should,yes,yes,Central-path cat; hopping rabbit; three butterflies; no action button required
+Readable bank account and holder,gift,must,yes,yes,Normal Arial in cream field; verified at 320 390 768 pixels
+Waving and blinking wedding avatars,game,should,yes,yes,Local 6x2 atlas with real wave and blink poses
+Cinematic garden atmosphere,game,should,yes,yes,Forest shadows golden highlights canopy shadows and falling pixel leaves

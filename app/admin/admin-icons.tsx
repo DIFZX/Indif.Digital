@@ -1,7 +1,8 @@
-type IconName = "grid" | "external" | "logout" | "search" | "settings" | "close" | "archive" | "check" | "clock" | "layers";
+type IconName = "grid" | "external" | "logout" | "search" | "settings" | "close" | "archive" | "check" | "clock" | "layers" | "gamepad";
 
 export function AdminIcon({ name }: { name: IconName }) {
   const paths = {
+    gamepad: <><path d="M7 7h10a4 4 0 0 1 4 3l1 7a2 2 0 0 1-3 2l-4-3H9l-4 3a2 2 0 0 1-3-2l1-7a4 4 0 0 1 4-3Z" /><path d="M7 10v5M4.5 12.5h5M16 11h.01M19 14h.01" /></>,
     grid: <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>,
     external: <><path d="M14 3h7v7M21 3l-9 9" /><path d="M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" /></>,
     logout: <><path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4M13 8l4 4-4 4M7 12h13" /></>,

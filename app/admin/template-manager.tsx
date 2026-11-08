@@ -9,9 +9,9 @@ import { AdminIcon } from "./admin-icons";
 import { TemplateEditor } from "./template-editor";
 import styles from "./catalog.module.css";
 
-export function TemplateManager({ templates, archived }: { templates: ManagedCatalogTemplate[]; archived: boolean }) {
+export function TemplateManager({ templates, archived, initialCategory = "all" }: { templates: ManagedCatalogTemplate[]; archived: boolean; initialCategory?: "all" | TemplateCategory }) {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<"all" | TemplateCategory>("all");
+  const [category, setCategory] = useState<"all" | TemplateCategory>(initialCategory);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const activeCount = templates.filter((template) => template.is_active).length;

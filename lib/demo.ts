@@ -419,6 +419,19 @@ export const blushRoseDemoInvitation: Invitation = {
   },
 };
 
+export const adventureWeddingPixelDemoInvitation: Invitation = {
+  ...sundaVibesDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000110",
+  slug: "adventure-wedding-pixel",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000010",
+    slug: "adventure-wedding-pixel",
+    name: "Adventure Wedding Pixel",
+    theme: { primary: "#483021", accent: "#9d3e57", background: "#fff3d9" },
+  },
+};
+
 export const demoInvitations = [
   demoInvitation,
   pinkVibesDemoInvitation,
@@ -429,6 +442,7 @@ export const demoInvitations = [
   sundaVibesDemoInvitation,
   royalMaroonDemoInvitation,
   blushRoseDemoInvitation,
+  adventureWeddingPixelDemoInvitation,
 ];
 
 export const demoGreetings: Greeting[] = [
