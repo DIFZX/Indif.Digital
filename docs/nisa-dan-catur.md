@@ -7,7 +7,7 @@ Undangan menggunakan template Mustard Black yang dipilih client: hitam matte, ak
 - URL publik: `https://inv.indifdigital.my.id/nisa-dan-catur`.
 - Nama wanita ditampilkan lebih dahulu, sesuai formulir. Foto terbaru `sampul new.jpeg` dipakai untuk sampul dan bingkai pembuka.
 - Foto individu memakai `foto mempelai wanita.png` untuk Nisa dan `foto mempelai pria.png` untuk Catur.
-- Galeri berisi delapan foto berdua tanpa sampul dan foto individu. Referensi pemilik proyek diterapkan sebagai dua kolom bingkai potret seragam dengan rasio 4:5, sudut membulat dan jarak konsisten. Bingkai tetap memakai warna mustard agar menyatu dengan tema. Pengaturan `gallery_layout` hanya berlaku pada undangan ini.
+- Galeri berisi sepuluh foto berdua tanpa sampul dan foto individu. Referensi pemilik proyek diterapkan sebagai dua kolom bingkai potret seragam dengan rasio 4:5, sudut membulat dan jarak konsisten. Bingkai tetap memakai warna mustard agar menyatu dengan tema. Pengaturan `gallery_layout` hanya berlaku pada undangan ini.
 - Akad dan resepsi berlangsung 22 November 2026 di kediaman mempelai wanita. Jam, orang tua, Instagram, rekening dan alamat pengiriman mengikuti formulir.
 - Cerita hanya dirapikan: pertemuan di lorong SMK, bertukar nomor WhatsApp, hubungan semakin dekat setelah sembilan bulan, restu keluarga dan menuju pernikahan. Tidak ditambahkan tahun pertemuan atau acara lamaran.
 - Mandiri dan ShopeePay ditampilkan sebagai dua tujuan berbeda. Penerima serta alamat kado mengikuti isian pengiriman, termasuk kode pos.

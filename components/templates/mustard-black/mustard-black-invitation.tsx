@@ -41,10 +41,28 @@ export function MustardBlackInvitationView({
   const bridePhotoPath = resolveMediaUrl(invitation.bride_photo_path) || "/media/mustard-black/The Bride.jpg";
   const storyImagePath = resolveMediaUrl(invitation.story_image_path) || "/media/mustard-black/5.jpg";
 
-  const rawGallery =
+  const isNisaCatur = invitation.slug === "nisa-dan-catur";
+  const nisaCaturAdditionalGallery = [
+    "/media/client/Nisa & Catur/IMG_0014.PNG",
+    "/media/client/Nisa & Catur/IMG_0025.PNG",
+  ];
+
+  const baseGallery =
     invitation.gallery_paths && invitation.gallery_paths.length > 0
       ? invitation.gallery_paths.map((path) => resolveMediaUrl(path))
       : [];
+
+  let rawGallery = baseGallery;
+  if (isNisaCatur) {
+    const combined = [...baseGallery];
+    for (const extra of nisaCaturAdditionalGallery) {
+      const resolved = resolveMediaUrl(extra);
+      if (!combined.includes(resolved)) {
+        combined.push(resolved);
+      }
+    }
+    rawGallery = combined;
+  }
   const galleryPaths =
     rawGallery.length > 0
       ? rawGallery

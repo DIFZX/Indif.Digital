@@ -396,16 +396,18 @@ export function MustardBlackClientApp({
                     fetchPriority="high"
                   />
                 </div>
-                <div className={styles.coverArchFlower}>
-                  <Image
-                    src="/media/mustard-black/lily-flower.png"
-                    alt=""
-                    width={110}
-                    height={140}
-                    loading="eager"
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
+                {!isNisaCatur && (
+                  <div className={styles.coverArchFlower}>
+                    <Image
+                      src="/media/mustard-black/lily-flower.png"
+                      alt=""
+                      width={110}
+                      height={140}
+                      loading="eager"
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
+                )}
               </div>
 
               <span className={styles.coverKicker}>The Wedding of</span>
@@ -511,15 +513,17 @@ export function MustardBlackClientApp({
                       fetchPriority="high"
                     />
                   </div>
-                  <div className={styles.heroArchLily}>
-                    <Image
-                      src="/media/mustard-black/lily-flower.png"
-                      alt=""
-                      width={100}
-                      height={130}
-                      style={{ objectFit: "contain" }}
-                    />
-                  </div>
+                  {!isNisaCatur && (
+                    <div className={styles.heroArchLily}>
+                      <Image
+                        src="/media/mustard-black/lily-flower.png"
+                        alt=""
+                        width={100}
+                        height={130}
+                        style={{ objectFit: "contain" }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <span className={styles.heroKicker}>The Wedding of</span>
