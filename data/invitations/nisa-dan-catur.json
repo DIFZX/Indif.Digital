@@ -3,11 +3,11 @@
   "bride_name": "Aniffatul Coirunisa",
   "bride_short_name": "Nisa",
   "bride_parents": "Putri pertama dari dua bersaudara, putri Bapak Slamet Adi Mulyo & Ibu Supiyah",
-  "bride_photo_path": "/media/client/Nisa & Catur/IMG_20261115_062326_320_3.jpg",
+  "bride_photo_path": "/media/client/Nisa & Catur/foto mempelai wanita.png",
   "groom_name": "Catur Adi Wicaksono",
   "groom_short_name": "Catur",
   "groom_parents": "Putra keempat dari lima bersaudara, putra Bapak Purwanto Joko Utomo & Ibu Komalasari",
-  "groom_photo_path": "/media/client/Nisa & Catur/IMG_20261115_062326_383_5.jpg",
+  "groom_photo_path": "/media/client/Nisa & Catur/foto mempelai pria.png",
   "event_date": "2026-11-22",
   "ceremony_time": "08.00–10.00 WIB",
   "reception_time": "11.00–17.00 WIB",
@@ -35,8 +35,8 @@
     }
   ],
   "story_image_path": "/media/client/Nisa & Catur/IMG_20261115_062447_139.jpg",
-  "cover_path": "/media/client/Nisa & Catur/Sampul_.jpg",
-  "profile_path": "/media/client/Nisa & Catur/Sampul_.jpg",
+  "cover_path": "/media/client/Nisa & Catur/sampul new.jpeg",
+  "profile_path": "/media/client/Nisa & Catur/sampul new.jpeg",
   "gallery_paths": [
     "/media/client/Nisa & Catur/IMG_20261115_062326_383_5.jpg",
     "/media/client/Nisa & Catur/IMG_20261115_062326_320_3.jpg",
@@ -45,10 +45,9 @@
     "/media/client/Nisa & Catur/IMG_20261115_062115.jpg",
     "/media/client/Nisa & Catur/IMG_20261115_062326_141.jpg",
     "/media/client/Nisa & Catur/IMG_20261115_062326_142_1.jpg",
-    "/media/client/Nisa & Catur/IMG_20261115_062447_139.jpg",
-    "/media/client/Nisa & Catur/Sampul_.jpg"
+    "/media/client/Nisa & Catur/IMG_20261115_062447_139.jpg"
   ],
-  "music_path": null,
+  "music_path": "/media/client/Nisa & Catur/The PanasDalam Bank (Remastered 2018) - Dulu Kita Masih Remaja (Offical Video Audio).mp3",
   "gift_info": {
     "bank": "Mandiri",
     "account_number": "1560021471810",
@@ -64,7 +63,7 @@
     "couple_order": "bride-first",
     "bride_instagram": "_niisaahhh",
     "groom_instagram": "catur_adi12",
-    "music_youtube_id": "5XqiLi2HVpU"
+    "gallery_layout": "portrait-grid"
   },
   "closing_text": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.",
   "closing_greeting": "Kami yang berbahagia,"

@@ -259,7 +259,6 @@ export function MustardBlackClientApp({
   const [firstPerson, secondPerson] = invitation.theme_overrides.couple_order === "bride-first" ? [bride, groom] : [groom, bride];
   const instagramLiveUrl = invitation.theme_overrides.instagram_live_url;
   const youtubeLiveUrl = invitation.theme_overrides.youtube_live_url;
-  const youtubeMusicId = /^[\w-]{11}$/.test(invitation.theme_overrides.music_youtube_id ?? "") ? invitation.theme_overrides.music_youtube_id : null;
 
   return (
     <div className={themeClassName}>
@@ -545,23 +544,6 @@ export function MustardBlackClientApp({
             </section>
 
             {/* ─── 3. MEMPELAI (GROOM & BRIDE) SECTION ─── */}
-            {youtubeMusicId && opened && (
-              <section className={styles.sectionRow} aria-label="Musik pernikahan">
-                <h2 className={styles.sectionTitle}>Musik Pengiring</h2>
-                <p className={styles.sectionSubtitle}>Dulu Kita Masih Remaja · Instrumental piano oleh HRPiano</p>
-                <iframe
-                  className={styles.musicPlayer}
-                  title="Dulu Kita Masih Remaja - instrumental piano HRPiano"
-                  width="400"
-                  height="225"
-                  src={`https://www.youtube-nocookie.com/embed/${youtubeMusicId}?autoplay=1&playsinline=1&loop=1&playlist=${youtubeMusicId}`}
-                  allow="autoplay; encrypted-media; picture-in-picture"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
-                />
-              </section>
-            )}
-
             <section className={styles.sectionRow} id="mempelai">
               <Reveal direction="up">
                 <div className={styles.sectionHeader}>
@@ -856,7 +838,7 @@ export function MustardBlackClientApp({
                 </div>
               </Reveal>
 
-              <div className={styles.galleryGrid}>
+              <div className={`${styles.galleryGrid} ${invitation.theme_overrides.gallery_layout === "portrait-grid" ? styles.galleryPortraitGrid : ""}`}>
                 {galleryPaths.map((path, idx) => (
                   <Reveal key={path} direction="up" delay={idx * 80}>
                     <button

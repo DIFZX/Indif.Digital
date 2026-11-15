@@ -42,14 +42,6 @@
   outline-offset: 4px;
 }
 
-.musicPlayer {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  border: 0;
-  margin-top: 1.5rem;
-}
 
 .layout {
   display: grid;
@@ -1367,6 +1359,27 @@
 
 .galleryCard:hover .galleryOverlay {
   opacity: 1;
+}
+
+.galleryPortraitGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border: 1px solid var(--mb-gold-border);
+  border-radius: 24px;
+  background: var(--mb-bg-card);
+}
+
+.galleryPortraitGrid > * {
+  min-width: 0;
+}
+
+.galleryPortraitGrid .galleryCard {
+  grid-column: auto;
+  aspect-ratio: 4 / 5;
+  border: 2px solid var(--mb-mustard);
+  border-radius: 14px;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* ─── 8. LIVE STREAMING ─── */
