@@ -29,6 +29,27 @@
 }
 
 /* ─── DESKTOP SPLIT LAYOUT ─── */
+.experience :is(a[href], button, select) {
+  cursor: pointer;
+}
+
+.experience button:disabled {
+  cursor: not-allowed;
+}
+
+.experience :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--mb-mustard-light);
+  outline-offset: 4px;
+}
+
+.musicPlayer {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  margin-top: 1.5rem;
+}
 
 .layout {
   display: grid;
@@ -1309,6 +1330,9 @@
 }
 
 .galleryCard {
+  width: 100%;
+  padding: 0;
+  border: 0;
   position: relative;
   aspect-ratio: 3 / 4;
   border-radius: 14px;
@@ -1437,6 +1461,8 @@
 }
 
 .bankLogoWrapper {
+  color: var(--mb-mustard-light);
+  font-size: 1.4rem;
   position: relative;
   width: 90px;
   height: 32px;
@@ -1819,4 +1845,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience *,
+  .experience *::before,
+  .experience *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .showcaseSlide:first-child {
+    opacity: 1;
+  }
 }

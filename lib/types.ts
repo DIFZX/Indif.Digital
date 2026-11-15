@@ -4,10 +4,16 @@ export type StoryItem = {
   text: string;
 };
 
-export type GiftInfo = {
+export type GiftAccount = {
   bank?: string;
   account_number?: string;
   account_name?: string;
+};
+
+export type GiftInfo = GiftAccount & {
+  accounts?: GiftAccount[];
+  recipient_name?: string;
+  shipping_address?: string;
 };
 
 export type InvitationTemplate = {

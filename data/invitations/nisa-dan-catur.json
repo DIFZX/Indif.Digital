@@ -1,0 +1,71 @@
+{
+  "slug": "nisa-dan-catur",
+  "bride_name": "Aniffatul Coirunisa",
+  "bride_short_name": "Nisa",
+  "bride_parents": "Putri pertama dari dua bersaudara, putri Bapak Slamet Adi Mulyo & Ibu Supiyah",
+  "bride_photo_path": "/media/client/Nisa & Catur/IMG_20261115_062326_320_3.jpg",
+  "groom_name": "Catur Adi Wicaksono",
+  "groom_short_name": "Catur",
+  "groom_parents": "Putra keempat dari lima bersaudara, putra Bapak Purwanto Joko Utomo & Ibu Komalasari",
+  "groom_photo_path": "/media/client/Nisa & Catur/IMG_20261115_062326_383_5.jpg",
+  "event_date": "2026-11-22",
+  "ceremony_time": "08.00–10.00 WIB",
+  "reception_time": "11.00–17.00 WIB",
+  "venue_name": "Kediaman Mempelai Wanita",
+  "venue_address": "Jl. Kerajaan Raya Blok L5 No. 28, RT 001/RW 034, Kel. Wanasari, Kec. Cibitung, Kab. Bekasi, Jawa Barat",
+  "maps_url": "https://www.google.com/maps?q=-6.259894,107.091291",
+  "opening_text": "Dengan memohon rahmat dan rida Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada pernikahan kami.",
+  "quote_text": "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.",
+  "quote_source": "QS. Ar-Rum: 21",
+  "story": [
+    {
+      "year": "Awal Cerita",
+      "title": "Pertemuan di Lorong SMK",
+      "text": "Kisah kami berawal dari pertemuan yang tak disengaja di lorong SMK. Kami saling bertukar nomor WhatsApp dan mulai mengenal satu sama lain. Setelah sembilan bulan, kami memutuskan untuk menjalin hubungan yang lebih dekat."
+    },
+    {
+      "year": "Langkah Bersama",
+      "title": "Menuju Hubungan yang Lebih Serius",
+      "text": "Dengan niat yang baik, ketulusan hati, dan restu keluarga, kami memutuskan untuk melangkah ke tahap yang lebih serius. Perjalanan ini kami jalani dengan penuh harapan dan doa."
+    },
+    {
+      "year": "Pernikahan",
+      "title": "Hari yang Kami Nantikan",
+      "text": "Kini kami menantikan hari ketika kami dipersatukan dalam ikatan suci pernikahan. Semoga langkah ini menjadi awal kehidupan baru yang penuh kebahagiaan dan keberkahan."
+    }
+  ],
+  "story_image_path": "/media/client/Nisa & Catur/IMG_20261115_062447_139.jpg",
+  "cover_path": "/media/client/Nisa & Catur/Sampul_.jpg",
+  "profile_path": "/media/client/Nisa & Catur/Sampul_.jpg",
+  "gallery_paths": [
+    "/media/client/Nisa & Catur/IMG_20261115_062326_383_5.jpg",
+    "/media/client/Nisa & Catur/IMG_20261115_062326_320_3.jpg",
+    "/media/client/Nisa & Catur/IMG_20261115_062326_141_2.jpg",
+    "/media/client/Nisa & Catur/IMG_20261115_062326_364_4.jpg",
+    "/media/client/Nisa & Catur/IMG_20261115_062115.jpg",
+    "/media/client/Nisa & Catur/IMG_20261115_062326_141.jpg",
+    "/media/client/Nisa & Catur/IMG_20261115_062326_142_1.jpg",
+    "/media/client/Nisa & Catur/IMG_20261115_062447_139.jpg",
+    "/media/client/Nisa & Catur/Sampul_.jpg"
+  ],
+  "music_path": null,
+  "gift_info": {
+    "bank": "Mandiri",
+    "account_number": "1560021471810",
+    "account_name": "Aniffatul Coirunisa",
+    "accounts": [
+      { "bank": "Mandiri", "account_number": "1560021471810", "account_name": "Aniffatul Coirunisa" },
+      { "bank": "ShopeePay", "account_number": "089664178302", "account_name": "Catur Adi Wicaksono" }
+    ],
+    "recipient_name": "Aniffatul",
+    "shipping_address": "Jl. Kerajaan Raya Blok L5 No. 28, RT 001/RW 034, Kel. Wanasari, Kec. Cibitung, Kab. Bekasi, Jawa Barat 17520"
+  },
+  "theme_overrides": {
+    "couple_order": "bride-first",
+    "bride_instagram": "_niisaahhh",
+    "groom_instagram": "catur_adi12",
+    "music_youtube_id": "5XqiLi2HVpU"
+  },
+  "closing_text": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.",
+  "closing_greeting": "Kami yang berbahagia,"
+}

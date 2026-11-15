@@ -56,7 +56,7 @@ export function MustardBlackInvitationView({
           "/media/mustard-black/5.jpg",
         ];
 
-  const musicPath = resolveMediaUrl(invitation.music_path) || "/media/elegant/Bergema Selamanya.mp4";
+  const musicPath = resolveMediaUrl(invitation.music_path);
 
   return (
     <MustardBlackClientApp

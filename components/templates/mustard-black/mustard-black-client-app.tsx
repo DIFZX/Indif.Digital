@@ -70,43 +70,24 @@ export function MustardBlackClientApp({
   const [submitting, setSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  // Restore any wishes saved locally across page refreshes
+  const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    const restoreTimer = window.setTimeout(() => {
-    try {
-      const stored = localStorage.getItem(`mustard_black_wishes_${invitation.id}`);
-      if (stored) {
-        const parsed = JSON.parse(stored) as Greeting[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setGreetings((prev) => {
-            const map = new Map<string, Greeting>();
-            prev.forEach((g) => map.set(g.id || g.message, g));
-            parsed.forEach((g) => {
-              if (!map.has(g.id || g.message)) {
-                map.set(g.id || g.message, g);
-              }
-            });
-            return Array.from(map.values());
-          });
-        }
+    if (lightboxIndex === null) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    lightboxCloseRef.current?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setLightboxIndex(null);
+      if (event.key === "Tab") {
+        event.preventDefault();
+        lightboxCloseRef.current?.focus();
       }
-    } catch {}
-    }, 0);
-    return () => window.clearTimeout(restoreTimer);
-  }, [invitation.id]);
-
-  // Prevent iOS Safari gesture/pinch zoom glitches
-  useEffect(() => {
-    const handleGesture = (e: Event) => {
-      e.preventDefault();
     };
-    document.addEventListener("gesturestart", handleGesture);
-    document.addEventListener("gesturechange", handleGesture);
+    document.addEventListener("keydown", handleKey);
     return () => {
-      document.removeEventListener("gesturestart", handleGesture);
-      document.removeEventListener("gesturechange", handleGesture);
+      document.removeEventListener("keydown", handleKey);
+      previousFocus?.focus();
     };
-  }, []);
+  }, [lightboxIndex]);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const displayGuestName = guestName || "Tamu Undangan";
@@ -225,11 +206,11 @@ export function MustardBlackClientApp({
       document.body.appendChild(textarea);
       textarea.focus();
       textarea.select();
-      document.execCommand("copy");
+      const copied = document.execCommand("copy");
       document.body.removeChild(textarea);
-      onSuccess();
+      if (copied) onSuccess();
     } catch {
-      onSuccess();
+      setCopiedKey(null);
     }
   }
 
@@ -238,14 +219,6 @@ export function MustardBlackClientApp({
     if (!rsvpName.trim()) return;
     setSubmitting(true);
     setStatusMessage(null);
-
-    const newGreeting: Greeting = {
-      id: "greeting-" + Date.now(),
-      guest_name: rsvpName.trim(),
-      attendance: rsvpAttendance,
-      message: rsvpMessage.trim() || "Selamat menempuh hidup baru Dita & Fajar, semoga bahagia selalu!",
-      created_at: new Date().toISOString(),
-    };
 
     try {
       const res = await fetch("/api/guest-response", {
@@ -260,66 +233,33 @@ export function MustardBlackClientApp({
         }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        const greetingToAdd: Greeting = data.greeting || newGreeting;
-        setGreetings((prev) => {
-          const next = [greetingToAdd, ...prev.filter((g) => g.id !== greetingToAdd.id)];
-          try {
-            localStorage.setItem(`mustard_black_wishes_${invitation.id}`, JSON.stringify(next.slice(0, 50)));
-          } catch {}
-          return next;
-        });
-        setStatusMessage({ type: "success", text: "Terima kasih! Konfirmasi & ucapan Anda telah tersimpan." });
-      } else {
-        setGreetings((prev) => {
-          const next = [newGreeting, ...prev.filter((g) => g.id !== newGreeting.id)];
-          try {
-            localStorage.setItem(`mustard_black_wishes_${invitation.id}`, JSON.stringify(next.slice(0, 50)));
-          } catch {}
-          return next;
-        });
-        setStatusMessage({ type: "success", text: "Ucapan Anda berhasil dikirim." });
+      const data = await res.json() as { message?: string; greeting?: Greeting | null };
+      if (!res.ok || res.status === 207) {
+        setStatusMessage({ type: "error", text: data.message || "Respons belum tersimpan. Silakan coba lagi." });
+        return;
       }
+      const savedGreeting = data.greeting;
+      if (savedGreeting) {
+        setGreetings((prev) => [savedGreeting, ...prev.filter((g) => g.id !== savedGreeting.id)]);
+      }
+      setStatusMessage({ type: "success", text: data.message || "Terima kasih, konfirmasi Anda sudah tersimpan." });
       setRsvpMessage("");
     } catch {
-      setGreetings((prev) => {
-        const next = [newGreeting, ...prev.filter((g) => g.id !== newGreeting.id)];
-        try {
-          localStorage.setItem(`mustard_black_wishes_${invitation.id}`, JSON.stringify(next.slice(0, 50)));
-        } catch {}
-        return next;
-      });
-      setStatusMessage({ type: "success", text: "Ucapan Anda berhasil ditampilkan." });
-      setRsvpMessage("");
+      setStatusMessage({ type: "error", text: "Koneksi terputus. Periksa internet Anda, lalu coba lagi." });
     } finally {
       setSubmitting(false);
     }
   }
 
-  const giftInfo = (invitation.gift_info as { bank?: string; account_number?: string; account_name?: string }) || {
-    bank: "BCA",
-    account_number: "7125091428",
-    account_name: "Fajar Sidik",
-  };
-
-  const stories = [
-    {
-      year: "Awal Cerita",
-      title: "Pertemuan Pertama",
-      text: "Berawal dari pertemuan sederhana, kami saling mengenal dan mulai berbagi banyak cerita. Tanpa disadari, kebersamaan itu tumbuh menjadi rasa nyaman yang semakin kuat dari hari ke hari.",
-    },
-    {
-      year: "Lamaran",
-      title: "Momen Sakral Lamaran",
-      text: "Dengan niat yang tulus dan restu keluarga, kami memutuskan untuk melangkah ke tahap yang lebih serius. Momen lamaran menjadi awal dari perjalanan baru yang penuh harapan dan doa baik.",
-    },
-    {
-      year: "Pernikahan",
-      title: "Ikatan Suci Pernikahan",
-      text: "Kini kami sampai pada hari yang kami nantikan, hari di mana dua hati dipersatukan dalam ikatan suci pernikahan. Semoga langkah ini menjadi awal kehidupan baru yang penuh cinta, kebahagiaan, dan keberkahan.",
-    },
-  ];
+  const giftInfo = invitation.gift_info;
+  const giftAccounts = (giftInfo.accounts ?? [giftInfo]).filter((account) => account.account_number);
+  const giftAddress = giftInfo.shipping_address || invitation.venue_address;
+  const bride = { name: invitation.bride_name, parents: invitation.bride_parents, photo: bridePhotoPath, role: "The Bride", instagram: invitation.theme_overrides.bride_instagram };
+  const groom = { name: invitation.groom_name, parents: invitation.groom_parents, photo: groomPhotoPath, role: "The Groom", instagram: invitation.theme_overrides.groom_instagram };
+  const [firstPerson, secondPerson] = invitation.theme_overrides.couple_order === "bride-first" ? [bride, groom] : [groom, bride];
+  const instagramLiveUrl = invitation.theme_overrides.instagram_live_url;
+  const youtubeLiveUrl = invitation.theme_overrides.youtube_live_url;
+  const youtubeMusicId = /^[\w-]{11}$/.test(invitation.theme_overrides.music_youtube_id ?? "") ? invitation.theme_overrides.music_youtube_id : null;
 
   return (
     <div className={themeClassName}>
@@ -375,7 +315,8 @@ export function MustardBlackClientApp({
                   src={path}
                   alt=""
                   fill
-                  priority={index === 0}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
                   sizes="65vw"
                   style={{ objectFit: "cover", objectPosition: "center 30%" }}
                 />
@@ -391,6 +332,7 @@ export function MustardBlackClientApp({
               alt=""
               width={280}
               height={380}
+              loading="eager"
               style={{ objectFit: "contain" }}
             />
           </div>
@@ -423,7 +365,8 @@ export function MustardBlackClientApp({
                 fill
                 sizes="(max-width: 900px) 100vw, 480px"
                 style={{ objectFit: "cover", objectPosition: "center 20%" }}
-                priority
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
             <div className={styles.coverGradient} />
@@ -438,7 +381,8 @@ export function MustardBlackClientApp({
                     fill
                     sizes="180px"
                     style={{ objectFit: "cover", objectPosition: "center 20%" }}
-                    priority
+                    loading="eager"
+                    fetchPriority="high"
                   />
                 </div>
                 <div className={styles.coverArchFlower}>
@@ -447,6 +391,7 @@ export function MustardBlackClientApp({
                     alt=""
                     width={110}
                     height={140}
+                    loading="eager"
                     style={{ objectFit: "contain" }}
                   />
                 </div>
@@ -535,7 +480,8 @@ export function MustardBlackClientApp({
                   alt={coupleNames}
                   fill
                   sizes="(max-width: 900px) 100vw, 480px"
-                  priority
+                  loading="eager"
+                  fetchPriority="high"
                 />
               </div>
               <div className={styles.heroGradient} />
@@ -550,7 +496,8 @@ export function MustardBlackClientApp({
                       fill
                       sizes="170px"
                       style={{ objectFit: "cover", objectPosition: "center 20%" }}
-                      priority
+                      loading="eager"
+                      fetchPriority="high"
                     />
                   </div>
                   <div className={styles.heroArchLily}>
@@ -590,14 +537,31 @@ export function MustardBlackClientApp({
               <Reveal direction="up">
                 <div className={styles.quoteCard}>
                   <p className={styles.quoteText}>
-                    &ldquo;Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.&rdquo;
+                    &ldquo;{invitation.quote_text}&rdquo;
                   </p>
-                  <span className={styles.quoteSurah}>(QS. Ar-Rum : 21)</span>
+                  <span className={styles.quoteSurah}>{invitation.quote_source}</span>
                 </div>
               </Reveal>
             </section>
 
             {/* ─── 3. MEMPELAI (GROOM & BRIDE) SECTION ─── */}
+            {youtubeMusicId && opened && (
+              <section className={styles.sectionRow} aria-label="Musik pernikahan">
+                <h2 className={styles.sectionTitle}>Musik Pengiring</h2>
+                <p className={styles.sectionSubtitle}>Dulu Kita Masih Remaja · Instrumental piano oleh HRPiano</p>
+                <iframe
+                  className={styles.musicPlayer}
+                  title="Dulu Kita Masih Remaja - instrumental piano HRPiano"
+                  width="400"
+                  height="225"
+                  src={`https://www.youtube-nocookie.com/embed/${youtubeMusicId}?autoplay=1&playsinline=1&loop=1&playlist=${youtubeMusicId}`}
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </section>
+            )}
+
             <section className={styles.sectionRow} id="mempelai">
               <Reveal direction="up">
                 <div className={styles.sectionHeader}>
@@ -615,20 +579,20 @@ export function MustardBlackClientApp({
                 <div className={styles.coupleIntro}>
                   <h3 className={styles.greetingArabic}>Assalamu&apos;alaikum Wr. Wb.</h3>
                   <p className={styles.greetingText}>
-                    Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i serta kerabat sekalian untuk menghadiri acara pernikahan kami.
+                    {invitation.opening_text}
                   </p>
                 </div>
               </Reveal>
 
               <div className={styles.coupleCardsWrapper}>
-                {/* The Groom: Fajar Sidik */}
+                {/* The order follows the couple's invitation preference. */}
                 <Reveal direction="left" delay={100}>
                   <div className={styles.personCard}>
                     <div className={styles.personArchContainer}>
                       <div className={styles.personArchPhoto}>
                         <Image
-                          src={groomPhotoPath}
-                          alt={invitation.groom_name}
+                          src={firstPerson.photo}
+                          alt={firstPerson.name}
                           fill
                           sizes="160px"
                           style={{ objectFit: "cover", objectPosition: "center 20%" }}
@@ -645,14 +609,14 @@ export function MustardBlackClientApp({
                       </div>
                     </div>
 
-                    <span className={styles.personRoleBadge}>The Groom</span>
-                    <h3 className={styles.personFullName}>{invitation.groom_name}</h3>
+                    <span className={styles.personRoleBadge}>{firstPerson.role}</span>
+                    <h3 className={styles.personFullName}>{firstPerson.name}</h3>
                     <p className={styles.personParents}>
-                      Putra Kedua dari Bapak M. Dawam &amp; (Almh) Ibu Dewi Sudarwati
+                      {firstPerson.parents}
                     </p>
 
-                    <a
-                      href="https://instagram.com/fajarsidik"
+                    {firstPerson.instagram && <a
+                      href={`https://www.instagram.com/${encodeURIComponent(firstPerson.instagram)}/`}
                       target="_blank"
                       rel="noreferrer"
                       className={styles.instagramBtn}
@@ -660,21 +624,20 @@ export function MustardBlackClientApp({
                       <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                       </svg>
-                      <span>@fajarsidik</span>
-                    </a>
+                      <span>@{firstPerson.instagram}</span>
+                    </a>}
                   </div>
                 </Reveal>
 
                 <div className={styles.coupleDividerAmpersand}>&amp;</div>
 
-                {/* The Bride: Dita Maharani Putri */}
                 <Reveal direction="right" delay={200}>
                   <div className={styles.personCard}>
                     <div className={styles.personArchContainer}>
                       <div className={styles.personArchPhoto}>
                         <Image
-                          src={bridePhotoPath}
-                          alt={invitation.bride_name}
+                          src={secondPerson.photo}
+                          alt={secondPerson.name}
                           fill
                           sizes="160px"
                           style={{ objectFit: "cover", objectPosition: "center 20%" }}
@@ -691,14 +654,14 @@ export function MustardBlackClientApp({
                       </div>
                     </div>
 
-                    <span className={styles.personRoleBadge}>The Bride</span>
-                    <h3 className={styles.personFullName}>{invitation.bride_name}</h3>
+                    <span className={styles.personRoleBadge}>{secondPerson.role}</span>
+                    <h3 className={styles.personFullName}>{secondPerson.name}</h3>
                     <p className={styles.personParents}>
-                      Putri Pertama dari Bapak Anas Rifai &amp; Ibu Kholifah
+                      {secondPerson.parents}
                     </p>
 
-                    <a
-                      href="https://instagram.com/ditamaharani"
+                    {secondPerson.instagram && <a
+                      href={`https://www.instagram.com/${encodeURIComponent(secondPerson.instagram)}/`}
                       target="_blank"
                       rel="noreferrer"
                       className={styles.instagramBtn}
@@ -706,8 +669,8 @@ export function MustardBlackClientApp({
                       <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                       </svg>
-                      <span>@ditamaharani</span>
-                    </a>
+                      <span>@{secondPerson.instagram}</span>
+                    </a>}
                   </div>
                 </Reveal>
               </div>
@@ -741,11 +704,11 @@ export function MustardBlackClientApp({
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                         <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
                       </svg>
-                      <span>Pukul 08.00 WIB - Selesai</span>
+                      <span>Pukul {invitation.ceremony_time}</span>
                     </p>
 
                     <p className={styles.eventVenueLabel}>Tempat Acara</p>
-                    <h4 className={styles.eventVenueName}>Kediaman Mempelai Wanita</h4>
+                    <h4 className={styles.eventVenueName}>{invitation.venue_name}</h4>
                     <p className={styles.eventVenueAddress}>{invitation.venue_address}</p>
 
                     <a
@@ -772,7 +735,7 @@ export function MustardBlackClientApp({
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                         <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
                       </svg>
-                      <span>Pukul 11.00 WIB - Selesai</span>
+                      <span>Pukul {invitation.reception_time}</span>
                     </p>
 
                     <p className={styles.eventVenueLabel}>Tempat Acara</p>
@@ -859,7 +822,7 @@ export function MustardBlackClientApp({
               </Reveal>
 
               <div className={styles.storyTimeline}>
-                {stories.map((st, i) => (
+                {invitation.story.map((st, i) => (
                   <Reveal key={st.year} direction="up" delay={i * 120} className={styles.storyReveal}>
                     <div className={styles.storyItem}>
                       <div className={styles.storyDot} />
@@ -894,34 +857,36 @@ export function MustardBlackClientApp({
               </Reveal>
 
               <div className={styles.galleryGrid}>
-                {galleryPaths.slice(0, 5).map((path, idx) => (
+                {galleryPaths.map((path, idx) => (
                   <Reveal key={path} direction="up" delay={idx * 80}>
-                    <div
+                    <button
+                      type="button"
                       className={styles.galleryCard}
                       onClick={() => setLightboxIndex(idx)}
+                      aria-label={`Lihat foto ${coupleNames} ${idx + 1}`}
                     >
                       <Image
                         src={path}
-                        alt={`Galeri Dita & Fajar ${idx + 1}`}
+                        alt={`Galeri ${coupleNames} ${idx + 1}`}
                         fill
                         sizes="(max-width: 900px) 50vw, 240px"
                       />
                       <div className={styles.galleryOverlay} />
-                    </div>
+                    </button>
                   </Reveal>
                 ))}
               </div>
             </section>
 
             {/* ─── 8. LIVE STREAMING ─── */}
-            <section className={styles.sectionRow}>
+            {(instagramLiveUrl || youtubeLiveUrl) && <section className={styles.sectionRow}>
               <Reveal direction="up">
                 <div className={styles.streamingCard}>
                   <span className={styles.streamingTimeBadge}>
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                       <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" />
                     </svg>
-                    <span>Sabtu, 12 Desember 2026 · 08.00 WIB</span>
+                    <span>{formatEventDate(invitation.event_date)} · {invitation.ceremony_time}</span>
                   </span>
 
                   <h3 className={styles.streamingTitle}>Live Streaming</h3>
@@ -930,8 +895,8 @@ export function MustardBlackClientApp({
                   </p>
 
                   <div className={styles.streamingButtonRow}>
-                    <a
-                      href="https://instagram.com"
+                    {instagramLiveUrl && <a
+                      href={instagramLiveUrl}
                       target="_blank"
                       rel="noreferrer"
                       className={styles.streamBtn}
@@ -940,9 +905,9 @@ export function MustardBlackClientApp({
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                       </svg>
                       <span>Instagram Live</span>
-                    </a>
-                    <a
-                      href="https://youtube.com"
+                    </a>}
+                    {youtubeLiveUrl && <a
+                      href={youtubeLiveUrl}
                       target="_blank"
                       rel="noreferrer"
                       className={styles.streamBtn}
@@ -951,11 +916,11 @@ export function MustardBlackClientApp({
                         <path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z" />
                       </svg>
                       <span>YouTube Live</span>
-                    </a>
+                    </a>}
                   </div>
                 </div>
               </Reveal>
-            </section>
+            </section>}
 
             {/* ─── 9. AMPLOP DIGITAL & HADIAH ─── */}
             <section className={styles.sectionRow} id="hadiah">
@@ -974,23 +939,18 @@ export function MustardBlackClientApp({
                 </div>
               </Reveal>
 
-              <Reveal direction="up">
-                {/* ATM Card Replica */}
+              {giftAccounts.map((account, index) => <Reveal key={`${account.bank}-${index}`} direction="up">
                 <div className={styles.giftCard}>
                   <div className={styles.giftCardHeader}>
                     <div className={styles.bankLogoWrapper}>
-                      <Image
-                        src="/media/mustard-black/bca.webp"
-                        alt="BCA"
-                        fill
-                        style={{ objectFit: "contain", objectPosition: "left center" }}
-                      />
+                      <strong>{account.bank}</strong>
                     </div>
                     <div className={styles.bankChipWrapper}>
                       <Image
                         src="/media/mustard-black/chip-atm.png"
                         alt="Chip"
                         fill
+                        sizes="44px"
                         style={{ objectFit: "contain", objectPosition: "right center" }}
                       />
                     </div>
@@ -998,17 +958,17 @@ export function MustardBlackClientApp({
 
                   <div className={styles.giftCardNumberRow}>
                     <p className={styles.giftCardNumberLabel}>Nomor Rekening</p>
-                    <p className={styles.giftCardNumber}>{giftInfo.account_number}</p>
+                    <p className={styles.giftCardNumber}>{account.account_number}</p>
                   </div>
 
-                  <p className={styles.giftCardHolder}>A.N {giftInfo.account_name}</p>
+                  <p className={styles.giftCardHolder}>A.N {account.account_name}</p>
 
                   <button
                     type="button"
                     className={styles.copyAccountButton}
-                    onClick={() => copyToClipboard(giftInfo.account_number || "7125091428", "rekening")}
+                    onClick={() => copyToClipboard(account.account_number || "", `rekening-${index}`)}
                   >
-                    {copiedKey === "rekening" ? (
+                    {copiedKey === `rekening-${index}` ? (
                       <>
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                           <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
@@ -1025,20 +985,20 @@ export function MustardBlackClientApp({
                     )}
                   </button>
                 </div>
-              </Reveal>
+              </Reveal>)}
 
               <Reveal direction="up" delay={100}>
                 {/* Physical Gift Box */}
                 <div className={styles.giftAddressBox}>
                   <h3 className={styles.giftAddressTitle}>Kirim Kado Fisik</h3>
                   <p className={styles.giftAddressText}>
-                    Penerima: {invitation.groom_name} ({giftInfo.account_name})<br />
-                    Alamat: {invitation.venue_address}
+                    Penerima: {giftInfo.recipient_name || giftInfo.account_name || invitation.bride_name}<br />
+                    Alamat: {giftAddress}
                   </p>
                   <button
                     type="button"
                     className={styles.copyAccountButton}
-                    onClick={() => copyToClipboard(invitation.venue_address, "alamat")}
+                    onClick={() => copyToClipboard(giftAddress, "alamat")}
                   >
                     {copiedKey === "alamat" ? (
                       <>
@@ -1086,6 +1046,8 @@ export function MustardBlackClientApp({
                         id="mb-name"
                         type="text"
                         required
+                        minLength={2}
+                        maxLength={80}
                         value={rsvpName}
                         onChange={(e) => setRsvpName(e.target.value)}
                         placeholder="Masukkan nama lengkap Anda"
@@ -1150,6 +1112,8 @@ export function MustardBlackClientApp({
 
                     {statusMessage && (
                       <div
+                        role="status"
+                        aria-live="polite"
                         className={`${styles.statusToast} ${
                           statusMessage.type === "success"
                             ? styles.statusToastSuccess
@@ -1165,6 +1129,7 @@ export function MustardBlackClientApp({
 
               {/* Wishes list */}
               <div className={styles.wishesContainer}>
+                {greetings.length === 0 && <p className={styles.sectionSubtitle}>Belum ada ucapan. Jadilah yang pertama mengirim doa untuk {coupleNames}.</p>}
                 {greetings.map((g, idx) => (
                   <Reveal key={g.id || idx} direction="up" delay={(idx % 3) * 60}>
                     <div className={styles.wishCard}>
@@ -1199,9 +1164,9 @@ export function MustardBlackClientApp({
               <Reveal direction="up">
                 <div className={styles.closingCard}>
                   <p className={styles.closingText}>
-                    Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
+                    {invitation.closing_text}
                   </p>
-                  <p className={styles.closingGreeting}>Kami yang berbahagia,</p>
+                  <p className={styles.closingGreeting}>{invitation.closing_greeting}</p>
                   <h3 className={styles.closingCoupleNames}>{coupleNames}</h3>
 
                   <div className={styles.mustardDivider}>
@@ -1225,11 +1190,15 @@ export function MustardBlackClientApp({
       {lightboxIndex !== null && (
         <div
           className={styles.lightboxModal}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Galeri ${coupleNames}`}
           onClick={() => setLightboxIndex(null)}
         >
           <button
             type="button"
             className={styles.lightboxCloseButton}
+            ref={lightboxCloseRef}
             onClick={() => setLightboxIndex(null)}
             aria-label="Tutup foto"
           >
