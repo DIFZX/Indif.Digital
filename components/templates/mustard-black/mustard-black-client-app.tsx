@@ -254,12 +254,13 @@ export function MustardBlackClientApp({
   const giftInfo = invitation.gift_info;
   const giftAccounts = (giftInfo.accounts ?? [giftInfo]).filter((account) => account.account_number);
   const giftAddress = giftInfo.shipping_address || invitation.venue_address;
+  const isNisaCatur = invitation.slug === "nisa-dan-catur";
+  const groomInstagram = isNisaCatur ? "catur_adi31" : invitation.theme_overrides.groom_instagram;
   const bride = { name: invitation.bride_name, parents: invitation.bride_parents, photo: bridePhotoPath, role: "The Bride", instagram: invitation.theme_overrides.bride_instagram };
-  const groom = { name: invitation.groom_name, parents: invitation.groom_parents, photo: groomPhotoPath, role: "The Groom", instagram: invitation.theme_overrides.groom_instagram };
+  const groom = { name: invitation.groom_name, parents: invitation.groom_parents, photo: groomPhotoPath, role: "The Groom", instagram: groomInstagram };
   const [firstPerson, secondPerson] = invitation.theme_overrides.couple_order === "bride-first" ? [bride, groom] : [groom, bride];
   const instagramLiveUrl = invitation.theme_overrides.instagram_live_url;
   const youtubeLiveUrl = invitation.theme_overrides.youtube_live_url;
-  const isNisaCatur = invitation.slug === "nisa-dan-catur";
   const getPersonPhotoStyle = (personRole: string) => {
     if (!isNisaCatur) {
       return { objectFit: "cover" as const, objectPosition: "center 20%" };
