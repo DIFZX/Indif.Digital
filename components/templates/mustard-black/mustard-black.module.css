@@ -985,6 +985,28 @@
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.8));
 }
 
+.personArchLilyLeft {
+  position: absolute;
+  bottom: -15px;
+  left: -20px;
+  width: 85px;
+  height: 110px;
+  z-index: 3;
+  pointer-events: none;
+  transform: scaleX(-1);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.8));
+}
+
+.personArchPhotoZoomBride {
+  transform: scale(1.22);
+  transform-origin: 62% 25%;
+}
+
+.personArchPhotoZoomGroom {
+  transform: scale(1.22);
+  transform-origin: 38% 25%;
+}
+
 .personRoleBadge {
   display: inline-block;
   background: rgba(212, 163, 89, 0.15);

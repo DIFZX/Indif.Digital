@@ -259,6 +259,18 @@ export function MustardBlackClientApp({
   const [firstPerson, secondPerson] = invitation.theme_overrides.couple_order === "bride-first" ? [bride, groom] : [groom, bride];
   const instagramLiveUrl = invitation.theme_overrides.instagram_live_url;
   const youtubeLiveUrl = invitation.theme_overrides.youtube_live_url;
+  const isNisaCatur = invitation.slug === "nisa-dan-catur";
+  const getPersonPhotoStyle = (personRole: string) => {
+    if (!isNisaCatur) {
+      return { objectFit: "cover" as const, objectPosition: "center 20%" };
+    }
+    return {
+      objectFit: "cover" as const,
+      objectPosition: "center 20%",
+      transform: "scale(1.22)",
+      transformOrigin: personRole === "The Bride" ? "62% 25%" : "38% 25%",
+    };
+  };
 
   return (
     <div className={themeClassName}>
@@ -577,10 +589,11 @@ export function MustardBlackClientApp({
                           alt={firstPerson.name}
                           fill
                           sizes="160px"
-                          style={{ objectFit: "cover", objectPosition: "center 20%" }}
+                          className={isNisaCatur ? (firstPerson.role === "The Bride" ? styles.personArchPhotoZoomBride : styles.personArchPhotoZoomGroom) : undefined}
+                          style={getPersonPhotoStyle(firstPerson.role)}
                         />
                       </div>
-                      <div className={styles.personArchLily}>
+                      <div className={firstPerson.role === "The Bride" ? styles.personArchLilyLeft : styles.personArchLily}>
                         <Image
                           src="/media/mustard-black/lily-flower.png"
                           alt=""
@@ -622,10 +635,11 @@ export function MustardBlackClientApp({
                           alt={secondPerson.name}
                           fill
                           sizes="160px"
-                          style={{ objectFit: "cover", objectPosition: "center 20%" }}
+                          className={isNisaCatur ? (secondPerson.role === "The Bride" ? styles.personArchPhotoZoomBride : styles.personArchPhotoZoomGroom) : undefined}
+                          style={getPersonPhotoStyle(secondPerson.role)}
                         />
                       </div>
-                      <div className={styles.personArchLily}>
+                      <div className={secondPerson.role === "The Bride" ? styles.personArchLilyLeft : styles.personArchLily}>
                         <Image
                           src="/media/mustard-black/lily-flower.png"
                           alt=""
