@@ -151,6 +151,7 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
         const formattedDate = new Intl.DateTimeFormat("id-ID", {
           dateStyle: "medium",
           timeStyle: "short",
+          timeZone: "Asia/Jakarta",
         }).format(new Date(item.created_at));
 
         return [
@@ -319,7 +320,7 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
               <h1 className={styles.heroCoupleTitle}>{coupleNames}</h1>
               <p className={styles.heroDateVenue}>
                 <span>📅</span>
-                {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(
+                {new Intl.DateTimeFormat("id-ID", { dateStyle: "full", timeZone: "Asia/Jakarta" }).format(
                   new Date(invitation.event_date)
                 )}
               </p>
@@ -732,6 +733,7 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
                   const formattedDate = new Intl.DateTimeFormat("id-ID", {
                     dateStyle: "medium",
                     timeStyle: "short",
+                    timeZone: "Asia/Jakarta",
                   }).format(new Date(item.created_at));
 
                   return (
@@ -821,7 +823,7 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
               <div className={styles.infoDetails}>
                 <div><strong>Akad Nikah:</strong> {invitation.ceremony_time}</div>
                 <div><strong>Resepsi:</strong> {invitation.reception_time}</div>
-                <div><strong>Tanggal:</strong> {new Intl.DateTimeFormat("id-ID", { dateStyle: "full" }).format(new Date(invitation.event_date))}</div>
+                <div><strong>Tanggal:</strong> {new Intl.DateTimeFormat("id-ID", { dateStyle: "full", timeZone: "Asia/Jakarta" }).format(new Date(invitation.event_date))}</div>
               </div>
             </div>
 
