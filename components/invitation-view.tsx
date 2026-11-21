@@ -16,6 +16,10 @@ import { SundaVibesInvitationView } from "@/components/templates/sunda-vibes/sun
 import { RoyalMaroonInvitationView } from "@/components/templates/royal-maroon/royal-maroon-invitation";
 import { BlushRoseInvitationView } from "@/components/templates/blush-rose/blush-rose-invitation";
 import { AdventureWeddingPixelInvitation } from "@/components/templates/adventure-wedding-pixel/adventure-wedding-pixel-invitation";
+import { ChampagneIvoryInvitationView } from "@/components/templates/champagne-ivory/champagne-ivory-invitation";
+import { DustyRoseInvitationView } from "@/components/templates/dusty-rose/dusty-rose-invitation";
+import { SageBotanicalInvitationView } from "@/components/templates/sage-botanical/sage-botanical-invitation";
+import { TerracottaWarmthInvitationView } from "@/components/templates/terracotta-warmth/terracotta-warmth-invitation";
 import { BRAND } from "@/lib/brand";
 import { formatCoupleNames, getInvitationEvents } from "@/lib/invitation-display";
 import { resolveMediaUrl } from "@/lib/media";
@@ -128,7 +132,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
         <aside className="desktop-showcase" aria-label="Foto pasangan">
           <div className="showcase-slides">
             {showcaseImages.map((path, index) => (
-              <div className="showcase-slide" key={path} style={{ animationDelay: `${index * 6}s` }}>
+              <div className="showcase-slide" key={path} style={{ animationDelay: `${index * 6}s`, opacity: index === 0 ? 1 : undefined }}>
                 <Image src={path} alt="" fill priority={index === 0} sizes="70vw" />
               </div>
             ))}
@@ -167,7 +171,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                 <p className="intro-copy">{invitation.opening_text}</p>
               </Reveal>
 
-              <div className={namesOnly ? "couple-stack couple-stack--names" : "couple-stack"}>
+              <div className={namesOnly ? "couple-stack couple-stack--names-only" : "couple-stack"}>
                 {people.map((person, index) => (
                   <Fragment key={person.role}>
                     {index > 0 && <span className="ampersand">&</span>}
@@ -177,7 +181,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                           <div className="person-photo"><Image src={person.photo} alt={person.name} fill sizes="210px" /></div>
                           <Image className={`person-flower ${person.role}-flower`} src={resolveMediaUrl(person.flower)} alt="" width={person.flowerSize} height={person.flowerSize} aria-hidden="true" />
                         </div>}
-                        {!namesOnly && <p className="eyebrow">{person.label}</p>}
+                        <p className="eyebrow">{person.label}</p>
                         <h2>{person.name}</h2>
                         <small>{person.parents}</small>
                       </article>
@@ -205,7 +209,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
 
             {invitation.story.length > 0 && <section className="section story-section">
               <Reveal><p className="eyebrow">Kisah cinta</p><h2>Tumbuh dalam satu cerita</h2></Reveal>
-              <Reveal direction="scale" delay={120}><div className="story-image"><Image src={storyImagePath} alt={`Foto ${coupleNames}`} fill sizes="(max-width: 900px) 100vw, 520px" /></div></Reveal>
+<Reveal direction="scale" delay={120}><div className="story-image"><Image src={storyImagePath} alt={`Foto ${coupleNames}`} fill sizes="(max-width: 900px) 100vw, 520px" /></div></Reveal>
               <div className="timeline">
                 {invitation.story.map((item, index) => (
                   <Reveal key={`${item.year}-${item.title}`} direction={index % 2 ? "left" : "right"} delay={index * 80}>
@@ -336,6 +340,22 @@ export function InvitationView(props: InvitationViewProps) {
 
   if (props.invitation.template.slug === "sunda-vibes") {
     return <SundaVibesInvitationView {...props} />;
+  }
+
+  if (props.invitation.template.slug === "champagne-ivory") {
+    return <ChampagneIvoryInvitationView {...props} />;
+  }
+
+  if (props.invitation.template.slug === "dusty-rose") {
+    return <DustyRoseInvitationView {...props} />;
+  }
+
+  if (props.invitation.template.slug === "sage-botanical") {
+    return <SageBotanicalInvitationView {...props} />;
+  }
+
+  if (props.invitation.template.slug === "terracotta-warmth") {
+    return <TerracottaWarmthInvitationView {...props} />;
   }
 
   return <GreenyInvitationView {...props} />;

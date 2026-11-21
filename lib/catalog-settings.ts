@@ -56,6 +56,10 @@ export function getTemplateThumbnail(slug: string, fallbackPath: string | null) 
     "blue-garden": "/media/mockups/mockup-blue-garden.webp",
     "pink-vibes": "/media/mockups/mockup-pink-vibes.webp",
     "mustard-black": "/media/mockups/mockup-mustard-black.webp",
+    "champagne-ivory": "/media/mustard-black/1.jpg",
+    "dusty-rose": "/media/mustard-black/1.jpg",
+    "sage-botanical": "/media/mustard-black/1.jpg",
+    "terracotta-warmth": "/media/mustard-black/1.jpg",
     "greeny-flowers": "/media/mockups/mockup-greeny-flowers.webp",
   };
   return mockups[slug] || resolveMediaUrl(fallbackPath) || "/media/elegant/gallery-couple-v2.png";

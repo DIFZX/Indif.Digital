@@ -33,7 +33,26 @@ export async function getInvitation(slug: string): Promise<Invitation | null> {
   if (error || !data || !data.template) {
     return demoInvitations.find((invitation) => invitation.slug === slug) ?? null;
   }
-  return data as unknown as Invitation;
+  const invitation = data as unknown as Invitation;
+  const preview = demoInvitations.find(
+    (demo) =>
+      demo.slug === invitation.slug &&
+      demo.template.slug === invitation.template.slug &&
+      ["greeny-flowers", "pink-vibes", "blue-garden"].includes(demo.template.slug),
+  );
+  if (!preview) return invitation;
+
+  // Catalogue previews use the bundled photos even when their database rows
+  // still contain the original sample paths. Customer invitations keep their photos.
+  return {
+    ...invitation,
+    cover_path: preview.cover_path,
+    profile_path: preview.profile_path,
+    bride_photo_path: preview.bride_photo_path,
+    groom_photo_path: preview.groom_photo_path,
+    story_image_path: preview.story_image_path,
+    gallery_paths: preview.gallery_paths,
+  };
 }
 
 export async function getGreetings(invitationId: string): Promise<Greeting[]> {

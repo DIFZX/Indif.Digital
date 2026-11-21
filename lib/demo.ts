@@ -7,11 +7,11 @@ export const demoInvitation: Invitation = {
   bride_name: "Intan",
   bride_short_name: "Intan",
   bride_parents: "Putri Alm. Bapak Soma & Ibu Heny",
-  bride_photo_path: "/media/elegant/bride-intan-v1.png",
+  bride_photo_path: "/media/sunda-vibes/The Bride.jpg",
   groom_name: "Difa",
   groom_short_name: "Difa",
   groom_parents: "Putra Bapak Sulaiman & Ibu Fitrotunisa",
-  groom_photo_path: "/media/elegant/groom-difa-v1.png",
+  groom_photo_path: "/media/sunda-vibes/The Groom.jpg",
   event_date: "2026-12-12",
   ceremony_time: "08.00 WIB",
   reception_time: "11.00–14.00 WIB",
@@ -40,15 +40,17 @@ export const demoInvitation: Invitation = {
       text: "Kini kami sampai pada hari yang kami nantikan, hari di mana dua hati dipersatukan dalam ikatan suci pernikahan. Semoga langkah ini menjadi awal kehidupan baru yang penuh cinta, kebahagiaan, dan keberkahan.",
     },
   ],
-  story_image_path: "/media/invitations/intan-dan-difa/story/story-running-v1.png",
-  cover_path: "/media/elegant/gallery-couple-v2.png",
-  profile_path: "/media/elegant/profile-main-v1.jpeg",
+  story_image_path: "/media/sunda-vibes/5.jpg",
+  cover_path: "/media/sunda-vibes/1.jpg",
+  profile_path: "/media/sunda-vibes/2.jpg",
   gallery_paths: [
-    "/media/invitations/intan-dan-difa/gallery/gallery-01-v1.png",
-    "/media/invitations/intan-dan-difa/gallery/gallery-02-v1.png",
-    "/media/invitations/intan-dan-difa/gallery/gallery-03-v1.jpeg",
-    "/media/invitations/intan-dan-difa/gallery/gallery-04-v1.jpeg",
-    "/media/invitations/intan-dan-difa/gallery/gallery-05-v1.jpeg",
+    "/media/sunda-vibes/1.jpg",
+    "/media/sunda-vibes/2.jpg",
+    "/media/sunda-vibes/3.jpg",
+    "/media/sunda-vibes/4.jpg",
+    "/media/sunda-vibes/5.jpg",
+    "/media/sunda-vibes/The Bride.jpg",
+    "/media/sunda-vibes/The Groom.jpg",
   ],
   music_path: "/media/elegant/Bergema Selamanya.mp4",
   gift_info: { bank: "BCA", account_number: "1234567890", account_name: "Intan" },
@@ -432,6 +434,58 @@ export const adventureWeddingPixelDemoInvitation: Invitation = {
   },
 };
 
+export const champagneIvoryDemoInvitation: Invitation = {
+  ...mustardBlackDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000111",
+  slug: "champagne-ivory",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000011",
+    slug: "champagne-ivory",
+    name: "Champagne Ivory",
+    theme: { primary: "#B89358", accent: "#E8D5B5", background: "#FAF7F2" },
+  },
+};
+
+export const dustyRoseDemoInvitation: Invitation = {
+  ...mustardBlackDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000112",
+  slug: "dusty-rose",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000012",
+    slug: "dusty-rose",
+    name: "Dusty Rose",
+    theme: { primary: "#B86B7B", accent: "#EBB8C2", background: "#FCF6F7" },
+  },
+};
+
+export const sageBotanicalDemoInvitation: Invitation = {
+  ...mustardBlackDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000113",
+  slug: "sage-botanical",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000013",
+    slug: "sage-botanical",
+    name: "Sage Botanical",
+    theme: { primary: "#52704E", accent: "#A3C09F", background: "#F4F6F2" },
+  },
+};
+
+export const terracottaWarmthDemoInvitation: Invitation = {
+  ...mustardBlackDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000114",
+  slug: "terracotta-warmth",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000014",
+    slug: "terracotta-warmth",
+    name: "Terracotta Warmth",
+    theme: { primary: "#B55B39", accent: "#E8A285", background: "#FAF4EE" },
+  },
+};
+
 export const demoInvitations = [
   demoInvitation,
   pinkVibesDemoInvitation,
@@ -443,6 +497,10 @@ export const demoInvitations = [
   royalMaroonDemoInvitation,
   blushRoseDemoInvitation,
   adventureWeddingPixelDemoInvitation,
+  champagneIvoryDemoInvitation,
+  dustyRoseDemoInvitation,
+  sageBotanicalDemoInvitation,
+  terracottaWarmthDemoInvitation,
 ];
 
 export const demoGreetings: Greeting[] = [
