@@ -4,7 +4,11 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 
-export function Gallery({ paths, lightboxClassName = "" }: { paths: string[]; lightboxClassName?: string }) {
+export function Gallery({ paths, lightboxClassName = "", featuredTop = false }: {
+  paths: string[];
+  lightboxClassName?: string;
+  featuredTop?: boolean;
+}) {
   const [selected, setSelected] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -34,7 +38,7 @@ export function Gallery({ paths, lightboxClassName = "" }: { paths: string[]; li
 
   return (
     <>
-      <div className="gallery-grid">
+      <div className={featuredTop ? "gallery-grid gallery-grid--featured-top" : "gallery-grid"}>
         {paths.map((path, index) => (
           <button
             key={path}

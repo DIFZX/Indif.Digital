@@ -4,6 +4,13 @@ import { useEffect, useState } from "react";
 
 type Remaining = { days: number; hours: number; minutes: number; seconds: number };
 
+const indonesianUnits: Record<keyof Remaining, string> = {
+  days: "Hari",
+  hours: "Jam",
+  minutes: "Menit",
+  seconds: "Detik",
+};
+
 function getRemaining(target: number): Remaining {
   const distance = Math.max(0, target - Date.now());
   return {
@@ -14,7 +21,11 @@ function getRemaining(target: number): Remaining {
   };
 }
 
-export function Countdown({ eventDate, startsAt = `${eventDate}T08:00:00+07:00` }: { eventDate: string; startsAt?: string }) {
+export function Countdown({ eventDate, startsAt = `${eventDate}T08:00:00+07:00`, locale = "en" }: {
+  eventDate: string;
+  startsAt?: string;
+  locale?: "en" | "id";
+}) {
   const target = Date.parse(startsAt);
   const [remaining, setRemaining] = useState<Remaining | null>(null);
 
@@ -26,7 +37,7 @@ export function Countdown({ eventDate, startsAt = `${eventDate}T08:00:00+07:00` 
   return (
     <div className="countdown" aria-label="Hitung mundur acara">
       {Object.entries(remaining ?? { days: 0, hours: 0, minutes: 0, seconds: 0 }).map(([unit, value]) => (
-        <span key={unit}><strong>{String(value).padStart(2, "0")}</strong><small>{unit}</small></span>
+        <span key={unit}><strong>{String(value).padStart(2, "0")}</strong><small>{locale === "id" ? indonesianUnits[unit as keyof Remaining] : unit}</small></span>
       ))}
     </div>
   );

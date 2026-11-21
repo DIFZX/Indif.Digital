@@ -112,6 +112,8 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
   const musicPath = resolveMediaUrl(invitation.music_path);
   const events = getInvitationEvents(invitation);
   const independentVenues = Boolean(invitation.theme_overrides.reception_venue_name);
+  const namesOnly = invitation.theme_overrides.portrait_layout === "names-only";
+  const scheduleCards = independentVenues && invitation.theme_overrides.event_layout === "cards";
   const openingMark = theme.opening_mark ?? "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ";
   const greeting = theme.opening_greeting ?? "Assalamualaikum Warahmatullahi Wabarakatuh";
   const people = [
@@ -150,7 +152,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                 <div className="hero-medallion"><Image src={profilePath} alt="Foto pasangan" fill priority sizes="174px" /></div>
                 <h1>{coupleNames}</h1>
                 <p>{formatEventDate(invitation.event_date)}</p>
-                <a className="calendar-link" href={calendarUrl(invitation, events[0])} target="_blank" rel="noreferrer">＋ Simpan ke Google Calendar</a>
+                {!scheduleCards && <a className="calendar-link" href={calendarUrl(invitation, events[0])} target="_blank" rel="noreferrer">＋ Simpan ke Google Calendar</a>}
                 {guestName && <div className="guest-name"><small>Kepada Yth.</small><strong>{guestName}</strong></div>}
                 <a className="scroll-cue" href="#mempelai" aria-label="Lihat isi undangan"><i /></a>
                 <small className="scroll-label">Scroll down</small>
@@ -165,17 +167,17 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                 <p className="intro-copy">{invitation.opening_text}</p>
               </Reveal>
 
-              <div className="couple-stack">
+              <div className={namesOnly ? "couple-stack couple-stack--names" : "couple-stack"}>
                 {people.map((person, index) => (
                   <Fragment key={person.role}>
                     {index > 0 && <span className="ampersand">&</span>}
                     <Reveal direction={index ? "left" : "right"}>
                       <article className={`person-card ${person.role}-card`}>
-                        <div className="person-photo-wrap">
+                        {!namesOnly && <div className="person-photo-wrap">
                           <div className="person-photo"><Image src={person.photo} alt={person.name} fill sizes="210px" /></div>
                           <Image className={`person-flower ${person.role}-flower`} src={resolveMediaUrl(person.flower)} alt="" width={person.flowerSize} height={person.flowerSize} aria-hidden="true" />
-                        </div>
-                        <p className="eyebrow">{person.label}</p>
+                        </div>}
+                        {!namesOnly && <p className="eyebrow">{person.label}</p>}
                         <h2>{person.name}</h2>
                         <small>{person.parents}</small>
                       </article>
@@ -215,19 +217,26 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
 
             <Wave flip />
 
-            <section className="section event-section" id="acara">
-              <Reveal><p className="eyebrow light">Moment bahagia</p><h2>{formatEventDate(invitation.event_date)}</h2><Countdown eventDate={invitation.event_date} startsAt={events[0].startsAt} /></Reveal>
+            <section className={scheduleCards ? "section event-section event-section--cards" : "section event-section"} id="acara">
+              <Reveal>
+                <p className="eyebrow light">{scheduleCards ? "Jadwal Pernikahan" : "Moment bahagia"}</p>
+                <h2>{formatEventDate(invitation.event_date)}</h2>
+                <Countdown eventDate={invitation.event_date} startsAt={events[0].startsAt} locale={scheduleCards ? "id" : "en"} />
+              </Reveal>
               <div className={`event-grid${independentVenues ? " event-grid-with-venues" : ""}`}>
                 {events.map((event, index) => (
                   <Reveal key={event.id} direction={index ? "left" : "right"}>
                     <article className="event-card">
-                      <span>{event.label}</span><strong>{event.time}</strong>
+                      {scheduleCards ? <h3>{event.label}</h3> : <span>{event.label}</span>}
+                      <strong>{event.time}</strong>
                       {independentVenues && (
                         <div className="venue-card">
-                          <h3>{event.venue}</h3>
+                          {scheduleCards ? <h4>{event.venue}</h4> : <h3>{event.venue}</h3>}
                           <p>{event.address}</p>
-                          {event.mapsUrl && <a className="button outline" href={event.mapsUrl} target="_blank" rel="noreferrer" aria-label={`Lihat Google Maps untuk ${event.label}`}>Lihat Google Maps</a>}
-                          {event.startsAt && event.endsAt && <a className="calendar-link" href={calendarUrl(invitation, event)} target="_blank" rel="noreferrer">Simpan ke Google Calendar</a>}
+                          <div className={scheduleCards ? "event-actions" : undefined}>
+                            {event.mapsUrl && <a className="button outline" href={event.mapsUrl} target="_blank" rel="noreferrer" aria-label={`Lihat Google Maps untuk ${event.label}`}>Lihat Google Maps</a>}
+                            {event.startsAt && event.endsAt && <a className="calendar-link" href={calendarUrl(invitation, event)} target="_blank" rel="noreferrer" aria-label={`Simpan ${event.label} ke Google Calendar`}>{scheduleCards ? "Simpan Kalender" : "Simpan ke Google Calendar"}</a>}
+                          </div>
                         </div>
                       )}
                     </article>
@@ -249,7 +258,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
             {galleryPaths.length > 0 && (
               <section className="section gallery-section" id="galeri">
                 <Reveal><p className="eyebrow">Galeri</p><h2>Sepenggal kisah kami</h2></Reveal>
-                <Reveal delay={100}><Gallery paths={galleryPaths} /></Reveal>
+                <Reveal delay={100}><Gallery paths={galleryPaths} featuredTop={invitation.theme_overrides.gallery_layout === "featured-top"} /></Reveal>
               </section>
             )}
 
