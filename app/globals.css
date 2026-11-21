@@ -1019,6 +1019,19 @@ footer h2 {
 .event-card strong {
   font-size: 0.82rem;
 }
+.event-grid.event-grid-with-venues {
+  grid-template-columns: 1fr;
+}
+.event-grid-with-venues .reveal + .reveal {
+  border-left: 0;
+  border-top: 1px solid #ffffff30;
+}
+.event-grid-with-venues .venue-card {
+  margin: 0 auto 0.5rem;
+}
+.event-grid-with-venues .calendar-link {
+  display: block;
+}
 .venue-card {
   margin: 2rem auto 1rem;
 }

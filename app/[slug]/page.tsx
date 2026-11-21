@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InvitationView } from "@/components/invitation-view";
 import { InvitationViewTracker } from "@/components/invitation-view-tracker";
+import { formatCoupleNames } from "@/lib/invitation-display";
 import { getGreetings, getInvitation } from "@/lib/invitations";
 
 type PageProps = {
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!invitation) return { title: "Undangan tidak ditemukan" };
 
   return {
-    title: `${invitation.bride_short_name} & ${invitation.groom_short_name}`,
+    title: formatCoupleNames(invitation),
     description: invitation.opening_text,
   };
 }

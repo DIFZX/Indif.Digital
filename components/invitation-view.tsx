@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Fragment } from "react";
 import { Countdown } from "@/components/countdown";
 import { FloatingNav } from "@/components/floating-nav";
 import { Gallery } from "@/components/gallery";
@@ -16,6 +17,7 @@ import { RoyalMaroonInvitationView } from "@/components/templates/royal-maroon/r
 import { BlushRoseInvitationView } from "@/components/templates/blush-rose/blush-rose-invitation";
 import { AdventureWeddingPixelInvitation } from "@/components/templates/adventure-wedding-pixel/adventure-wedding-pixel-invitation";
 import { BRAND } from "@/lib/brand";
+import { formatCoupleNames, getInvitationEvents } from "@/lib/invitation-display";
 import { resolveMediaUrl } from "@/lib/media";
 import type { Greeting, Invitation } from "@/lib/types";
 
@@ -42,17 +44,19 @@ function formatEventDate(value: string) {
   }).format(new Date(`${value}T12:00:00+07:00`));
 }
 
-function calendarUrl(invitation: Invitation) {
+function calendarUrl(invitation: Invitation, event: ReturnType<typeof getInvitationEvents>[number]) {
   const start = invitation.event_date.replaceAll("-", "");
   const endDate = new Date(`${invitation.event_date}T12:00:00Z`);
   endDate.setUTCDate(endDate.getUTCDate() + 1);
   const end = endDate.toISOString().slice(0, 10).replaceAll("-", "");
+  const timed = event.startsAt && event.endsAt;
+  const calendarTimestamp = (iso: string) => new Date(iso).toISOString().replace(/[-:]|\.\d+/g, "");
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: `Pernikahan ${invitation.bride_short_name} & ${invitation.groom_short_name}`,
-    dates: `${start}/${end}`,
+    text: `${timed ? event.label : "Pernikahan"} ${formatCoupleNames(invitation)}`,
+    dates: timed ? `${calendarTimestamp(event.startsAt)}/${calendarTimestamp(event.endsAt)}` : `${start}/${end}`,
     details: invitation.opening_text,
-    location: `${invitation.venue_name}, ${invitation.venue_address}`,
+    location: `${event.venue}, ${event.address}`,
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
@@ -97,7 +101,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
     "--paper": theme.background ?? "#f5f1e8",
     "--intro-background-image": `url("${resolveMediaUrl(INTRO_BACKGROUND_PATH)}")`,
   } as React.CSSProperties;
-  const coupleNames = `${invitation.bride_short_name} & ${invitation.groom_short_name}`;
+  const coupleNames = formatCoupleNames(invitation);
   const coverPath = resolveMediaUrl(invitation.cover_path);
   const profilePath = resolveMediaUrl(invitation.profile_path ?? invitation.cover_path);
   const bridePhotoPath = resolveMediaUrl(invitation.bride_photo_path ?? invitation.cover_path);
@@ -106,6 +110,15 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
   const showcaseImages = galleryPaths.length > 0 ? galleryPaths : [coverPath];
   const storyImagePath = resolveMediaUrl(invitation.story_image_path) ?? showcaseImages[1] ?? coverPath;
   const musicPath = resolveMediaUrl(invitation.music_path);
+  const events = getInvitationEvents(invitation);
+  const independentVenues = Boolean(invitation.theme_overrides.reception_venue_name);
+  const openingMark = theme.opening_mark ?? "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ";
+  const greeting = theme.opening_greeting ?? "Assalamualaikum Warahmatullahi Wabarakatuh";
+  const people = [
+    { role: "bride", label: "The Bride", name: invitation.bride_name, parents: invitation.bride_parents, photo: bridePhotoPath, flower: BRIDE_FLOWER_PATH, flowerSize: 112 },
+    { role: "groom", label: "The Groom", name: invitation.groom_name, parents: invitation.groom_parents, photo: groomPhotoPath, flower: GROOM_FLOWER_PATH, flowerSize: 108 },
+  ];
+  if (invitation.theme_overrides.name_order === "groom-first") people.reverse();
 
   return (
     <InvitationExperience coupleNames={coupleNames} coverPath={coverPath} profilePath={profilePath} guestName={guestName} musicPath={musicPath} initiallyOpened={initiallyOpened}>
@@ -137,7 +150,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                 <div className="hero-medallion"><Image src={profilePath} alt="Foto pasangan" fill priority sizes="174px" /></div>
                 <h1>{coupleNames}</h1>
                 <p>{formatEventDate(invitation.event_date)}</p>
-                <a className="calendar-link" href={calendarUrl(invitation)} target="_blank" rel="noreferrer">＋ Simpan ke Google Calendar</a>
+                <a className="calendar-link" href={calendarUrl(invitation, events[0])} target="_blank" rel="noreferrer">＋ Simpan ke Google Calendar</a>
                 {guestName && <div className="guest-name"><small>Kepada Yth.</small><strong>{guestName}</strong></div>}
                 <a className="scroll-cue" href="#mempelai" aria-label="Lihat isi undangan"><i /></a>
                 <small className="scroll-label">Scroll down</small>
@@ -147,39 +160,32 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
             <section className="section intro" id="mempelai">
               <FlyingBirds />
               <Reveal>
-                <p className="arabic-mark">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
-                <p className="script greeting-script">Assalamualaikum Warahmatullahi Wabarakatuh</p>
+                {openingMark && <p className="arabic-mark">{openingMark}</p>}
+                {greeting && <p className="script greeting-script">{greeting}</p>}
                 <p className="intro-copy">{invitation.opening_text}</p>
               </Reveal>
 
               <div className="couple-stack">
-                <Reveal direction="right">
-                  <article className="person-card bride-card">
-                    <div className="person-photo-wrap">
-                      <div className="person-photo"><Image src={bridePhotoPath} alt={invitation.bride_name} fill sizes="210px" /></div>
-                      <Image className="person-flower bride-flower" src={resolveMediaUrl(BRIDE_FLOWER_PATH)} alt="" width={112} height={112} aria-hidden="true" />
-                    </div>
-                    <p className="eyebrow">The Bride</p>
-                    <h2>{invitation.bride_name}</h2>
-                    <small>{invitation.bride_parents}</small>
-                  </article>
-                </Reveal>
-                <span className="ampersand">&</span>
-                <Reveal direction="left">
-                  <article className="person-card groom-card">
-                    <div className="person-photo-wrap">
-                      <div className="person-photo"><Image src={groomPhotoPath} alt={invitation.groom_name} fill sizes="210px" /></div>
-                      <Image className="person-flower groom-flower" src={resolveMediaUrl(GROOM_FLOWER_PATH)} alt="" width={108} height={108} aria-hidden="true" />
-                    </div>
-                    <p className="eyebrow">The Groom</p>
-                    <h2>{invitation.groom_name}</h2>
-                    <small>{invitation.groom_parents}</small>
-                  </article>
-                </Reveal>
+                {people.map((person, index) => (
+                  <Fragment key={person.role}>
+                    {index > 0 && <span className="ampersand">&</span>}
+                    <Reveal direction={index ? "left" : "right"}>
+                      <article className={`person-card ${person.role}-card`}>
+                        <div className="person-photo-wrap">
+                          <div className="person-photo"><Image src={person.photo} alt={person.name} fill sizes="210px" /></div>
+                          <Image className={`person-flower ${person.role}-flower`} src={resolveMediaUrl(person.flower)} alt="" width={person.flowerSize} height={person.flowerSize} aria-hidden="true" />
+                        </div>
+                        <p className="eyebrow">{person.label}</p>
+                        <h2>{person.name}</h2>
+                        <small>{person.parents}</small>
+                      </article>
+                    </Reveal>
+                  </Fragment>
+                ))}
               </div>
             </section>
 
-            <section className="quote-section">
+            {invitation.quote_text && <section className="quote-section">
               <Reveal>
                 <Image
                   className="decorative-ornament quote-ornament"
@@ -193,11 +199,11 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                 <p>“{invitation.quote_text}”</p>
                 {invitation.quote_source && <cite>{invitation.quote_source}</cite>}
               </Reveal>
-            </section>
+            </section>}
 
-            <section className="section story-section">
+            {invitation.story.length > 0 && <section className="section story-section">
               <Reveal><p className="eyebrow">Kisah cinta</p><h2>Tumbuh dalam satu cerita</h2></Reveal>
-              <Reveal direction="scale" delay={120}><div className="story-image"><Image src={storyImagePath} alt="Intan dan Difa berlari bersama di taman" fill sizes="(max-width: 900px) 100vw, 520px" /></div></Reveal>
+              <Reveal direction="scale" delay={120}><div className="story-image"><Image src={storyImagePath} alt={`Foto ${coupleNames}`} fill sizes="(max-width: 900px) 100vw, 520px" /></div></Reveal>
               <div className="timeline">
                 {invitation.story.map((item, index) => (
                   <Reveal key={`${item.year}-${item.title}`} direction={index % 2 ? "left" : "right"} delay={index * 80}>
@@ -205,24 +211,37 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                   </Reveal>
                 ))}
               </div>
-            </section>
+            </section>}
 
             <Wave flip />
 
             <section className="section event-section" id="acara">
-              <Reveal><p className="eyebrow light">Moment bahagia</p><h2>{formatEventDate(invitation.event_date)}</h2><Countdown eventDate={invitation.event_date} /></Reveal>
-              <div className="event-grid">
-                <Reveal direction="right"><article className="event-card"><span>Akad</span><strong>{invitation.ceremony_time}</strong></article></Reveal>
-                <Reveal direction="left"><article className="event-card"><span>Resepsi</span><strong>{invitation.reception_time}</strong></article></Reveal>
+              <Reveal><p className="eyebrow light">Moment bahagia</p><h2>{formatEventDate(invitation.event_date)}</h2><Countdown eventDate={invitation.event_date} startsAt={events[0].startsAt} /></Reveal>
+              <div className={`event-grid${independentVenues ? " event-grid-with-venues" : ""}`}>
+                {events.map((event, index) => (
+                  <Reveal key={event.id} direction={index ? "left" : "right"}>
+                    <article className="event-card">
+                      <span>{event.label}</span><strong>{event.time}</strong>
+                      {independentVenues && (
+                        <div className="venue-card">
+                          <h3>{event.venue}</h3>
+                          <p>{event.address}</p>
+                          {event.mapsUrl && <a className="button outline" href={event.mapsUrl} target="_blank" rel="noreferrer" aria-label={`Lihat Google Maps untuk ${event.label}`}>Lihat Google Maps</a>}
+                          {event.startsAt && event.endsAt && <a className="calendar-link" href={calendarUrl(invitation, event)} target="_blank" rel="noreferrer">Simpan ke Google Calendar</a>}
+                        </div>
+                      )}
+                    </article>
+                  </Reveal>
+                ))}
               </div>
-              <Reveal>
+              {!independentVenues && <Reveal>
                 <div className="venue-card">
                   <Image className="venue-map-pin" src={resolveMediaUrl(MAP_PIN_PATH)} alt="" width={64} height={64} sizes="64px" aria-hidden="true" />
                   <h3>{invitation.venue_name}</h3>
                   <p>{invitation.venue_address}</p>
                 </div>
                 {invitation.maps_url && <a className="button outline" href={invitation.maps_url} target="_blank" rel="noreferrer">Lihat Google Maps</a>}
-              </Reveal>
+              </Reveal>}
             </section>
 
             <Wave />
@@ -234,7 +253,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
               </section>
             )}
 
-            <Reveal className="reveal-feature"><GiftCard gift={invitation.gift_info} /></Reveal>
+            {invitation.gift_info?.account_number && <Reveal className="reveal-feature"><GiftCard gift={invitation.gift_info} /></Reveal>}
             <Reveal className="reveal-feature" direction="scale"><Guestbook invitationId={invitation.id} initialGreetings={greetings} /></Reveal>
 
             <footer>
@@ -266,7 +285,7 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
               </Reveal>
             </footer>
           </main>
-          <FloatingNav />
+          <FloatingNav hasGallery={galleryPaths.length > 0} />
         </div>
       </div>
     </InvitationExperience>

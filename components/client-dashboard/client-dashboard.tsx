@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BRAND } from "@/lib/brand";
+import { formatCoupleNames, getCeremonyStartsAt, getInvitationEvents } from "@/lib/invitation-display";
 import { resolveMediaUrl } from "@/lib/media";
 import { DEFAULT_SHARE_MESSAGE, MAX_SHARE_MESSAGE_LENGTH, SHARE_MESSAGE_FIELDS, renderGuestShareMessage } from "@/lib/invitation-share-message";
 import { saveInvitationShareMessage } from "@/app/[slug]/dashboard/actions";
@@ -48,12 +49,15 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
     seconds: 0,
   });
 
-  const coupleNames = `${invitation.bride_short_name} & ${invitation.groom_short_name}`;
+  const coupleNames = formatCoupleNames(invitation);
+  const ceremonyStartsAt = getCeremonyStartsAt(invitation);
+  const events = getInvitationEvents(invitation, "Akad Nikah");
+  const separateVenues = Boolean(invitation.theme_overrides.reception_venue_name);
 
   // Countdown Calculation
   useEffect(() => {
     const calculateTime = () => {
-      const targetDate = new Date(`${invitation.event_date}T08:00:00+07:00`).getTime();
+      const targetDate = Date.parse(ceremonyStartsAt);
       const now = new Date().getTime();
       const difference = targetDate - now;
 
@@ -72,7 +76,7 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
     calculateTime();
     const interval = setInterval(calculateTime, 1000);
     return () => clearInterval(interval);
-  }, [invitation.event_date]);
+  }, [ceremonyStartsAt]);
 
   // Toast auto-hide
   const showToast = (message: string) => {
@@ -806,7 +810,7 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
             <div className={styles.sectionHeader}>
               <div>
                 <h1 className={styles.sectionTitle}>Rundown & Lokasi</h1>
-                <p className={styles.sectionSubtitle}>Detail acara pernikahan dan rekening hadiah digital</p>
+                <p className={styles.sectionSubtitle}>Detail jadwal dan lokasi pernikahan</p>
               </div>
             </div>
 
@@ -821,8 +825,7 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
                 <h3 className={styles.infoCardTitle}>Waktu Acara</h3>
               </div>
               <div className={styles.infoDetails}>
-                <div><strong>Akad Nikah:</strong> {invitation.ceremony_time}</div>
-                <div><strong>Resepsi:</strong> {invitation.reception_time}</div>
+                {events.map((event) => <div key={event.id}><strong>{event.label}:</strong> {event.time}</div>)}
                 <div><strong>Tanggal:</strong> {new Intl.DateTimeFormat("id-ID", { dateStyle: "full", timeZone: "Asia/Jakarta" }).format(new Date(invitation.event_date))}</div>
               </div>
             </div>
@@ -837,13 +840,13 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
                 </div>
                 <h3 className={styles.infoCardTitle}>Lokasi & Venue</h3>
               </div>
-              <div className={styles.infoDetails}>
-                <div><strong>{invitation.venue_name}</strong></div>
-                <div>{invitation.venue_address}</div>
-                {invitation.maps_url && (
+              {(separateVenues ? events : events.slice(0, 1)).map((event) => <div key={event.id} className={styles.infoDetails}>
+                <div><strong>{separateVenues && `${event.label} · `}{event.venue}</strong></div>
+                <div>{event.address}</div>
+                {event.mapsUrl && (
                   <div style={{ marginTop: "8px" }}>
                     <a
-                      href={invitation.maps_url}
+                      href={event.mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.btnPrimary}
@@ -853,10 +856,10 @@ export function ClientDashboard({ section: activeTab }: { section: DashboardSect
                     </a>
                   </div>
                 )}
-              </div>
+              </div>)}
             </div>
 
-            {invitation.gift_info && (
+            {Object.keys(invitation.gift_info ?? {}).length > 0 && (
               <div className={styles.infoCard}>
                 <div className={styles.infoCardHeader}>
                   <div className={styles.infoCardIcon}>

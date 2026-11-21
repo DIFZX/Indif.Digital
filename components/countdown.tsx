@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Remaining = { days: number; hours: number; minutes: number; seconds: number };
 
@@ -14,8 +14,8 @@ function getRemaining(target: number): Remaining {
   };
 }
 
-export function Countdown({ eventDate }: { eventDate: string }) {
-  const target = useMemo(() => new Date(`${eventDate}T08:00:00+07:00`).getTime(), [eventDate]);
+export function Countdown({ eventDate, startsAt = `${eventDate}T08:00:00+07:00` }: { eventDate: string; startsAt?: string }) {
+  const target = Date.parse(startsAt);
   const [remaining, setRemaining] = useState<Remaining | null>(null);
 
   useEffect(() => {

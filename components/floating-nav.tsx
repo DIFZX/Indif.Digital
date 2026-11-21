@@ -10,7 +10,7 @@ const links = [
   { id: "ucapan", label: "Ucapan", icon: "◌" },
 ];
 
-export function FloatingNav() {
+export function FloatingNav({ hasGallery = true }: { hasGallery?: boolean }) {
   const [active, setActive] = useState("home");
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function FloatingNav() {
 
   return (
     <nav className="bottom-nav" aria-label="Navigasi undangan">
-      {links.map((link) => (
+      {links.filter((link) => hasGallery || link.id !== "galeri").map((link) => (
         <a key={link.id} href={`#${link.id}`} className={active === link.id ? "is-active" : ""}>
           <span aria-hidden="true">{link.icon}</span>
           <small>{link.label}</small>

@@ -1,4 +1,5 @@
 import type { Invitation } from "@/lib/types";
+import { formatCoupleNames } from "@/lib/invitation-display";
 
 export const MAX_SHARE_MESSAGE_LENGTH = 6000;
 
@@ -28,7 +29,8 @@ Merupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.
 Salam hangat,
 *{nama_panggilan}*`;
 
-type ShareInvitation = Pick<Invitation, "bride_name" | "groom_name" | "bride_short_name" | "groom_short_name" | "event_date" | "venue_name">;
+type ShareInvitation = Pick<Invitation, "bride_name" | "groom_name" | "bride_short_name" | "groom_short_name" | "event_date" | "venue_name">
+  & Partial<Pick<Invitation, "theme_overrides">>;
 
 export function renderGuestShareMessage(
   template: string,
@@ -39,8 +41,8 @@ export function renderGuestShareMessage(
   if (!template.trim()) return "";
   const values: Record<string, string> = {
     nama_tamu: guestName.trim() || "[Nama Tamu]",
-    nama_mempelai: `${invitation.bride_name} & ${invitation.groom_name}`,
-    nama_panggilan: `${invitation.bride_short_name} & ${invitation.groom_short_name}`,
+    nama_mempelai: formatCoupleNames(invitation, true),
+    nama_panggilan: formatCoupleNames(invitation),
     tanggal: new Intl.DateTimeFormat("id-ID", { dateStyle: "full", timeZone: "Asia/Jakarta" }).format(new Date(`${invitation.event_date}T12:00:00+07:00`)),
     lokasi: invitation.venue_name,
     link_undangan: personalizedUrl,

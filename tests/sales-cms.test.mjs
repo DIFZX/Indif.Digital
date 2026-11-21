@@ -30,6 +30,7 @@ before(async () => {
     await db.exec(await migration(name));
   }
   await db.exec(await migration("20260820172612_add_greeting_attendance"));
+  await db.exec(await migration("20260820171050_enable_auto_approve_greetings"));
   await db.exec(await migration("20261019190000_secure_dashboard_and_add_views"));
   await db.exec(await migration("20261019210000_add_client_dashboard_magic_links"));
   await db.exec(await migration("20261108120000_add_private_share_message"));
@@ -596,8 +597,31 @@ test("Interactive migration publishes the category without changing other catalo
 });
 
 test("Pixel RSVP uses the real API handler, persists both attendance states, and is read only through its private dashboard token", async () => {
-  await db.exec(await migration("20260820171050_enable_auto_approve_greetings"));
-  const invitationId = "00000000-0000-0000-0000-000000000110";
+  await checkInvitationRSVP("00000000-0000-0000-0000-000000000110");
+});
+
+test("James & Dina uses a new Greeny Flowers record, a private dashboard, and the requested WITA schedule", async () => {
+  const content = JSON.parse(await readFile(new URL("../data/invitations/james-dan-dina.json", import.meta.url), "utf8"));
+  const { id: templateId } = (await db.query("select id from templates where slug = 'greeny-flowers'")).rows[0];
+  const { id: invitationId } = (await db.query(
+    "insert into invitations select (jsonb_populate_record((select i from invitations i where slug='intan-dan-difa'), $1)).* returning id",
+    [{ ...content, id: "00000000-0000-4000-8000-000000000111", template_id: templateId, status: "draft" }],
+  )).rows[0];
+  assert.equal((await asRole("anon", null, "select id from invitations where slug='james-dan-dina'")).rows.length, 0);
+  await db.query("update invitations set status = 'published' where id = $1", [invitationId]);
+  assert.equal((await asRole("anon", null, "select id from invitations where slug='james-dan-dina'")).rows[0].id, invitationId);
+
+  const display = await loadTs("lib/invitation-display.ts", {});
+  assert.equal(display.formatCoupleNames(content), "James & Dina");
+  assert.equal(new Date(display.getCeremonyStartsAt(content)).toISOString(), "2027-01-14T06:30:00.000Z");
+  assert.deepEqual(display.getInvitationEvents(content).map(({ label, venue, time }) => [label, venue, time]), [
+    ["Pemberkatan Nikah", "Efrata Church", "14.30–16.00 WITA"],
+    ["Resepsi", "Kediaman Mempelai Wanita", "17.00–19.00 WITA"],
+  ]);
+  await checkInvitationRSVP(invitationId);
+});
+
+async function checkInvitationRSVP(invitationId) {
   const sourceCount = (await db.query("select count(*)::int as count from rsvps where invitation_id<>$1", [invitationId])).rows[0].count;
   async function anonymousQuery(sql, params) {
     await db.exec("set role anon");
@@ -626,7 +650,7 @@ test("Pixel RSVP uses the real API handler, persists both attendance states, and
     },
   };
   const api = await loadTs("app/api/guest-response/route.ts", { "@/lib/supabase": { getSupabase: () => client } });
-  for (const [name, attendance, guestCount] of [["Pixel guest attending", "attending", 3], ["Pixel guest absent", "not_attending", 7]]) {
+  for (const [name, attendance, guestCount] of [["Test guest attending", "attending", 3], ["Test guest absent", "not_attending", 7]]) {
     const response = await api.POST(new Request("http://localhost/api/guest-response", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ invitationId, guestName: name, attendance, guestCount, message: `A real local SQL test for ${name}.` }) }));
     assert.equal(response.status, 201);
     assert.equal((await response.json()).greeting.guest_name, name);
@@ -643,7 +667,7 @@ test("Pixel RSVP uses the real API handler, persists both attendance states, and
   assert.equal(await loader.getInvitationDashboardData(invitationId, sundaKey, client), null);
   await assert.rejects(anonymousQuery("select * from rsvps", []), /permission denied/);
   assert.equal((await db.query("select count(*)::int as count from rsvps where invitation_id<>$1", [invitationId])).rows[0].count, sourceCount);
-});
+}
 
 test("Pixel movement normalizes diagonals, rejects obstacles, and exposes nearby destinations", async () => {
   const { advancePlayer, canWalk, nearestLocation, SPAWN } = await loadTs("components/templates/adventure-wedding-pixel/world.ts", {});
@@ -723,7 +747,9 @@ test("Pixel walk cycle alternates both steps and returns to standing", async () 
 });
 
 test("guest messages replace repeated markers once, preserve custom wording, and always include the personal link", async () => {
-  const { renderGuestShareMessage, DEFAULT_SHARE_MESSAGE } = await loadTs("lib/invitation-share-message.ts", {});
+  const { renderGuestShareMessage, DEFAULT_SHARE_MESSAGE } = await loadTs("lib/invitation-share-message.ts", {
+    "@/lib/invitation-display": await loadTs("lib/invitation-display.ts", {}),
+  });
   const invitation = { bride_name: "Bride Full", groom_name: "Groom Full", bride_short_name: "Bride", groom_short_name: "Groom", event_date: "2026-09-30", venue_name: "Wedding Venue" };
   const link = "https://inv.example.invalid/wedding?to=Keluarga%20%26%20Sahabat";
   const rendered = renderGuestShareMessage("Halo {nama_tamu}!\n{nama_tamu}, sampai jumpa di {lokasi}.\n{nama_mempelai}\n{nama_panggilan}\n{tanggal}\n{link_undangan}", invitation, "  Keluarga & Sahabat 💛  ", link);
@@ -771,7 +797,9 @@ test("share-message writes require the correct invitation key, stay private, and
 });
 
 test("share-message action validates input, authorizes every call, and saves the template returned by the private dashboard loader", async () => {
-  const { MAX_SHARE_MESSAGE_LENGTH } = await loadTs("lib/invitation-share-message.ts", {});
+  const { MAX_SHARE_MESSAGE_LENGTH } = await loadTs("lib/invitation-share-message.ts", {
+    "@/lib/invitation-display": await loadTs("lib/invitation-display.ts", {}),
+  });
   const invitation = (await db.query("select i.id,i.slug,a.access_token from invitations i join invitation_dashboard_access a on a.invitation_id=i.id where i.slug='adventure-wedding-pixel'")).rows[0];
   const access = await loadTs("lib/client-dashboard-access.ts", { "server-only": {}, "next/headers": {}, "next/navigation": {}, "@/lib/invitations": {}, "@/lib/supabase/server": {} });
   let cookieValue, calls = 0, verificationError = false;
