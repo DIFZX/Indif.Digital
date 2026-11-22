@@ -1,6 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element -- Original local pixel art has fixed dimensions and needs no image optimizer. */
+import { useEffect } from "react";
 import { PixelIcon } from "./pixel-panels";
 import styles from "./pixel.module.css";
 
@@ -16,6 +17,11 @@ export function PixelEntryLoading() {
 }
 
 export function PixelWelcome({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const timer = window.setTimeout(onClose, 5000);
+    return () => window.clearTimeout(timer);
+  }, [onClose]);
+
   return <aside className={styles.welcome} role="status" aria-label="Selamat datang">
     <button className={styles.welcomeClose} type="button" aria-label="Tutup petunjuk singkat" onClick={onClose}>×</button>
     <div className={styles.welcomeMain}>

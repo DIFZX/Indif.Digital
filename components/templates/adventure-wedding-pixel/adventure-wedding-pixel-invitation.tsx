@@ -52,6 +52,12 @@ export function AdventureWeddingPixelInvitation({ invitation: sourceInvitation, 
   }, [entering, ready, worldError]);
 
   useEffect(() => {
+    if (!welcome) return;
+    const timeout = window.setTimeout(() => setWelcome(false), 5000);
+    return () => window.clearTimeout(timeout);
+  }, [welcome]);
+
+  useEffect(() => {
     if (!animalMessage) return;
     const timeout = window.setTimeout(() => setAnimalMessage(null), 3200);
     return () => window.clearTimeout(timeout);
