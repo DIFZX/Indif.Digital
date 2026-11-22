@@ -65,9 +65,9 @@ function calendarUrl(invitation: Invitation, event: ReturnType<typeof getInvitat
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-function Wave({ flip = false }: { flip?: boolean }) {
+function Wave({ flip = false, className = "" }: { flip?: boolean; className?: string }) {
   return (
-    <div className={`wave-divider ${flip ? "is-flipped" : ""}`} aria-hidden="true">
+    <div className={`wave-divider ${flip ? "is-flipped" : ""} ${className}`.trim()} aria-hidden="true">
       <svg viewBox="0 0 1440 160" preserveAspectRatio="none"><path d="M0,96L60,90.7C120,85,240,75,360,80C480,85,600,107,720,112C840,117,960,107,1080,90.7C1200,75,1320,53,1380,42.7L1440,32L1440,160L0,160Z" /></svg>
     </div>
   );
@@ -191,7 +191,10 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
               </div>
             </section>
 
-            {invitation.quote_text && <section className="quote-section">
+            {invitation.quote_text && (
+              <>
+                <Wave className="wave-divider--quote" />
+                <section className="quote-section">
               <Reveal>
                 <Image
                   className="decorative-ornament quote-ornament"
@@ -205,7 +208,9 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                 <p>“{invitation.quote_text}”</p>
                 {invitation.quote_source && <cite>{invitation.quote_source}</cite>}
               </Reveal>
-            </section>}
+            </section>
+              </>
+            )}
 
             {invitation.story.length > 0 && <section className="section story-section">
               <Reveal><p className="eyebrow">Kisah cinta</p><h2>Tumbuh dalam satu cerita</h2></Reveal>

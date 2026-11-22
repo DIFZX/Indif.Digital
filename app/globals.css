@@ -497,6 +497,15 @@ button {
   height: 100%;
   fill: currentColor;
 }
+.wave-divider--quote {
+  position: relative;
+  z-index: 2;
+  height: 54px;
+  margin: 0 0 -4px;
+  color: #e3e8dc;
+  background: var(--paper);
+  pointer-events: none;
+}
 .wave-divider.is-flipped {
   margin: 0 0 -4px;
   color: var(--primary);
