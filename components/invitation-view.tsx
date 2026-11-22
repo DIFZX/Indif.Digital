@@ -182,7 +182,16 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
                           <Image className={`person-flower ${person.role}-flower`} src={resolveMediaUrl(person.flower)} alt="" width={person.flowerSize} height={person.flowerSize} aria-hidden="true" />
                         </div>}
                         <p className="eyebrow">{person.label}</p>
-                        <h2>{person.name}</h2>
+                        <h2>
+                          {typeof person.name === "string" && person.name.includes("\n")
+                            ? person.name.split("\n").map((part, i) => (
+                                <Fragment key={i}>
+                                  {i > 0 && <br />}
+                                  {part}
+                                </Fragment>
+                              ))
+                            : person.name}
+                        </h2>
                         <small>{person.parents}</small>
                       </article>
                     </Reveal>

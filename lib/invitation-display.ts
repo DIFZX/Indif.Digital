@@ -4,8 +4,8 @@ type Couple = Pick<Invitation, "bride_name" | "groom_name" | "bride_short_name" 
   & Partial<Pick<Invitation, "theme_overrides">>;
 
 export function formatCoupleNames(invitation: Couple, full = false) {
-  const bride = full ? invitation.bride_name : invitation.bride_short_name;
-  const groom = full ? invitation.groom_name : invitation.groom_short_name;
+  const bride = full ? invitation.bride_name?.replace(/\s*\n\s*/g, " ") : invitation.bride_short_name;
+  const groom = full ? invitation.groom_name?.replace(/\s*\n\s*/g, " ") : invitation.groom_short_name;
   return invitation.theme_overrides?.name_order === "groom-first" ? `${groom} & ${bride}` : `${bride} & ${groom}`;
 }
 

@@ -893,8 +893,9 @@ footer h2 {
   text-transform: uppercase;
 }
 .couple-stack--names-only h2 {
-  font-size: clamp(1.18rem, 3.8vw, 1.95rem);
-  line-height: 1.22;
+  white-space: pre-line;
+  font-size: clamp(1.32rem, 4.2vw, 2.15rem);
+  line-height: 1.25;
   margin: 0.35rem 0 0.95rem;
   color: var(--primary);
   text-wrap: balance;
