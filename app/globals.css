@@ -1242,6 +1242,9 @@ footer h2 {
   grid-row: auto;
   aspect-ratio: 4 / 5;
 }
+.gallery-grid.gallery-grid--featured-top:has(> button:nth-child(2):last-child) button:first-child {
+  grid-column: auto;
+}
 .gallery-grid.gallery-grid--featured-top button img {
   object-fit: cover;
   object-position: center 25%;

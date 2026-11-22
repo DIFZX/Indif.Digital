@@ -616,7 +616,7 @@ test("James & Dina uses a new Greeny Flowers record, a private dashboard, and th
   assert.equal(new Date(display.getCeremonyStartsAt(content)).toISOString(), "2027-01-14T06:30:00.000Z");
   assert.deepEqual(display.getInvitationEvents(content).map(({ label, venue, time }) => [label, venue, time]), [
     ["Pemberkatan Nikah", "Efrata Church", "14.30–16.00 WITA"],
-    ["Resepsi", "Kediaman Mempelai Wanita", "17.00–19.00 WITA"],
+    ["Resepsi", "Efrata Church", "17.00–19.00 WITA"],
   ]);
   await checkInvitationRSVP(invitationId);
 });
