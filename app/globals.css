@@ -880,8 +880,8 @@ footer h2 {
   margin: 1.5rem auto 3.5rem;
 }
 .couple-stack--names-only .person-card {
-  width: min(400px, 92vw);
-  padding: 1.25rem 1rem;
+  width: min(620px, 96vw);
+  padding: 1.25rem 0.5rem;
 }
 .couple-stack--names-only .eyebrow {
   display: block;
@@ -893,7 +893,7 @@ footer h2 {
   text-transform: uppercase;
 }
 .couple-stack--names-only h2 {
-  font-size: clamp(2rem, 6.5vw, 2.35rem);
+  font-size: clamp(1.18rem, 3.8vw, 1.95rem);
   line-height: 1.22;
   margin: 0.35rem 0 0.95rem;
   color: var(--primary);
@@ -901,7 +901,7 @@ footer h2 {
 }
 .couple-stack--names-only small {
   display: block;
-  max-width: 35ch;
+  max-width: 44ch;
   margin: 0 auto;
   font-size: 0.9rem;
   line-height: 1.75;
