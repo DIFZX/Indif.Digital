@@ -51,7 +51,7 @@ export type Invitation = {
   gallery_paths: string[];
   music_path: string | null;
   gift_info: GiftInfo;
-  theme_overrides: Record<string, string>;
+  theme_overrides: Record<string, any>;
   closing_text: string;
   closing_greeting: string;
   template: InvitationTemplate;

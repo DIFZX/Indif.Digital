@@ -2,7 +2,7 @@
   "slug": "james-dan-dina",
   "bride_name": "Dina Elika Aprilliya, S.Tr.Kes",
   "bride_short_name": "Dina",
-  "bride_parents": "Putri kedua dari dua bersaudara, putri Pdt. Sujak Iko dan Pdt. Dianawati",
+  "bride_parents": "Putri kedua dari dua bersaudara, putri Pdt. Sujak Iko & Pdt. Dianawati",
   "bride_photo_path": null,
   "groom_name": "James Ronaldho Siahaan,\nS.Kom., S.H.",
   "groom_short_name": "James",
@@ -41,7 +41,12 @@
     "reception_venue_address": "Dusun Serba Mutiara 1 No 4, Desa Luar, Kecamatan Alas, Kabupaten Sumbawa-NTB",
     "reception_maps_url": "https://maps.app.goo.gl/LJRE7QhwyiWrEAJL8?g_st=iw",
     "reception_starts_at": "2027-01-14T17:00:00+08:00",
-    "reception_ends_at": "2027-01-14T19:00:00+08:00"
+    "reception_ends_at": "2027-01-14T19:00:00+08:00",
+    "vendors": [
+      "Catering Haja Tini",
+      "Tinalovastel",
+      "Talula Photography"
+    ]
   },
   "closing_text": "Terima kasih atas kehadiran dan doa restu Bapak/Ibu/Saudara/i pada hari bahagia kami.",
   "closing_greeting": "Salam hangat"

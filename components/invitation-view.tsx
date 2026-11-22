@@ -118,6 +118,12 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
   const independentVenues = Boolean(invitation.theme_overrides.reception_venue_name);
   const namesOnly = invitation.theme_overrides.portrait_layout === "names-only";
   const scheduleCards = independentVenues && invitation.theme_overrides.event_layout === "cards";
+  const rawVendors = (invitation as any).vendors ?? invitation.theme_overrides?.vendors;
+  const vendors: string[] = Array.isArray(rawVendors)
+    ? rawVendors
+    : typeof rawVendors === "string"
+      ? rawVendors.split(/,\s*/).map((s: string) => s.trim()).filter(Boolean)
+      : [];
   const openingMark = theme.opening_mark ?? "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ";
   const greeting = theme.opening_greeting ?? "Assalamualaikum Warahmatullahi Wabarakatuh";
   const people = [
@@ -277,6 +283,22 @@ function GreenyInvitationView({ invitation, greetings, guestName, initiallyOpene
               <section className="section gallery-section" id="galeri">
                 <Reveal><p className="eyebrow">Galeri</p><h2>Sepenggal kisah kami</h2></Reveal>
                 <Reveal delay={100}><Gallery paths={galleryPaths} featuredTop={invitation.theme_overrides.gallery_layout === "featured-top"} /></Reveal>
+              </section>
+            )}
+
+            {vendors.length > 0 && (
+              <section className="section vendor-section" id="vendor">
+                <Reveal>
+                  <p className="eyebrow">Wedding Partner</p>
+                  <h2>Our Vendor</h2>
+                  <div className="vendor-list">
+                    {vendors.map((vendor, index) => (
+                      <div key={index} className="vendor-item">
+                        {vendor}
+                      </div>
+                    ))}
+                  </div>
+                </Reveal>
               </section>
             )}
 
