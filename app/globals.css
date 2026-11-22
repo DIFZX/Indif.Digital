@@ -1547,25 +1547,38 @@ footer small {
 }
 .bottom-nav a {
   display: grid;
-  gap: 0.12rem;
+  gap: 0.2rem;
   justify-items: center;
-  padding: 0.3rem 0.15rem;
+  padding: 0.38rem 0.15rem 0.32rem;
   color: #738076;
   text-decoration: none;
   transition:
     color 0.2s,
     transform 0.2s;
 }
-.bottom-nav a > span {
-  font-size: 1.1rem;
-  line-height: 1;
+.bottom-nav a svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.2s, transform 0.2s;
 }
 .bottom-nav a small {
-  font-size: 0.57rem;
+  font-size: 0.62rem;
+  font-weight: 550;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
 }
 .bottom-nav a.is-active {
   color: var(--primary);
   transform: translateY(-2px);
+}
+.bottom-nav a.is-active svg {
+  stroke: var(--primary);
 }
 
 @media (max-width: 959px) {
