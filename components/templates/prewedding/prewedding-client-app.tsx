@@ -543,7 +543,12 @@ export function PreweddingClientApp({
               <WatermarkCrest />
               <Reveal direction="up">
                 <div className={styles.quoteCard}>
-                  <CardFloralAccent flowerPath={flowerPath} position="top-right" size={78} />
+                  <CardFloralAccent
+                    flowerPath={flowerPath}
+                    position="top-right"
+                    size={58}
+                    style={{ top: "-22px", right: "-16px" }}
+                  />
                   <p className={styles.quoteText}>&ldquo;{invitation.quote_text}&rdquo;</p>
                   <span className={styles.quoteSurah}>{invitation.quote_source}</span>
                 </div>
@@ -687,7 +692,12 @@ export function PreweddingClientApp({
                 {/* Akad Nikah */}
                 <Reveal direction="left" delay={100}>
                   <div className={styles.eventCard}>
-                    <CardFloralAccent flowerPath={flowerPath} position="top-right" size={78} />
+                    <CardFloralAccent
+                      flowerPath={flowerPath}
+                      position="top-right"
+                      size={62}
+                      style={{ top: "-18px", right: "-14px" }}
+                    />
                     <span className={styles.eventCardBadge}>Akad Nikah</span>
                     <h3 className={styles.eventTitle}>Akad Nikah</h3>
                     <p className={styles.eventDate}>{formatEventDate(invitation.event_date)}</p>
@@ -719,7 +729,12 @@ export function PreweddingClientApp({
                 {/* Resepsi */}
                 <Reveal direction="right" delay={200}>
                   <div className={styles.eventCard}>
-                    <CardFloralAccent flowerPath={flowerPath} position="top-right" size={78} />
+                    <CardFloralAccent
+                      flowerPath={flowerPath}
+                      position="top-right"
+                      size={62}
+                      style={{ top: "-18px", right: "-14px" }}
+                    />
                     <span className={styles.eventCardBadge}>Resepsi</span>
                     <h3 className={styles.eventTitle}>Resepsi Pernikahan</h3>
                     <p className={styles.eventDate}>{formatEventDate(invitation.event_date)}</p>
@@ -915,7 +930,12 @@ export function PreweddingClientApp({
                   return (
                     <Reveal key={key} direction="up" delay={idx * 100}>
                       <div className={styles.giftCard}>
-                        <CardFloralAccent flowerPath={flowerPath} position="top-right" size={72} />
+                        <CardFloralAccent
+                          flowerPath={flowerPath}
+                          position="top-right"
+                          size={60}
+                          style={{ top: "-18px", right: "-14px" }}
+                        />
                         <span className={styles.bankBadge}>{account.bank || "BANK"}</span>
                         <h4 className={styles.accountNumber}>{account.account_number}</h4>
                         <p className={styles.accountHolder}>a.n {account.account_name}</p>
@@ -948,7 +968,12 @@ export function PreweddingClientApp({
                 {giftAddress && (
                   <Reveal direction="up" delay={200}>
                     <div className={styles.giftAddressCard}>
-                      <CardFloralAccent flowerPath={flowerPath} position="top-right" size={68} />
+                      <CardFloralAccent
+                        flowerPath={flowerPath}
+                        position="top-right"
+                        size={60}
+                        style={{ top: "-18px", right: "-14px" }}
+                      />
                       <h4 className={styles.giftAddressTitle}>Kirim Kado Fisik</h4>
                       <p className={styles.giftAddressText}>{giftAddress}</p>
                       <button
@@ -996,7 +1021,12 @@ export function PreweddingClientApp({
               {/* RSVP Form */}
               <Reveal direction="up">
                 <form className={styles.rsvpForm} onSubmit={handleSubmitRsvp}>
-                  <CardFloralAccent flowerPath={flowerPath} position="top-right" size={80} />
+                  <CardFloralAccent
+                    flowerPath={flowerPath}
+                    position="top-right"
+                    size={62}
+                    style={{ top: "-18px", right: "-14px" }}
+                  />
 
                   {statusMessage && (
                     <div

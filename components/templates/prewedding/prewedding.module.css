@@ -765,7 +765,7 @@
   background: var(--pw-bg-card);
   border: 1px solid var(--pw-border);
   border-radius: 20px;
-  padding: 34px 26px;
+  padding: 48px 34px 34px;
   text-align: center;
   box-shadow: var(--pw-card-shadow);
   position: relative;
