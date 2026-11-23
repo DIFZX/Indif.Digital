@@ -1,0 +1,259 @@
+.showcaseWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
+  user-select: none;
+}
+
+.stageContainer {
+  position: relative;
+  width: 100%;
+  height: clamp(470px, 62vw, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1300px;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.isDragging {
+  cursor: grabbing;
+}
+
+.stagePerspective {
+  position: relative;
+  width: clamp(210px, 30vw, 270px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* Individual Phone Card */
+.phoneCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  margin-top: clamp(-220px, -29vw, -270px);
+  margin-left: -50%;
+  transform-origin: center center;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 380ms ease,
+              filter 380ms ease;
+  will-change: transform, opacity;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.isDragging .phoneCard {
+  transition: none; /* instant tracking while dragging */
+}
+
+/* Realistic Smartphone Device Shell */
+.phoneDevice {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 18.2;
+  border-radius: clamp(30px, 3.8vw, 42px);
+  background: #09090b;
+  border: 4px solid #27272a;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65),
+              0 0 0 1px rgba(255, 255, 255, 0.12),
+              inset 0 0 0 1.5px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  transition: box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.cardCenter:hover .phoneDevice {
+  box-shadow: 0 32px 64px -14px rgba(0, 0, 0, 0.8),
+              0 0 0 1.5px var(--sf-border-hover, rgba(255, 255, 255, 0.35));
+}
+
+/* Dynamic Island Notch */
+.phoneIsland {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28%;
+  height: 16px;
+  background: #000000;
+  border-radius: 999px;
+  z-index: 20;
+  box-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Phone Screen Area */
+.phoneScreen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #18181b;
+}
+
+.phoneImage {
+  object-fit: cover;
+  object-position: top center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Phone Home Indicator Bar */
+.phoneHomeBar {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+}
+
+/* Peeking label on side cards */
+.peekingLabel {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sf-text-muted, #71717a);
+  opacity: 0.85;
+}
+
+/* Controls (Arrows & Dots) */
+.controlsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  z-index: 10;
+}
+
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--sf-border, rgba(255, 255, 255, 0.18));
+  background: var(--sf-bg-surface, rgba(255, 255, 255, 0.06));
+  color: var(--sf-text-primary, #ffffff);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.navButton:hover {
+  background: var(--sf-text-primary, #ffffff);
+  color: var(--sf-bg, #000000);
+  border-color: var(--sf-text-primary, #ffffff);
+  transform: scale(1.06);
+}
+
+.dotsContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--sf-border, rgba(255, 255, 255, 0.25));
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 250ms ease;
+}
+
+.dotActive {
+  width: 22px;
+  background: var(--sf-text-primary, #ffffff);
+}
+
+/* Caption Section Matching Reference Screenshot */
+.captionSection {
+  margin-top: 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.templateTag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sf-text-muted, #888888);
+}
+
+.captionHeading {
+  margin: 0;
+  font-family: var(--font-serif, "Playfair Display", Georgia, serif);
+  font-size: clamp(1.45rem, 2.5vw, 1.85rem);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--sf-text-primary, #ffffff);
+  letter-spacing: -0.01em;
+}
+
+.previewAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--sf-text-secondary, #a1a1aa);
+  text-decoration: none;
+  transition: color 200ms ease, transform 200ms ease;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.previewAction:hover {
+  color: var(--sf-text-primary, #ffffff);
+  border-color: var(--sf-border, rgba(255, 255, 255, 0.2));
+  transform: translateY(-1px);
+}
+
+.captionSub {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--sf-text-muted, #71717a);
+}
+
+@media (max-width: 640px) {
+  .stageContainer {
+    height: 450px;
+  }
+  .stagePerspective {
+    width: 200px;
+  }
+  .phoneCard {
+    margin-top: -202px;
+  }
+  .controlsRow {
+    margin-top: 1rem;
+  }
+  .captionSection {
+    margin-top: 1rem;
+  }
+}

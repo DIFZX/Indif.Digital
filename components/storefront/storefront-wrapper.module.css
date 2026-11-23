@@ -1,0 +1,58 @@
+.storefrontRoot {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  transition: background-color 300ms ease, color 300ms ease;
+  overflow-x: hidden;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "Segoe UI", Roboto, sans-serif);
+}
+
+/* ─── DARK THEME TOKENS (Default Monochrome Luxury) ─── */
+.storefrontRoot[data-theme="dark"] {
+  --sf-bg: #09090b;
+  --sf-bg-surface: #121214;
+  --sf-bg-surface-elevated: #18181b;
+  --sf-border: rgba(255, 255, 255, 0.12);
+  --sf-border-hover: rgba(255, 255, 255, 0.32);
+  --sf-text-primary: #ffffff;
+  --sf-text-secondary: #a1a1aa;
+  --sf-text-muted: #71717a;
+  --sf-btn-primary-bg: #ffffff;
+  --sf-btn-primary-text: #09090b;
+  --sf-btn-secondary-bg: rgba(255, 255, 255, 0.08);
+  --sf-btn-secondary-text: #ffffff;
+  --sf-btn-secondary-border: rgba(255, 255, 255, 0.2);
+  --sf-tag-bg: rgba(255, 255, 255, 0.06);
+  --sf-tag-border: rgba(255, 255, 255, 0.14);
+  --sf-discount-bg: #e11d48;
+  --sf-nav-bg: rgba(9, 9, 11, 0.82);
+  --sf-brand-filter: invert(1);
+  --sf-card-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.65);
+  background-color: var(--sf-bg);
+  color: var(--sf-text-primary);
+}
+
+/* ─── LIGHT THEME TOKENS (Clean Monochrome Luxury) ─── */
+.storefrontRoot[data-theme="light"] {
+  --sf-bg: #ffffff;
+  --sf-bg-surface: #f9f9fb;
+  --sf-bg-surface-elevated: #ffffff;
+  --sf-border: rgba(0, 0, 0, 0.1);
+  --sf-border-hover: rgba(0, 0, 0, 0.28);
+  --sf-text-primary: #09090b;
+  --sf-text-secondary: #52525b;
+  --sf-text-muted: #71717a;
+  --sf-btn-primary-bg: #09090b;
+  --sf-btn-primary-text: #ffffff;
+  --sf-btn-secondary-bg: #f4f4f5;
+  --sf-btn-secondary-text: #09090b;
+  --sf-btn-secondary-border: rgba(0, 0, 0, 0.14);
+  --sf-tag-bg: rgba(0, 0, 0, 0.04);
+  --sf-tag-border: rgba(0, 0, 0, 0.1);
+  --sf-discount-bg: #be123c;
+  --sf-nav-bg: rgba(255, 255, 255, 0.88);
+  --sf-brand-filter: none;
+  --sf-card-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.08);
+  background-color: var(--sf-bg);
+  color: var(--sf-text-primary);
+}
