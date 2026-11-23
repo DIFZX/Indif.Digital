@@ -58,6 +58,7 @@
   max-width: 1500px;
   margin: 0 auto;
   padding-inline: clamp(20px, 4vw, 64px);
+  padding-top: clamp(80px, 9vw, 96px);
 }
 
 .heroGrid {

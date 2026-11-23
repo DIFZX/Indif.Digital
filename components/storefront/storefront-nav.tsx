@@ -41,9 +41,6 @@ export function StorefrontNav() {
             <a className={styles.navLink} href="#templates">
               Template
             </a>
-            <a className={styles.navLink} href="#kelebihan">
-              Kelebihan
-            </a>
           </div>
 
           <div className={styles.socialButtonsGroup}>

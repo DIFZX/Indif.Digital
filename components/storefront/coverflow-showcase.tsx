@@ -215,33 +215,24 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
             return (
               <div
                 key={template.id}
-                className={`${styles.phoneCard} ${posClass}`}
+                className={`${styles.mockupCard} ${posClass}`}
                 style={cardStyle}
                 onClick={handleCardClick}
                 role="button"
                 tabIndex={isCenter ? 0 : -1}
                 aria-label={`Pilih mockup template ${template.name}`}
               >
-                {/* Realistic Phone Shell */}
-                <div className={styles.phoneDevice}>
-                  {/* Speaker / Dynamic Island Top Notch */}
-                  <div className={styles.phoneIsland} aria-hidden="true" />
-                  
-                  {/* Phone Screen Mockup Content */}
-                  <div className={styles.phoneScreen}>
-                    <Image
-                      src={thumbnailSrc}
-                      alt={`Mockup template ${template.name}`}
-                      fill
-                      sizes="(max-width: 640px) 280px, (max-width: 1024px) 340px, 380px"
-                      className={styles.phoneImage}
-                      priority={idx === initialIndex}
-                      draggable={false}
-                    />
-                  </div>
-
-                  {/* Phone Home Swipe Bar */}
-                  <div className={styles.phoneHomeBar} aria-hidden="true" />
+                {/* Clean Mockup Frame ("Mockup Biasa") */}
+                <div className={styles.mockupFrame}>
+                  <Image
+                    src={thumbnailSrc}
+                    alt={`Mockup template ${template.name}`}
+                    fill
+                    sizes="(max-width: 640px) 290px, (max-width: 1024px) 360px, 420px"
+                    className={styles.mockupImage}
+                    priority={idx === initialIndex}
+                    draggable={false}
+                  />
                 </div>
 
                 {/* Peeking Template Label */}
@@ -254,21 +245,8 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
         </div>
       </div>
 
-      {/* Navigation Controls & Chevrons */}
+      {/* Navigation Dots ("Bola Putih") */}
       <div className={styles.controlsRow}>
-        <button
-          type="button"
-          onClick={goToPrev}
-          className={styles.navButton}
-          aria-label="Template sebelumnya"
-          title="Geser ke kiri"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-
-        {/* Dots Pagination */}
         <div className={styles.dotsContainer} role="tablist" aria-label="Daftar template showcase">
           {validTemplates.map((t, i) => (
             <button
@@ -281,18 +259,6 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
             />
           ))}
         </div>
-
-        <button
-          type="button"
-          onClick={goToNext}
-          className={styles.navButton}
-          aria-label="Template berikutnya"
-          title="Geser ke kanan"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
       </div>
 
       {/* Caption matching the user's reference screenshot */}
