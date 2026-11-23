@@ -439,13 +439,20 @@
 
 .coverArchFlower {
   position: absolute;
-  bottom: -24px;
-  right: -30px;
-  width: 125px;
-  height: 160px;
+  bottom: -8px;
+  right: -12px;
+  width: 46px;
+  height: 58px;
   z-index: 3;
   pointer-events: none;
-  filter: drop-shadow(0 8px 22px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.coverArchFlower img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  display: block;
 }
 
 .coverKicker {
@@ -844,25 +851,33 @@
 
 .personArchLily {
   position: absolute;
-  bottom: -18px;
-  right: -24px;
-  width: 105px;
-  height: 135px;
+  bottom: -4px;
+  right: -8px;
+  width: 44px;
+  height: 56px;
   z-index: 3;
   pointer-events: none;
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.18));
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.14));
+}
+
+.personArchLily img,
+.personArchLilyLeft img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  display: block;
 }
 
 .personArchLilyLeft {
   position: absolute;
-  bottom: -18px;
-  left: -24px;
-  width: 105px;
-  height: 135px;
+  bottom: -4px;
+  left: -8px;
+  width: 44px;
+  height: 56px;
   z-index: 3;
   pointer-events: none;
   transform: scaleX(-1);
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.18));
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.14));
 }
 
 .personRoleBadge {
