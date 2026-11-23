@@ -394,8 +394,8 @@ export function PreweddingClientApp({
                   <Image
                     src={flowerPath}
                     alt=""
-                    width={46}
-                    height={58}
+                    width={64}
+                    height={82}
                     style={{ objectFit: "contain", pointerEvents: "none" }}
                     priority
                   />
@@ -509,8 +509,8 @@ export function PreweddingClientApp({
                     <Image
                       src={flowerPath}
                       alt=""
-                      width={125}
-                      height={160}
+                      width={64}
+                      height={82}
                       style={{ objectFit: "contain", pointerEvents: "none" }}
                       priority
                     />
@@ -588,8 +588,8 @@ export function PreweddingClientApp({
                         <Image
                           src={flowerPath}
                           alt=""
-                          width={44}
-                          height={56}
+                          width={62}
+                          height={78}
                           style={{ objectFit: "contain", pointerEvents: "none" }}
                         />
                       </div>
@@ -639,8 +639,8 @@ export function PreweddingClientApp({
                         <Image
                           src={flowerPath}
                           alt=""
-                          width={44}
-                          height={56}
+                          width={62}
+                          height={78}
                           style={{ objectFit: "contain", pointerEvents: "none" }}
                         />
                       </div>
