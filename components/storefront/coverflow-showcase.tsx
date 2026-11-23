@@ -24,7 +24,7 @@ interface CoverflowShowcaseProps {
 
 export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: CoverflowShowcaseProps) {
   const validTemplates = useMemo(() => {
-    return templates.filter((t) => Boolean(t.preview_path));
+    return templates.filter((t) => Boolean(t.preview_path) && t.slug !== "adventure-wedding-pixel");
   }, [templates]);
 
   const initialIndex = useMemo(() => {
@@ -154,7 +154,7 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
             const isLeft = offset < 0;
             const isRight = offset > 0;
 
-            const thumbnailSrc = getTemplateThumbnail(template.slug, template.thumbnail_path);
+            const screenSrc = `/media/screens/${template.slug}.webp`;
 
             // Compute dynamic transform with drag offset
             const dragInfluence = isDragging ? dragOffset * 0.4 : 0;
@@ -215,24 +215,33 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
             return (
               <div
                 key={template.id}
-                className={`${styles.mockupCard} ${posClass}`}
+                className={`${styles.phoneCard} ${posClass}`}
                 style={cardStyle}
                 onClick={handleCardClick}
                 role="button"
                 tabIndex={isCenter ? 0 : -1}
                 aria-label={`Pilih mockup template ${template.name}`}
               >
-                {/* Clean Mockup Frame ("Mockup Biasa") */}
-                <div className={styles.mockupFrame}>
-                  <Image
-                    src={thumbnailSrc}
-                    alt={`Mockup template ${template.name}`}
-                    fill
-                    sizes="(max-width: 640px) 290px, (max-width: 1024px) 360px, 420px"
-                    className={styles.mockupImage}
-                    priority={idx === initialIndex}
-                    draggable={false}
-                  />
+                {/* Realistic Phone Device Shell (transparent background around it) */}
+                <div className={styles.phoneDevice}>
+                  {/* Dynamic Island Top Notch */}
+                  <div className={styles.phoneIsland} aria-hidden="true" />
+                  
+                  {/* Phone Screen showing the clean invitation */}
+                  <div className={styles.phoneScreen}>
+                    <Image
+                      src={screenSrc}
+                      alt={`Desain undangan ${template.name}`}
+                      fill
+                      sizes="(max-width: 640px) 260px, (max-width: 1024px) 320px, 360px"
+                      className={styles.phoneImage}
+                      priority={idx === initialIndex}
+                      draggable={false}
+                    />
+                  </div>
+
+                  {/* Phone Home Swipe Bar */}
+                  <div className={styles.phoneHomeBar} aria-hidden="true" />
                 </div>
 
                 {/* Peeking Template Label */}
