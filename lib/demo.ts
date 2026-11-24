@@ -2,35 +2,35 @@ import type { Greeting, GuestRSVP, Invitation } from "@/lib/types";
 
 export const demoInvitation: Invitation = {
   id: "00000000-0000-0000-0000-000000000101",
-  slug: "intan-dan-difa",
+  slug: "greeny-flowers",
   status: "published",
-  bride_name: "Intan",
-  bride_short_name: "Intan",
-  bride_parents: "Putri Alm. Bapak Soma & Ibu Heny",
+  bride_name: "Dita Maharani Putri",
+  bride_short_name: "Dita",
+  bride_parents: "Putri Pertama dari Bapak Anas Rifai & Ibu Kholifah",
   bride_photo_path: "/media/sunda-vibes/The Bride.jpg",
-  groom_name: "Difa",
-  groom_short_name: "Difa",
-  groom_parents: "Putra Bapak Sulaiman & Ibu Fitrotunisa",
+  groom_name: "Fajar Sidik",
+  groom_short_name: "Fajar",
+  groom_parents: "Putra Kedua dari Bapak M. Dawam & (Almh) Ibu Dewi Sudarwati",
   groom_photo_path: "/media/sunda-vibes/The Groom.jpg",
   event_date: "2026-12-12",
-  ceremony_time: "08.00 WIB",
-  reception_time: "11.00–14.00 WIB",
-  venue_name: "Gedung Islamic Centre Bekasi",
-  venue_address: "Jl. Ahmad Yani No.22, RT.005/RW.002, Marga Jaya, Kec. Bekasi Sel., Kota Bks, Jawa Barat 17141",
-  maps_url: "https://share.google/OUegQc3AUuqfbTELX",
+  ceremony_time: "08.00 WIB - Selesai",
+  reception_time: "11.00 WIB - Selesai",
+  venue_name: "Waroeng Djoglo Grand Ballroom",
+  venue_address: "Jl. Joglo Raya No. 45, Kembangan, Jakarta Barat",
+  maps_url: "https://maps.google.com/?q=Waroeng+Djoglo",
   opening_text:
-    "Dengan penuh syukur, kami mengundang Anda untuk hadir dan menjadi bagian dari hari bahagia kami.",
+    "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i serta kerabat sekalian untuk menghadiri acara pernikahan kami.",
   quote_text:
     "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.",
-  quote_source: "(Qs. Ar-Rum: 21)",
+  quote_source: "(QS. Ar-Rum : 21)",
   story: [
     {
-      year: "2023",
+      year: "2022",
       title: "Awal Cerita",
       text: "Berawal dari pertemuan sederhana, kami saling mengenal dan mulai berbagi banyak cerita. Tanpa disadari, kebersamaan itu tumbuh menjadi rasa nyaman yang semakin kuat dari hari ke hari.",
     },
     {
-      year: "2025",
+      year: "2024",
       title: "Lamaran",
       text: "Dengan niat yang tulus dan restu keluarga, kami memutuskan untuk melangkah ke tahap yang lebih serius. Momen lamaran menjadi awal dari perjalanan baru yang penuh harapan dan doa baik.",
     },
@@ -53,11 +53,15 @@ export const demoInvitation: Invitation = {
     "/media/sunda-vibes/The Groom.jpg",
   ],
   music_path: "/media/elegant/Bergema Selamanya.mp4",
-  gift_info: { bank: "BCA", account_number: "1234567890", account_name: "Intan" },
+  gift_info: {
+    bank: "BCA",
+    account_number: "7125091428",
+    account_name: "Fajar Sidik",
+  },
   theme_overrides: {},
   closing_text:
     "Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.",
-  closing_greeting: "Wassalamu'alaikum Wr. Wb",
+  closing_greeting: "Kami yang berbahagia, Dita & Fajar",
   template: {
     id: "00000000-0000-0000-0000-000000000001",
     slug: "greeny-flowers",
@@ -486,6 +490,16 @@ export const terracottaWarmthDemoInvitation: Invitation = {
   },
 };
 
+export const legacyIntanDifaDemoInvitation: Invitation = {
+  ...demoInvitation,
+  slug: "intan-dan-difa",
+};
+
+export const ditaDanFajarDemoInvitation: Invitation = {
+  ...demoInvitation,
+  slug: "dita-dan-fajar",
+};
+
 export const demoInvitations = [
   demoInvitation,
   pinkVibesDemoInvitation,
@@ -501,6 +515,8 @@ export const demoInvitations = [
   dustyRoseDemoInvitation,
   sageBotanicalDemoInvitation,
   terracottaWarmthDemoInvitation,
+  legacyIntanDifaDemoInvitation,
+  ditaDanFajarDemoInvitation,
 ];
 
 export const demoGreetings: Greeting[] = [

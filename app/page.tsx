@@ -41,7 +41,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     name: "Greeny Flowers",
     description: "Nuansa hijau yang lembut, detail bunga yang hangat, dan susunan elegan untuk kisah yang terasa dekat dan personal.",
     thumbnail_path: "/media/mockups/mockup-greeny-flowers.webp",
-    preview_path: "/intan-dan-difa?to=Tamu%20Undangan",
+    preview_path: "/greeny-flowers?to=Tamu%20Undangan",
     category: "minimalis",
     price: 70000,
     promo_price: 35000,

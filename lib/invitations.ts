@@ -18,25 +18,56 @@ const invitationSelect = `
 
 export async function getInvitation(slug: string): Promise<Invitation | null> {
   const supabase = getSupabase();
-  if (!supabase) return demoInvitations.find((invitation) => invitation.slug === slug) ?? null;
+  if (!supabase) {
+    return (
+      demoInvitations.find(
+        (invitation) =>
+          invitation.slug === slug ||
+          (slug === "greeny-flowers" && invitation.template?.slug === "greeny-flowers") ||
+          (slug === "intan-dan-difa" && invitation.template?.slug === "greeny-flowers"),
+      ) ?? null
+    );
+  }
 
-  const { data, error } = await supabase
-    .from("invitations")
-    .select(invitationSelect)
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single();
+  // Support both "greeny-flowers" and legacy "intan-dan-difa"
+  const candidateSlugs =
+    slug === "greeny-flowers"
+      ? ["greeny-flowers", "intan-dan-difa"]
+      : slug === "intan-dan-difa"
+        ? ["intan-dan-difa", "greeny-flowers"]
+        : [slug];
+
+  let record: any = null;
+  for (const s of candidateSlugs) {
+    const { data, error } = await supabase
+      .from("invitations")
+      .select(invitationSelect)
+      .eq("slug", s)
+      .eq("status", "published")
+      .single();
+
+    if (!error && data && data.template) {
+      record = data;
+      break;
+    }
+  }
 
   // Inactive catalogue templates can be hidden by RLS while the published
   // invitation is still readable. Use the known demo instead of rendering a
   // null template relation; custom invitations without a demo stay unavailable.
-  if (error || !data || !data.template) {
-    return demoInvitations.find((invitation) => invitation.slug === slug) ?? null;
+  if (!record) {
+    return (
+      demoInvitations.find(
+        (invitation) =>
+          invitation.slug === slug ||
+          (slug === "greeny-flowers" && invitation.template?.slug === "greeny-flowers") ||
+          (slug === "intan-dan-difa" && invitation.template?.slug === "greeny-flowers"),
+      ) ?? null
+    );
   }
-  const invitation = data as unknown as Invitation;
+  const invitation = record as unknown as Invitation;
   const preview = demoInvitations.find(
     (demo) =>
-      demo.slug === invitation.slug &&
       demo.template.slug === invitation.template.slug &&
       ["greeny-flowers", "pink-vibes", "blue-garden"].includes(demo.template.slug),
   );
