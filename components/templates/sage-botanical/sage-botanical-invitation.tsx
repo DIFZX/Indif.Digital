@@ -57,7 +57,7 @@ export function SageBotanicalInvitationView({
     <PreweddingClientApp
       themeClass={styles.themeSageBotanical}
       dividerIcon="🌿"
-      flowerPath="/media/prewedding/sage-botanical/sage-flower-cropped.png"
+      flowerPath="/media/prewedding/sage-botanical/sage-flower-v2.png"
       invitation={invitation}
       greetings={greetings}
       guestName={guestName}
