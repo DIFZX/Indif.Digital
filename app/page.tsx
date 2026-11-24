@@ -13,6 +13,7 @@ import { StorefrontWrapper } from "@/components/storefront/storefront-wrapper";
 import { StorefrontNav } from "@/components/storefront/storefront-nav";
 import { CoverflowShowcase } from "@/components/storefront/coverflow-showcase";
 import { FeatureHighlights } from "@/components/storefront/feature-highlights";
+import { FaqSection } from "@/components/storefront/faq-section";
 import catalogStyles from "./dashboard/dashboard.module.css";
 import styles from "./home.module.css";
 
@@ -295,6 +296,9 @@ export default async function HomePage() {
 
         {/* Template Catalog Grid */}
         <TemplateCatalog templates={templates} />
+
+        {/* Customer Help Center & FAQ Section */}
+        <FaqSection />
 
         {/* Modern Footer */}
         <footer className={styles.footer}>

@@ -66,6 +66,18 @@ export async function getInvitation(slug: string): Promise<Invitation | null> {
     );
   }
   const invitation = record as unknown as Invitation;
+
+  // Catalogue previews use the bundled photos even when their database rows
+  // still contain the original sample paths. Customer invitations (e.g. james-dan-dina)
+  // MUST keep their genuine photos and never be replaced with demo assets!
+  const isCataloguePreview = [
+    "greeny-flowers",
+    "pink-vibes",
+    "blue-garden",
+    "intan-dan-difa",
+  ].includes(invitation.slug);
+  if (!isCataloguePreview) return invitation;
+
   const preview = demoInvitations.find(
     (demo) =>
       demo.template.slug === invitation.template.slug &&
@@ -73,8 +85,6 @@ export async function getInvitation(slug: string): Promise<Invitation | null> {
   );
   if (!preview) return invitation;
 
-  // Catalogue previews use the bundled photos even when their database rows
-  // still contain the original sample paths. Customer invitations keep their photos.
   return {
     ...invitation,
     cover_path: preview.cover_path,
