@@ -244,12 +244,27 @@ export default async function HomePage() {
                 <a className={styles.primaryAction} href="#templates">
                   Temukan undangan kalian
                 </a>
-                <div className={styles.customConsultation}>
-                  <p className={styles.customService}>Jasa custom undangan</p>
-                  <a className={styles.textAction} href={orderUrl("undangan digital")} target="_blank" rel="noreferrer">
-                    Konsultasi via WhatsApp
-                  </a>
-                </div>
+                <a
+                  className={styles.customActionCard}
+                  href={orderUrl("jasa custom undangan (160 rb)")}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Konsultasi jasa custom undangan via WhatsApp"
+                >
+                  <div className={styles.customIconCircle} aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.074-1.89-.447-1.488-.616-2.434-2.122-2.508-2.222-.074-.099-.607-.808-.607-1.542 0-.734.385-1.096.522-1.245.137-.149.301-.186.402-.186.101 0 .202.001.29.006.094.004.22-.036.344.263.129.313.441 1.077.48 1.157.039.08.065.174.013.279-.052.105-.078.17-.156.26-.078.09-.163.201-.233.27-.078.077-.16.16-.068.318.092.158.408.673.876 1.09.602.536 1.11.702 1.268.78.158.078.25.069.344-.039.094-.108.402-.468.51-.628.108-.16.216-.134.364-.079.148.056.938.442 1.1.523.162.081.27.121.31.189.04.068.04.394-.104.799z"/>
+                      <path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.981-1.308A9.957 9.957 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.25c-1.637 0-3.155-.494-4.423-1.341l-.317-.213-3.076.807.821-3-.232-.369A8.204 8.204 0 013.75 12c0-4.549 3.701-8.25 8.25-8.25s8.25 3.701 8.25 8.25-3.701 8.25-8.25 8.25z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <div className={styles.customActionDetails}>
+                    <div className={styles.customActionHeading}>
+                      <span className={styles.customActionTitle}>Jasa custom undangan</span>
+                      <span className={styles.customPriceBadge}>hanya 160 rb</span>
+                    </div>
+                    <span className={styles.customActionSub}>Konsultasi via WhatsApp &rarr;</span>
+                  </div>
+                </a>
               </div>
               <p className={styles.heroNote}>Pilih desainnya. Jadikan milik kalian.</p>
             </div>

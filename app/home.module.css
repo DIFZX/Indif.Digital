@@ -122,23 +122,97 @@
   margin-top: 32px;
 }
 
-.customConsultation {
+.customActionCard {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--sf-border-hover, rgba(255, 255, 255, 0.22));
+  background: var(--sf-btn-secondary-bg, rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-decoration: none;
+  transition: all 220ms ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+}
+
+.customActionCard:hover {
+  background: var(--sf-btn-secondary-hover, rgba(255, 255, 255, 0.1));
+  border-color: var(--sf-text-primary, #ffffff);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.customIconCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, 0.15);
+  color: #25d366;
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  flex-shrink: 0;
+  transition: all 220ms ease;
+}
+
+.customActionCard:hover .customIconCircle {
+  background: #25d366;
+  color: #ffffff;
+  border-color: #25d366;
+  transform: scale(1.05);
+}
+
+.customActionDetails {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+  text-align: left;
 }
 
-.customService {
-  margin: 0;
-  color: var(--sf-text-muted, #71717a);
+.customActionHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.customActionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sf-text-primary, #ffffff);
+  line-height: 1.3;
+}
+
+.customPriceBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--sf-btn-primary-bg, #ffffff);
+  color: var(--sf-btn-primary-text, #000000);
   font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
 }
 
-.primaryAction,
-.textAction {
+.customActionSub {
+  font-size: 11px;
+  color: var(--sf-text-secondary, #a1a1aa);
+  font-weight: 500;
+  line-height: 1.3;
+  transition: color 200ms ease;
+}
+
+.customActionCard:hover .customActionSub {
+  color: var(--sf-text-primary, #ffffff);
+}
+
+.primaryAction {
   display: inline-flex;
   min-height: 48px;
   align-items: center;
@@ -341,9 +415,6 @@
   .heroActions {
     justify-content: center;
   }
-  .customConsultation {
-    align-items: center;
-  }
 }
 
 @media (max-width: 600px) {
@@ -356,6 +427,11 @@
   .primaryAction {
     width: 100%;
     max-width: 280px;
+  }
+  .customActionCard {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
   }
 }
 
