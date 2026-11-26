@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import styles from "./faq-section.module.css";
 
