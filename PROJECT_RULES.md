@@ -187,4 +187,19 @@ Pada sesi terminal baru, perintah `npm run build` atau `npx next dev` akan berhe
 - Jaga kebersihan repositori: jangan pernah commit file temporary scratch ke git tracking kecuali skrip utilitas yang memang dibutuhkan jangka panjang.
 
 ---
+
+## 9. Perlindungan File & Data Production Client (WAJIB DIPATUHI)
+
+> [!CAUTION]
+> **ATURAN MUTLAK PRODUCTION CLIENT**:
+> Seluruh file dan data di dalam folder client (`public/media/client/`, `public/media/invitations/`, dan `data/invitations/`) adalah **file production milik customer yang sudah final (*fix*)**.
+
+1. **Dilarang Mengubah Tanpa Perintah**:
+   - Jika **TIDAK ADA perintah eksplisit** dari pemilik proyek, **JANGAN PERNAH** mengubah, menghapus, mengganti, atau memodifikasi apapun di folder client (baik foto, musik, tata letak/desain, teks, jadwal, maupun file JSON undangan client).
+2. **Wajib Tanya & Minta Izin Terlebih Dahulu**:
+   - Apabila dalam suatu tugas atau perbaikan bug dirasa **harus** menyentuh atau mengubah file di dalam folder client, AI Assistant / Developer **WAJIB bertanya dan meminta persetujuan user terlebih dahulu** sebelum melakukan perubahan apapun.
+3. **Isolasi Data Demo vs Client**:
+   - Pastikan pembaruan pada template demo katalog (data Dita & Fajar) tidak pernah menimpa atau memengaruhi undangan production milik customer (seperti yang dijaga pada `lib/invitations.ts`).
+
+---
 *Dokumen ini dibuat dan diperbarui untuk menjaga konsistensi kualitas desain InDif Digital.*

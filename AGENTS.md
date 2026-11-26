@@ -39,3 +39,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
    - `npm run test:cms` (41/41 tes lolos)
    - `npm run build` (retry jika muncul prompt advisory Next.js pada first run)
 
+5. **Perlindungan File Production Client (WAJIB)**:
+   - Folder `public/media/client/`, `public/media/invitations/`, dan `data/invitations/` adalah **file production customer yang sudah fix**.
+   - **JANGAN ubah apapun** di folder client jika tidak ada perintah eksplisit dari pemilik proyek.
+   - Jika memang terpaksa harus mengubah file di folder client, **WAJIB tanya dan minta izin user terlebih dahulu**.
+   - Pastikan pembaruan template demo katalog tidak pernah menimpa data/foto undangan customer.
+

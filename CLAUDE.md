@@ -27,3 +27,8 @@
    - `npm run typecheck`
    - `npm run test:cms`
    - `npm run build` (retry jika Next.js security advisory muncul di first run)
+
+5. **Perlindungan File Production Client (WAJIB)**:
+   - Folder `public/media/client/`, `public/media/invitations/`, dan `data/invitations/` adalah **file production customer yang sudah fix**.
+   - **JANGAN ubah apapun** di folder client tanpa perintah eksplisit dari user.
+   - Jika memang harus mengubah file di folder client, **WAJIB tanya ke user terlebih dahulu**.
