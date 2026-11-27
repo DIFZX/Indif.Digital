@@ -503,6 +503,19 @@ export const jadePavilionDemoInvitation: Invitation = {
   },
 };
 
+export const majesticMinangDemoInvitation: Invitation = {
+  ...mustardBlackDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000116",
+  slug: "majestic-minang",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000016",
+    slug: "majestic-minang",
+    name: "Majestic Minang",
+    theme: { primary: "#5E2430", accent: "#D8B261", background: "#F6ECE5" },
+  },
+};
+
 export const legacyIntanDifaDemoInvitation: Invitation = {
   ...demoInvitation,
   slug: "intan-dan-difa",
@@ -529,6 +542,7 @@ export const demoInvitations = [
   sageBotanicalDemoInvitation,
   terracottaWarmthDemoInvitation,
   jadePavilionDemoInvitation,
+  majesticMinangDemoInvitation,
   legacyIntanDifaDemoInvitation,
   ditaDanFajarDemoInvitation,
 ];

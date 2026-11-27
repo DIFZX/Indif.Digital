@@ -191,6 +191,17 @@ const fallbackTemplates: CatalogTemplate[] = [
     price: 120000,
     promo_price: 80000,
   },
+  {
+    id: "00000000-0000-0000-0000-000000000016",
+    slug: "majestic-minang",
+    name: "Majestic Minang",
+    description: "Template adat Minangkabau mewah bernuansa merah maroon & emas ukiran dengan video opening Rumah Gadang, payung kuniang, bingkai emas, dan fitur RSVP lengkap.",
+    thumbnail_path: "/media/mockups/mockup-majestic-minang.webp",
+    preview_path: "/majestic-minang?to=Tamu%20Undangan",
+    category: "spesial",
+    price: 120000,
+    promo_price: 80000,
+  },
 ];
 
 const whatsappUrl = "https://wa.me/6281776396965";

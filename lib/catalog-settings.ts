@@ -62,6 +62,7 @@ export function getTemplateThumbnail(slug: string, fallbackPath: string | null) 
     "terracotta-warmth": "/media/mockups/mockup-terracotta-warmth.webp",
     "greeny-flowers": "/media/mockups/mockup-greeny-flowers.webp",
     "jade-pavilion": "/media/mockups/mockup-jade-pavilion.webp",
+    "majestic-minang": "/media/mockups/mockup-majestic-minang.webp",
   };
   return mockups[slug] || resolveMediaUrl(fallbackPath) || "/media/elegant/gallery-couple-v2.png";
 }
