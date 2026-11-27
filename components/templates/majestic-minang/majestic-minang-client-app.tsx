@@ -9,7 +9,7 @@ import { MinangCrest, MinangGoldCard, MinangIcon, type MinangIconName } from "./
 import styles from "./majestic-minang.module.css";
 
 const HERO_CONTENT_REVEAL_SECONDS = 9.5;
-const OPENING_VIDEO_PATH = "/media/majestic-minang/VidioOpening.mp4";
+const OPENING_VIDEO_PATH = "/media/majestic-minang/opening-web-720p.mp4";
 const ASSET = "/media/majestic-minang/web";
 
 const NAV_ITEMS: { id: string; label: string; icon: MinangIconName }[] = [
@@ -121,6 +121,18 @@ export function MajesticMinangClientApp({
     };
   }, [opened, ready]);
 
+  // Ensure iOS Safari recognizes inline muted attributes directly on the DOM node
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "true");
+  }, []);
+
   // Sync couple name reveal to video timeline (9.5s) and freeze cleanly on final frame when ended
   useEffect(() => {
     const video = videoRef.current;
@@ -157,6 +169,12 @@ export function MajesticMinangClientApp({
       reveal();
       video.pause();
     };
+    const handleCanPlay = () => {
+      if (video.paused && !video.ended) {
+        video.muted = true;
+        video.play().catch(() => {});
+      }
+    };
     const watchFrame = () => {
       checkTime();
       if (video.currentTime < HERO_CONTENT_REVEAL_SECONDS && video.requestVideoFrameCallback) {
@@ -167,12 +185,18 @@ export function MajesticMinangClientApp({
     video.addEventListener("timeupdate", checkTime);
     video.addEventListener("ended", handleEnded);
     video.addEventListener("error", reveal);
+    video.addEventListener("canplay", handleCanPlay);
     watchFrame();
 
+    // Safety fallback so a slow network never traps the guest permanently
+    fallbackTimer = window.setTimeout(reveal, 13000);
+
     if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+      window.clearTimeout(fallbackTimer);
       fallbackTimer = window.setTimeout(reveal, 0);
     } else if (video.paused && !video.ended) {
-      video.play().catch(reveal);
+      video.muted = true;
+      video.play().catch(() => {});
     }
 
     return () => {
@@ -180,6 +204,7 @@ export function MajesticMinangClientApp({
       video.removeEventListener("timeupdate", checkTime);
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("error", reveal);
+      video.removeEventListener("canplay", handleCanPlay);
       if (frameId !== undefined && video.cancelVideoFrameCallback) {
         video.cancelVideoFrameCallback(frameId);
       }
@@ -279,13 +304,32 @@ export function MajesticMinangClientApp({
 
   async function handleOpenInvitation() {
     if (opened) return;
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = 0;
-      video.play().catch(() => setHeroRevealed(true));
-    }
     setOpened(true);
     window.scrollTo({ top: 0, behavior: "instant" });
+
+    const video = videoRef.current;
+    if (video) {
+      video.defaultMuted = true;
+      video.muted = true;
+      video.playsInline = true;
+      if (video.readyState >= 1) {
+        try {
+          video.currentTime = 0;
+        } catch {
+          // ignore seek error before buffer ready on iOS
+        }
+      }
+      video.play().catch(() => {
+        video.addEventListener(
+          "canplay",
+          () => {
+            video.muted = true;
+            video.play().catch(() => setHeroRevealed(true));
+          },
+          { once: true },
+        );
+      });
+    }
 
     if (audioRef.current) {
       try {
@@ -446,7 +490,7 @@ export function MajesticMinangClientApp({
       )}
 
       {/* ─── MAIN STAGE ─── */}
-      <div ref={stageRef} className={styles.stage} tabIndex={-1} aria-hidden={!opened} inert={!opened}>
+      <div ref={stageRef} className={styles.stage} tabIndex={-1} aria-hidden={!opened}>
         <div className={styles.layout}>
           {/* Desktop Sticky Photo Showcase */}
           <aside className={styles.desktopShowcase} aria-label={`Foto ${coupleNames}`}>

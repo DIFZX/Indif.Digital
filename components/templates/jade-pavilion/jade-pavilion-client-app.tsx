@@ -9,7 +9,7 @@ import { JadePavilionIcon, type JadeIconName } from "./jade-pavilion-icons";
 import styles from "./jade-pavilion.module.css";
 
 const HERO_CONTENT_REVEAL_SECONDS = 9;
-const OPENING_VIDEO_PATH = "/media/jade-pavilion/BotanicalGardenOpening.mp4";
+const OPENING_VIDEO_PATH = "/media/jade-pavilion/opening-web-720p.mp4";
 
 const NAV_ITEMS: { id: string; label: string; icon: JadeIconName }[] = [
   { id: "pembuka", label: "Sampul", icon: "home" },
@@ -119,6 +119,18 @@ export function JadePavilionClientApp({
       document.body.style.overflow = prevOverflow;
     };
   }, [opened, ready]);
+
+  // Ensure iOS Safari recognizes inline muted attributes directly on the DOM node
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "true");
+  }, []);
 
   // Watch video playback time strictly so buffering never reveals names before second 9.
   // When the video ends, pause cleanly on the final frame so it freezes into a photo.
@@ -239,13 +251,32 @@ export function JadePavilionClientApp({
 
   async function handleOpenInvitation() {
     if (opened) return;
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = 0;
-      video.play().catch(() => setHeroRevealed(true));
-    }
     setOpened(true);
     window.scrollTo({ top: 0, behavior: "instant" });
+
+    const video = videoRef.current;
+    if (video) {
+      video.defaultMuted = true;
+      video.muted = true;
+      video.playsInline = true;
+      if (video.readyState >= 1) {
+        try {
+          video.currentTime = 0;
+        } catch {
+          // ignore seek error before buffer ready on iOS
+        }
+      }
+      video.play().catch(() => {
+        video.addEventListener(
+          "canplay",
+          () => {
+            video.muted = true;
+            video.play().catch(() => setHeroRevealed(true));
+          },
+          { once: true },
+        );
+      });
+    }
 
     if (audioRef.current) {
       try {
@@ -427,7 +458,6 @@ export function JadePavilionClientApp({
         className={styles.stage}
         tabIndex={-1}
         aria-hidden={!opened}
-        inert={!opened}
       >
         <div className={styles.layout}>
           {/* Desktop Sticky Photo Showcase */}
