@@ -180,6 +180,17 @@ const fallbackTemplates: CatalogTemplate[] = [
     price: 70000,
     promo_price: 35000,
   },
+  {
+    id: "00000000-0000-0000-0000-000000000015",
+    slug: "jade-pavilion",
+    name: "Jade Pavilion",
+    description: "Template taman botani cat air bernuansa hijau sage & ivory dengan video opening sinematik, paviliun klasik, burung merak, dan fitur RSVP lengkap.",
+    thumbnail_path: "/media/mockups/mockup-jade-pavilion.webp",
+    preview_path: "/jade-pavilion?to=Tamu%20Undangan",
+    category: "spesial",
+    price: 120000,
+    promo_price: 80000,
+  },
 ];
 
 const whatsappUrl = "https://wa.me/6281776396965";

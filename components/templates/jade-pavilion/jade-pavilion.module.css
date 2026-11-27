@@ -1,0 +1,1303 @@
+.root {
+  --jp-paper: #f7f6f1;
+  --jp-wash: #ecf0ea;
+  --jp-card: #ffffff;
+  --jp-primary: #2e4a3e;
+  --jp-primary-deep: #20362d;
+  --jp-sage: #5d7a68;
+  --jp-sage-soft: #9bb3a2;
+  --jp-gold: #a98f5c;
+  --jp-ink: #2c3831;
+  --jp-muted: #5d6a62;
+  --jp-border: rgba(46, 74, 62, 0.14);
+  --jp-shadow: 0 18px 42px -24px rgba(32, 54, 45, 0.24);
+  font-family: var(--font-jade-body), system-ui, -apple-system, sans-serif;
+  color: var(--jp-ink);
+  background: var(--jp-paper);
+  min-height: 100svh;
+}
+
+/* ─── COVER OVERLAY (BEFORE "BUKA UNDANGAN") ─── */
+.cover {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 18px;
+  background-color: var(--jp-paper);
+  background-image: url("/media/jade-pavilion/bg-willow.webp");
+  background-size: cover;
+  background-position: center top;
+  overflow: hidden;
+  transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1), visibility 650ms ease;
+}
+
+.coverHidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.coverGarlandLeft {
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(86px, 21vw, 180px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.coverGarlandRight {
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(86px, 21vw, 180px);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.coverBottomFloral {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: min(560px, 108vw);
+  height: auto;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.95;
+}
+
+.coverCard {
+  position: relative;
+  z-index: 3;
+  width: min(352px, calc(100% - 16px));
+  padding: 26px 22px 30px;
+  border-radius: 190px 190px 26px 26px;
+  background: rgba(251, 250, 246, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(46, 74, 62, 0.16);
+  box-shadow: 0 28px 60px -30px rgba(32, 54, 45, 0.32);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coverGazebo {
+  width: clamp(138px, 34vw, 178px);
+  height: auto;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 8px 18px rgba(46, 74, 62, 0.1));
+}
+
+.coverKicker {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--jp-sage);
+}
+
+.coverNames {
+  margin: 0;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: clamp(2.4rem, 9vw, 3.15rem);
+  font-weight: 500;
+  line-height: 1.05;
+  color: var(--jp-primary);
+  letter-spacing: 0.01em;
+}
+
+.coverAmp {
+  font-style: italic;
+  color: var(--jp-gold);
+  margin: 0 0.16em;
+  font-weight: 400;
+}
+
+.coverDate {
+  margin: 8px 0 18px;
+  font-size: 0.84rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jp-muted);
+}
+
+.guestBox {
+  width: 100%;
+  max-width: 290px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: rgba(236, 240, 234, 0.72);
+  border: 1px solid rgba(46, 74, 62, 0.12);
+}
+
+.guestLabel {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--jp-muted);
+  margin-bottom: 3px;
+}
+
+.guestName {
+  display: block;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--jp-primary);
+}
+
+.openButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border: none;
+  border-radius: 999px;
+  background: var(--jp-primary);
+  color: #faf9f5;
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 26px -10px rgba(32, 54, 45, 0.55);
+  transition: transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.openButton:hover {
+  background: var(--jp-primary-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px -10px rgba(32, 54, 45, 0.65);
+}
+
+.openButton:focus-visible {
+  outline: 2px solid var(--jp-gold);
+  outline-offset: 3px;
+}
+
+/* ─── SPLIT DESKTOP + MOBILE PANEL LAYOUT ─── */
+.stage {
+  min-height: 100svh;
+  outline: none;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 480px);
+  min-height: 100svh;
+}
+
+.desktopShowcase {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px 54px;
+  background: #1f332a;
+}
+
+.showcasePhoto {
+  object-fit: cover;
+  object-position: center 24%;
+}
+
+.showcaseShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(24, 40, 33, 0.84) 0%,
+    rgba(24, 40, 33, 0.28) 46%,
+    rgba(24, 40, 33, 0.14) 100%
+  );
+  z-index: 1;
+}
+
+.showcaseContent {
+  position: relative;
+  z-index: 2;
+  color: #f7f6f1;
+  max-width: 520px;
+}
+
+.showcaseKicker {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #d6dfd8;
+}
+
+.showcaseTitle {
+  margin: 0 0 10px;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: clamp(2.8rem, 4.4vw, 4.1rem);
+  font-weight: 500;
+  line-height: 1.04;
+}
+
+.showcaseDate {
+  margin: 0 0 22px;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: rgba(247, 246, 241, 0.86);
+}
+
+.showcaseBrand {
+  position: relative;
+  z-index: 2;
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(247, 246, 241, 0.65);
+}
+
+.panel {
+  position: relative;
+  background: var(--jp-paper);
+  box-shadow: -12px 0 40px -24px rgba(24, 40, 33, 0.25);
+  overflow-x: clip;
+  padding-bottom: 92px;
+}
+
+/* ─── HERO VIDEO OPENING (REVEAL AT 9s & FREEZE ON FINAL FRAME) ─── */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 600px;
+  max-height: 920px;
+  overflow: hidden;
+  background-color: var(--jp-paper);
+  background-image: url("/media/jade-pavilion/bg-willow.webp");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(
+    ellipse at 50% 42%,
+    rgba(252, 251, 248, 0.38) 0%,
+    rgba(252, 251, 248, 0) 58%
+  );
+  opacity: 0;
+  transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.heroScrimVisible {
+  opacity: 1;
+}
+
+.heroOverlay {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 16px 20px;
+  margin-top: -118px;
+  width: min(310px, 82%);
+  background: transparent;
+  opacity: 0;
+  transform: translateY(18px) scale(0.97);
+  pointer-events: none;
+  transition:
+    opacity 1100ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.heroOverlayVisible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.heroKicker {
+  margin: 0 0 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--jp-sage);
+}
+
+.heroTitle {
+  margin: 0;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: clamp(2.6rem, 10vw, 3.35rem);
+  font-weight: 500;
+  line-height: 1.02;
+  color: var(--jp-primary);
+  text-shadow: 0 2px 16px rgba(252, 251, 248, 0.85);
+}
+
+.heroAmp {
+  display: block;
+  font-style: italic;
+  font-size: 0.6em;
+  line-height: 1.08;
+  color: var(--jp-gold);
+}
+
+.heroDivider {
+  width: 58px;
+  height: 1px;
+  margin: 12px auto;
+  background: linear-gradient(90deg, transparent, var(--jp-gold), transparent);
+}
+
+.heroDate {
+  margin: 0 0 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--jp-ink);
+}
+
+.scrollCue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: var(--jp-primary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.scrollCue:hover {
+  opacity: 1;
+  transform: translateY(2px);
+}
+
+/* ─── COMMON SECTION CHROME ─── */
+.section {
+  position: relative;
+  padding: 64px 22px;
+  text-align: center;
+}
+
+.sectionWash {
+  background: var(--jp-wash);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--jp-sage);
+}
+
+.heading {
+  margin: 0 0 14px;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: clamp(2rem, 7vw, 2.55rem);
+  font-weight: 500;
+  line-height: 1.12;
+  color: var(--jp-primary);
+}
+
+.lead {
+  margin: 0 auto;
+  max-width: 390px;
+  font-size: 0.9rem;
+  line-height: 1.72;
+  color: var(--jp-muted);
+}
+
+.sectionOrnament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 auto 14px;
+  color: var(--jp-gold);
+}
+
+.sectionOrnamentLine {
+  width: 38px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(169, 143, 92, 0.7), transparent);
+}
+
+.sectionOrnamentDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--jp-gold);
+}
+
+/* ─── QUOTE SECTION WITH PEACOCK WATERCOLOR SIGNATURE ─── */
+.quoteSection {
+  background-color: var(--jp-paper);
+  background-image: linear-gradient(to bottom, rgba(247, 246, 241, 0.45), rgba(247, 246, 241, 0.96)),
+    url("/media/jade-pavilion/bg-willow.webp");
+  background-size: cover;
+  background-position: top center;
+  padding: 66px 22px 54px;
+}
+
+.quoteCard {
+  position: relative;
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 32px 24px 26px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--jp-border);
+  box-shadow: var(--jp-shadow);
+  overflow: visible;
+}
+
+.quoteFloralAccent {
+  position: absolute;
+  top: -18px;
+  right: -12px;
+  width: 58px;
+  height: auto;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.quoteText {
+  margin: 0 0 14px;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.16rem;
+  line-height: 1.65;
+  color: var(--jp-ink);
+}
+
+.quoteSource {
+  display: inline-block;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jp-sage);
+}
+
+.peacockShowcase {
+  margin: 22px auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+.peacockImage {
+  width: 148px;
+  height: auto;
+  filter: drop-shadow(0 10px 22px rgba(46, 74, 62, 0.14));
+}
+
+/* ─── COUPLE / MEMPELAI SECTION ─── */
+.coupleList {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  margin-top: 34px;
+  align-items: center;
+}
+
+.personCard {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.archFrameWrap {
+  position: relative;
+  width: 224px;
+  height: 292px;
+  margin-bottom: 18px;
+}
+
+.archFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px 999px 22px 22px;
+  overflow: hidden;
+  border: 4px solid #ffffff;
+  box-shadow: 0 18px 40px -20px rgba(32, 54, 45, 0.35), 0 0 0 1px rgba(46, 74, 62, 0.16);
+  background: var(--jp-wash);
+}
+
+.archPhoto {
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+/* Upright floral corner accent at bottom-right of arch frame (never covers face/text) */
+.archFloral {
+  position: absolute;
+  right: -18px;
+  bottom: -14px;
+  width: 64px;
+  height: 82px;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.personRole {
+  margin: 0 0 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--jp-gold);
+}
+
+.personName {
+  margin: 0 0 8px;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--jp-primary);
+}
+
+.personParents {
+  margin: 0;
+  max-width: 300px;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--jp-muted);
+}
+
+.coupleAmpDivider {
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-style: italic;
+  font-size: 2.3rem;
+  color: var(--jp-gold);
+  line-height: 1;
+}
+
+/* ─── WEDDING EVENT SECTION (CLEAN CARDS — ZERO FLOWERS ON CARDS) ─── */
+.gazeboHeaderWrap {
+  margin: 0 auto 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.gazeboHeaderImg {
+  width: 152px;
+  height: auto;
+  opacity: 0.92;
+}
+
+.countdownGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 360px;
+  margin: 22px auto 22px;
+}
+
+.countdownBox {
+  padding: 13px 6px;
+  border-radius: 16px;
+  background: var(--jp-card);
+  border: 1px solid var(--jp-border);
+  box-shadow: 0 10px 24px -18px rgba(32, 54, 45, 0.28);
+}
+
+.countdownValue {
+  display: block;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.05;
+  color: var(--jp-primary);
+}
+
+.countdownLabel {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--jp-muted);
+}
+
+.eventGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.eventCard {
+  padding: 28px 22px;
+  border-radius: 22px;
+  background: var(--jp-card);
+  border: 1px solid var(--jp-border);
+  box-shadow: var(--jp-shadow);
+  text-align: center;
+}
+
+.eventTitle {
+  margin: 0 0 12px;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--jp-primary);
+}
+
+.eventDateBadge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--jp-wash);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--jp-primary);
+  margin-bottom: 10px;
+}
+
+.eventTime {
+  margin: 0 0 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--jp-ink);
+}
+
+.eventDivider {
+  width: 48px;
+  height: 1px;
+  margin: 0 auto 14px;
+  background: rgba(169, 143, 92, 0.5);
+}
+
+.venueName {
+  margin: 0 0 5px;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--jp-primary);
+}
+
+.venueAddress {
+  margin: 0 0 18px;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--jp-muted);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  background: var(--jp-primary);
+  color: #faf9f5;
+  text-decoration: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.actionButton:hover {
+  background: var(--jp-primary-deep);
+  transform: translateY(-1px);
+}
+
+.actionButtonOutline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--jp-primary);
+  border: 1px solid rgba(46, 74, 62, 0.32);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.actionButtonOutline:hover {
+  background: rgba(46, 74, 62, 0.06);
+  border-color: var(--jp-primary);
+}
+
+/* ─── LOVE STORY TIMELINE ─── */
+.storyPhotoFrame {
+  position: relative;
+  width: 100%;
+  max-width: 370px;
+  aspect-ratio: 4 / 3;
+  margin: 22px auto 26px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 4px solid #ffffff;
+  box-shadow: var(--jp-shadow);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+.timelineItem {
+  padding: 20px;
+  border-radius: 18px;
+  background: var(--jp-card);
+  border: 1px solid var(--jp-border);
+  border-left: 3px solid var(--jp-sage);
+}
+
+.timelineYear {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--jp-gold);
+  margin-bottom: 4px;
+}
+
+.timelineTitle {
+  margin: 0 0 6px;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: 1.32rem;
+  font-weight: 600;
+  color: var(--jp-primary);
+}
+
+.timelineText {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--jp-muted);
+}
+
+/* ─── GALLERY GRID & LIGHTBOX ─── */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.galleryBtn {
+  position: relative;
+  padding: 0;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background: var(--jp-wash);
+  cursor: pointer;
+  box-shadow: 0 12px 26px -18px rgba(32, 54, 45, 0.4);
+  transition: transform 220ms ease;
+}
+
+.galleryBtnFeatured {
+  grid-column: span 2;
+  aspect-ratio: 16 / 10;
+}
+
+.galleryBtn:hover {
+  transform: scale(1.015);
+}
+
+.galleryImg {
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(15, 24, 20, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lightboxInner {
+  position: relative;
+  width: min(560px, 94vw);
+  height: min(82svh, 760px);
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 205;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(20, 34, 28, 0.78);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+/* ─── WEDDING GIFT CARD (CLEAN — ZERO FLOWERS ON CARD) ─── */
+.giftCard {
+  max-width: 380px;
+  margin: 24px auto 0;
+  padding: 28px 24px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #2b463a 0%, #1d3229 100%);
+  color: #f7f6f1;
+  text-align: left;
+  box-shadow: 0 22px 44px -22px rgba(24, 40, 33, 0.55);
+  border: 1px solid rgba(169, 143, 92, 0.34);
+}
+
+.giftHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.giftBank {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #e4d4b0;
+}
+
+.giftBadge {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #e7ede9;
+}
+
+.giftAccountNumber {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.48rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.giftAccountName {
+  margin: 0 0 20px;
+  font-size: 0.88rem;
+  color: rgba(247, 246, 241, 0.85);
+}
+
+.giftCopyButton {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(228, 212, 176, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 180ms ease;
+}
+
+.giftCopyButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ─── RSVP & WISHES FORM (CLEAN — ZERO FLOWERS ON FORM) ─── */
+.rsvpForm {
+  max-width: 390px;
+  margin: 26px auto 0;
+  padding: 24px 20px;
+  border-radius: 22px;
+  background: var(--jp-card);
+  border: 1px solid var(--jp-border);
+  box-shadow: var(--jp-shadow);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--jp-primary);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 12px;
+  border: 1px solid rgba(46, 74, 62, 0.22);
+  background: #fbfbf8;
+  color: var(--jp-ink);
+  font-family: inherit;
+  font-size: 0.88rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--jp-primary);
+  box-shadow: 0 0 0 3px rgba(46, 74, 62, 0.12);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 92px;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--jp-primary);
+  color: #faf9f5;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 180ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--jp-primary-deep);
+}
+
+.submitButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.formStatus {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.formStatusSuccess {
+  background: #eaf4ec;
+  color: #1f5133;
+  border: 1px solid rgba(31, 81, 51, 0.2);
+}
+
+.formStatusError {
+  background: #fdeeee;
+  color: #8c2626;
+  border: 1px solid rgba(140, 38, 38, 0.2);
+}
+
+.greetingsList {
+  max-width: 390px;
+  margin: 24px auto 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.greetingsCount {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--jp-sage);
+}
+
+.greetingCard {
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: var(--jp-card);
+  border: 1px solid var(--jp-border);
+}
+
+.greetingTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.greetingAuthor {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--jp-primary);
+}
+
+.attendanceBadge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #e5f0e8;
+  color: #264d36;
+}
+
+.attendanceBadgeAbsent {
+  background: #f3ece8;
+  color: #785546;
+}
+
+.greetingMessage {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--jp-ink);
+}
+
+.greetingDate {
+  font-size: 0.72rem;
+  color: var(--jp-muted);
+}
+
+/* ─── CLOSING FOOTER ─── */
+.footer {
+  position: relative;
+  padding: 64px 24px 128px;
+  text-align: center;
+  background-color: var(--jp-paper);
+  background-image: linear-gradient(to bottom, var(--jp-wash) 0%, rgba(247, 246, 241, 0.92) 40%, var(--jp-paper) 100%);
+  overflow: hidden;
+}
+
+.footerClosingText {
+  margin: 0 auto 14px;
+  max-width: 360px;
+  font-size: 0.88rem;
+  line-height: 1.72;
+  color: var(--jp-muted);
+}
+
+.footerGreeting {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--jp-sage);
+}
+
+.footerMonogram {
+  width: 56px;
+  height: 56px;
+  margin: 14px auto 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(169, 143, 92, 0.55);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--jp-primary);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.footerCouple {
+  margin: 0 0 22px;
+  font-family: var(--font-jade-display), Georgia, serif;
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: var(--jp-primary);
+}
+
+.footerBrand {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--jp-muted);
+}
+
+.footerBrandImg {
+  width: 112px;
+  height: auto;
+  opacity: 0.82;
+}
+
+.footerBottomFloral {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  width: min(500px, 108%);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+/* ─── FLOATING CONTROLS (MUSIC & BOTTOM DOCK) ─── */
+.musicToggle {
+  position: fixed;
+  right: 16px;
+  bottom: 84px;
+  z-index: 95;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(46, 74, 62, 0.22);
+  background: rgba(251, 250, 246, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--jp-primary);
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -10px rgba(32, 54, 45, 0.35);
+}
+
+.bottomNav {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 95;
+  width: min(440px, calc(100vw - 24px));
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 2px;
+  padding: 7px 8px;
+  border-radius: 999px;
+  background: rgba(251, 250, 246, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(46, 74, 62, 0.16);
+  box-shadow: 0 14px 32px -14px rgba(32, 54, 45, 0.36);
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 2px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--jp-muted);
+  font-size: 0.62rem;
+  font-weight: 600;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.navItemActive {
+  background: rgba(46, 74, 62, 0.1);
+  color: var(--jp-primary);
+}
+
+@media (min-width: 901px) {
+  .bottomNav {
+    left: auto;
+    right: 20px;
+    transform: none;
+    width: 440px;
+  }
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .desktopShowcase {
+    display: none;
+  }
+
+  .panel {
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover,
+  .heroOverlay,
+  .heroScrim,
+  .openButton,
+  .galleryBtn {
+    transition: none;
+  }
+}

@@ -150,6 +150,7 @@ Setiap kali melakukan pembaruan visual pada sebuah template:
 | 12 | `sage-botanical` | Sage Botanical | Minimalis | `components/templates/prewedding/` |
 | 13 | `terracotta-warmth`| Terracotta Warmth | Minimalis | `components/templates/prewedding/` |
 | 14 | `adventure-wedding-pixel` | Adventure Wedding Pixel | Interaktif | `components/templates/adventure-wedding-pixel/` |
+| 15 | `jade-pavilion` | Jade Pavilion | Spesial | `components/templates/jade-pavilion/` |
 
 > Empat tema prewedding modern (*Champagne Ivory*, *Dusty Rose*, *Sage Botanical*, dan *Terracotta Warmth*) berbagi arsitektur bersama di `components/templates/prewedding/prewedding-client-app.tsx` dan `prewedding.module.css`.
 
