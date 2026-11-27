@@ -216,7 +216,7 @@
 
 .showcasePhoto {
   object-fit: cover;
-  object-position: center 24%;
+  object-position: center 62%;
 }
 
 .showcaseShade {
@@ -776,8 +776,8 @@
 .storyPhotoFrame {
   position: relative;
   width: 100%;
-  max-width: 370px;
-  aspect-ratio: 4 / 3;
+  max-width: 310px;
+  aspect-ratio: 4 / 5;
   margin: 22px auto 26px;
   border-radius: 22px;
   overflow: hidden;
@@ -841,7 +841,7 @@
   border: none;
   border-radius: 16px;
   overflow: hidden;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 5;
   background: var(--jp-wash);
   cursor: pointer;
   box-shadow: 0 12px 26px -18px rgba(32, 54, 45, 0.4);
@@ -850,7 +850,7 @@
 
 .galleryBtnFeatured {
   grid-column: span 2;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 5;
 }
 
 .galleryBtn:hover {
@@ -859,7 +859,7 @@
 
 .galleryImg {
   object-fit: cover;
-  object-position: center 22%;
+  object-position: center 55%;
 }
 
 .lightbox {
@@ -1131,11 +1131,16 @@
 /* ─── CLOSING FOOTER ─── */
 .footer {
   position: relative;
-  padding: 64px 24px 128px;
+  padding: 64px 24px clamp(255px, 62vw, 300px);
   text-align: center;
   background-color: var(--jp-paper);
   background-image: linear-gradient(to bottom, var(--jp-wash) 0%, rgba(247, 246, 241, 0.92) 40%, var(--jp-paper) 100%);
   overflow: hidden;
+}
+
+.footerInner {
+  position: relative;
+  z-index: 3;
 }
 
 .footerClosingText {

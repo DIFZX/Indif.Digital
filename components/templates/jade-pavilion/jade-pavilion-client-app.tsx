@@ -916,27 +916,29 @@ export function JadePavilionClientApp({
             </section>
 
             {/* 9. CLOSING FOOTER WITH WATERCOLOR BOTTOM FLORAL */}
-            <footer className={styles.footer}>
-              <Reveal>
-                <p className={styles.footerClosingText}>{invitation.closing_text}</p>
-                {invitation.closing_greeting && (
-                  <p className={styles.footerGreeting}>{invitation.closing_greeting}</p>
-                )}
-                <div className={styles.footerMonogram} aria-hidden="true">
-                  {invitation.bride_short_name.charAt(0)} &amp; {invitation.groom_short_name.charAt(0)}
-                </div>
-                <h2 className={styles.footerCouple}>{coupleNames}</h2>
-                <div className={styles.footerBrand}>
-                  <span>Digital Invitation by</span>
-                  <Image
-                    src={BRAND.logoPath}
-                    alt={BRAND.name}
-                    width={220}
-                    height={80}
-                    className={styles.footerBrandImg}
-                  />
-                </div>
-              </Reveal>
+            <footer className={styles.footer} id="penutup">
+              <div className={styles.footerInner}>
+                <Reveal>
+                  <p className={styles.footerClosingText}>{invitation.closing_text}</p>
+                  {invitation.closing_greeting && (
+                    <p className={styles.footerGreeting}>{invitation.closing_greeting}</p>
+                  )}
+                  <div className={styles.footerMonogram} aria-hidden="true">
+                    {invitation.bride_short_name.charAt(0)} &amp; {invitation.groom_short_name.charAt(0)}
+                  </div>
+                  <h2 className={styles.footerCouple}>{coupleNames}</h2>
+                  <div className={styles.footerBrand}>
+                    <span>Digital Invitation by</span>
+                    <Image
+                      src={BRAND.logoPath}
+                      alt={BRAND.name}
+                      width={220}
+                      height={80}
+                      className={styles.footerBrandImg}
+                    />
+                  </div>
+                </Reveal>
+              </div>
 
               <Image
                 src="/media/jade-pavilion/floral-bottom.webp"
