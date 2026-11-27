@@ -62,7 +62,7 @@ select
   src.groom_name, src.groom_short_name, src.groom_parents, src.groom_photo_path,
   src.event_date, src.ceremony_time, src.reception_time, src.venue_name, src.venue_address, src.maps_url,
   src.opening_text, src.quote_text, src.quote_source, src.story, src.story_image_path,
-  src.cover_path, src.profile_path, src.gallery_paths, src.music_path, src.gift_info,
+  src.cover_path, src.profile_path, src.gallery_paths, '/media/majestic-minang/minang-baralek-gadang.mp3', src.gift_info,
   '{}'::jsonb, src.closing_text, src.closing_greeting
 from public.invitations src
 cross join public.templates t

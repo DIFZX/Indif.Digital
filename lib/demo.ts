@@ -507,6 +507,7 @@ export const majesticMinangDemoInvitation: Invitation = {
   ...mustardBlackDemoInvitation,
   id: "00000000-0000-0000-0000-000000000116",
   slug: "majestic-minang",
+  music_path: "/media/majestic-minang/minang-baralek-gadang.mp3",
   theme_overrides: {},
   template: {
     id: "00000000-0000-0000-0000-000000000016",

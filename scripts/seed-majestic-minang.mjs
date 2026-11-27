@@ -96,7 +96,7 @@ const invitationPayload = {
     "/media/sunda-vibes/4.jpg",
     "/media/sunda-vibes/5.jpg",
   ],
-  music_path: "/media/elegant/Bergema Selamanya.mp4",
+  music_path: "/media/majestic-minang/minang-baralek-gadang.mp3",
   gift_info: {
     bank: "BCA",
     account_number: "7125091428",

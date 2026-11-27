@@ -418,7 +418,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: clamp(92px, 16svh, 148px);
+  padding-top: clamp(148px, 23svh, 212px);
 }
 
 .heroVideo {
@@ -1480,12 +1480,19 @@
   z-index: 2;
 }
 
-/* ─── FLOATING CONTROLS (ROYAL MAROON & GOLD DOCK) ─── */
-.musicToggle {
+/* ─── FLOATING CONTROLS (AUTO SCROLL + MUSIC + BOTTOM DOCK) ─── */
+.floatingControls {
   position: fixed;
   right: 16px;
   bottom: 84px;
   z-index: 95;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.floatingActionBtn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -1501,6 +1508,19 @@
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 10px 24px -10px rgba(18, 4, 8, 0.65);
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.floatingActionBtn:hover {
+  transform: translateY(-1px);
+  background: rgba(88, 28, 40, 0.96);
+}
+
+.floatingActionBtnActive {
+  background: linear-gradient(135deg, #f2d588 0%, #c99a42 52%, #a67623 100%);
+  color: #2f0e15;
+  border-color: #fff0c8;
+  box-shadow: 0 0 0 3px rgba(246, 224, 168, 0.28), 0 10px 24px -10px rgba(18, 4, 8, 0.65);
 }
 
 .bottomNav {

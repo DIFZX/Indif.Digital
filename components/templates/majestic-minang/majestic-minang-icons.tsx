@@ -15,7 +15,8 @@ export type MinangIconName =
   | "check"
   | "close"
   | "arrowDown"
-  | "chip";
+  | "chip"
+  | "pause";
 
 export function MinangIcon({ name, size = 18 }: { name: MinangIconName; size?: number }) {
   const props = {
@@ -128,6 +129,13 @@ export function MinangIcon({ name, size = 18 }: { name: MinangIconName; size?: n
         <svg {...props}>
           <rect x="3" y="6" width="18" height="12" rx="2.5" />
           <path d="M9 6v12M15 6v12M3 12h6M15 12h6" />
+        </svg>
+      );
+    case "pause":
+      return (
+        <svg {...props}>
+          <rect x="6" y="5" width="4" height="14" rx="1" />
+          <rect x="14" y="5" width="4" height="14" rx="1" />
         </svg>
       );
   }

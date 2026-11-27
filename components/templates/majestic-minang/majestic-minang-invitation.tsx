@@ -55,7 +55,11 @@ export function MajesticMinangInvitationView({
           "/media/sunda-vibes/5.jpg",
         ];
 
-  const musicPath = resolveMediaUrl(invitation.music_path) || "/media/elegant/Bergema Selamanya.mp4";
+  const rawMusic = resolveMediaUrl(invitation.music_path);
+  const musicPath =
+    !rawMusic || rawMusic.includes("Bergema Selamanya")
+      ? "/media/majestic-minang/minang-baralek-gadang.mp3"
+      : rawMusic;
   const theme = { ...invitation.template.theme, ...invitation.theme_overrides };
   const themeStyle = {
     "--mm-maroon": theme.primary || "#5e2430",

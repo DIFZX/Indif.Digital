@@ -86,6 +86,7 @@ export function MajesticMinangClientApp({
   const [opened, setOpened] = useState(initiallyOpened);
   const [heroRevealed, setHeroRevealed] = useState(initiallyOpened);
   const [playing, setPlaying] = useState(false);
+  const [autoScrolling, setAutoScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("pembuka");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [copiedAccount, setCopiedAccount] = useState(false);
@@ -234,6 +235,47 @@ export function MajesticMinangClientApp({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [lightboxIndex]);
+
+  // Smooth downward auto-scroll (stops automatically on manual scroll, touch, or bottom of page)
+  useEffect(() => {
+    if (!autoScrolling || !ready) return;
+
+    let rafId = 0;
+    let lastTime = performance.now();
+    let carry = 0;
+    const speedPxPerSec = 44;
+
+    const stopAutoScroll = () => setAutoScrolling(false);
+
+    const step = (now: number) => {
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+      carry += speedPxPerSec * dt;
+      const wholePx = Math.floor(carry);
+      if (wholePx >= 1) {
+        carry -= wholePx;
+        window.scrollBy(0, wholePx);
+      }
+
+      const reachedBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      if (reachedBottom) {
+        setAutoScrolling(false);
+        return;
+      }
+      rafId = window.requestAnimationFrame(step);
+    };
+
+    rafId = window.requestAnimationFrame(step);
+    window.addEventListener("wheel", stopAutoScroll, { passive: true });
+    window.addEventListener("touchstart", stopAutoScroll, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.removeEventListener("wheel", stopAutoScroll);
+      window.removeEventListener("touchstart", stopAutoScroll);
+    };
+  }, [autoScrolling, ready]);
 
   async function handleOpenInvitation() {
     if (opened) return;
@@ -960,21 +1002,34 @@ export function MajesticMinangClientApp({
         </div>
       </div>
 
-      {/* ─── FLOATING ROYAL MUSIC & BOTTOM NAVIGATION DOCK ─── */}
+      {/* ─── FLOATING AUTO SCROLL, MUSIC & BOTTOM NAVIGATION DOCK ─── */}
       {ready && (
         <>
-          {musicPath && (
+          <div className={styles.floatingControls}>
             <button
               type="button"
-              className={styles.musicToggle}
-              onClick={toggleMusic}
-              aria-label={playing ? "Matikan musik" : "Putar musik"}
-              aria-pressed={playing}
+              className={`${styles.floatingActionBtn} ${autoScrolling ? styles.floatingActionBtnActive : ""}`}
+              onClick={() => setAutoScrolling((prev) => !prev)}
+              aria-label={autoScrolling ? "Hentikan auto scroll" : "Aktifkan auto scroll"}
+              aria-pressed={autoScrolling}
             >
-              <MinangIcon name={playing ? "music" : "muted"} size={15} />
-              <span>Musik {playing ? "On" : "Off"}</span>
+              <MinangIcon name={autoScrolling ? "pause" : "arrowDown"} size={15} />
+              <span>{autoScrolling ? "Stop Scroll" : "Auto Scroll"}</span>
             </button>
-          )}
+
+            {musicPath && (
+              <button
+                type="button"
+                className={styles.floatingActionBtn}
+                onClick={toggleMusic}
+                aria-label={playing ? "Matikan musik" : "Putar musik"}
+                aria-pressed={playing}
+              >
+                <MinangIcon name={playing ? "music" : "muted"} size={15} />
+                <span>Musik {playing ? "On" : "Off"}</span>
+              </button>
+            )}
+          </div>
 
           <nav className={styles.bottomNav} aria-label="Navigasi undangan">
             {NAV_ITEMS.map(({ id, label, icon }) => (
