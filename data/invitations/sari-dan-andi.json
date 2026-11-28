@@ -44,6 +44,10 @@
     "reception_maps_url": null,
     "reception_starts_at": "2026-12-28T11:00:00+07:00",
     "save_date_photo": "/media/invitations/sari-dan-andi/pasangan.jpeg",
+    "opening_video_webm": "/media/invitations/sari-dan-andi/opening-video.webm",
+    "opening_video_mp4": "/media/invitations/sari-dan-andi/opening-video.mp4",
+    "opening_poster_path": "/media/invitations/sari-dan-andi/opening-poster.webp",
+    "opening_reveal_seconds": 7,
     "hide_story": true,
     "hide_gift": true
   },

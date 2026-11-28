@@ -73,12 +73,6 @@
       "sizeBytes": 2116908,
       "updatedAt": "2026-11-28T10:07:34.315Z"
     },
-    "public/media/java-vibes/decor/vidio-opening.mp4": {
-      "sha256": "3a7920d0ffac3da1fec57c2afdeac67493a25e37b6af8c8201757163265f0d5e",
-      "type": "video",
-      "sizeBytes": 2120423,
-      "updatedAt": "2026-11-28T11:25:57.469Z"
-    },
     "public/media/java-vibes/gending-jawa.mp3": {
       "sha256": "7a5dfe2f19ae20b096b715e8d0e6b53e500614f9817f04c5c327825a8cb5e28f",
       "type": "audio",
@@ -236,10 +230,40 @@
       "updatedAt": "2026-11-28T10:08:51.045Z"
     },
     "public/media/java-vibes/decor/opening-poster.webp": {
-      "sha256": "5127e545a89a5372d509a3afebe89faf68f0129768a5d91aefb3eb16b8ce0369",
+      "sha256": "62b7dcf1b39ca544f3b9d8e2c9cdd71ad373e90d5e1aba64807b7bcab8ebd600",
       "type": "image",
-      "sizeBytes": 269182,
-      "updatedAt": "2026-11-28T11:25:57.486Z"
+      "sizeBytes": 198236,
+      "updatedAt": "2026-11-28T13:00:12.498Z"
+    },
+    "public/media/java-vibes/decor/opening-video.webm": {
+      "sha256": "9ed25c3f3bbad625c231f7df84fffec233bfef6fb40bf5da8a7c682f40322eb2",
+      "type": "video",
+      "sizeBytes": 2035014,
+      "updatedAt": "2026-11-28T13:00:12.479Z"
+    },
+    "public/media/java-vibes/decor/opening-video.mp4": {
+      "sha256": "06ed5756cea68152edcd1cc5f84d851b0e63d3dc2faaebae6829af22fe5c9d34",
+      "type": "video",
+      "sizeBytes": 3053514,
+      "updatedAt": "2026-11-28T13:00:12.496Z"
+    },
+    "public/media/invitations/sari-dan-andi/opening-video.webm": {
+      "sha256": "9ed25c3f3bbad625c231f7df84fffec233bfef6fb40bf5da8a7c682f40322eb2",
+      "type": "video",
+      "sizeBytes": 2035014,
+      "updatedAt": "2026-11-28T13:00:12.503Z"
+    },
+    "public/media/invitations/sari-dan-andi/opening-video.mp4": {
+      "sha256": "06ed5756cea68152edcd1cc5f84d851b0e63d3dc2faaebae6829af22fe5c9d34",
+      "type": "video",
+      "sizeBytes": 3053514,
+      "updatedAt": "2026-11-28T13:00:12.509Z"
+    },
+    "public/media/invitations/sari-dan-andi/opening-poster.webp": {
+      "sha256": "62b7dcf1b39ca544f3b9d8e2c9cdd71ad373e90d5e1aba64807b7bcab8ebd600",
+      "type": "image",
+      "sizeBytes": 198236,
+      "updatedAt": "2026-11-28T13:00:12.511Z"
     }
   }
 }

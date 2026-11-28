@@ -28,6 +28,9 @@ const media = [...new Set([
   content.story_image_path,
   ...(content.gallery_paths ?? []),
   content.music_path,
+  content.theme_overrides?.opening_video_webm,
+  content.theme_overrides?.opening_video_mp4,
+  content.theme_overrides?.opening_poster_path,
 ].filter(Boolean))];
 
 for (const file of media) {

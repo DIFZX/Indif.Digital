@@ -192,6 +192,24 @@ export function JavaVibesClientApp({
     typeof overrides.save_date_photo === "string" && overrides.save_date_photo.trim()
       ? resolveMediaUrl(overrides.save_date_photo)
       : galleryPaths?.[2] || profilePath;
+  const openingVideoWebmPath =
+    typeof overrides.opening_video_webm === "string" && overrides.opening_video_webm.trim()
+      ? resolveMediaUrl(overrides.opening_video_webm)
+      : "/media/java-vibes/decor/opening-video.webm";
+  const openingVideoMp4Path =
+    typeof overrides.opening_video_mp4 === "string" && overrides.opening_video_mp4.trim()
+      ? resolveMediaUrl(overrides.opening_video_mp4)
+      : "opening_video_mp4" in overrides && !overrides.opening_video_mp4
+        ? null
+        : "/media/java-vibes/decor/opening-video.mp4";
+  const openingPosterPath =
+    typeof overrides.opening_poster_path === "string" && overrides.opening_poster_path.trim()
+      ? resolveMediaUrl(overrides.opening_poster_path)
+      : "/media/java-vibes/decor/opening-poster.webp";
+  const openingRevealSeconds =
+    typeof overrides.opening_reveal_seconds === "number" && Number.isFinite(overrides.opening_reveal_seconds)
+      ? overrides.opening_reveal_seconds
+      : 7;
 
   // Enforce iOS / WhatsApp inline muted attributes on mount without interrupting buffering
   useEffect(() => {
@@ -223,7 +241,7 @@ export function JavaVibesClientApp({
     const reveal = () => setHeroContentVisible(true);
 
     const watchPlaybackTime = () => {
-      if (video.currentTime >= 4) {
+      if (video.currentTime >= openingRevealSeconds) {
         reveal();
         return;
       }
@@ -252,7 +270,7 @@ export function JavaVibesClientApp({
     scheduleWatch();
 
     // Safety fallback so slow 3G / iOS Low Power Mode never hides the couple title
-    const fallbackTimer = window.setTimeout(reveal, 6500);
+    const fallbackTimer = window.setTimeout(reveal, Math.round((openingRevealSeconds + 3.5) * 1000));
 
     // Only trigger play if not already started by openInvitation click gesture
     if (video.paused && !video.ended) {
@@ -274,11 +292,11 @@ export function JavaVibesClientApp({
         ).cancelVideoFrameCallback(videoFrameId);
       }
     };
-  }, [opened]);
+  }, [opened, openingRevealSeconds]);
 
   function handleVideoTimeUpdate() {
     const video = heroVideoRef.current;
-    if (video && video.currentTime >= 4) {
+    if (video && video.currentTime >= openingRevealSeconds) {
       setHeroContentVisible(true);
     }
   }
@@ -688,7 +706,7 @@ export function JavaVibesClientApp({
           <video
             ref={heroVideoRef}
             className={styles.heroVideo}
-            poster="/media/java-vibes/decor/opening-poster.webp"
+            poster={openingPosterPath}
             muted
             playsInline
             preload="auto"
@@ -698,7 +716,8 @@ export function JavaVibesClientApp({
             tabIndex={-1}
             aria-hidden="true"
           >
-            <source src="/media/java-vibes/decor/vidio-opening.mp4" type="video/mp4" />
+            <source src={openingVideoWebmPath} type="video/webm" />
+            {openingVideoMp4Path && <source src={openingVideoMp4Path} type="video/mp4" />}
           </video>
 
           {/* Lightened Overlay for Optimal Video Visibility */}
