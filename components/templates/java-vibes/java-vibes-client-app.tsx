@@ -25,13 +25,45 @@ type Props = {
 };
 
 function formatEventDate(value: string) {
-  return new Intl.DateTimeFormat("id-ID", {
+  const formatted = new Intl.DateTimeFormat("id-ID", {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
     timeZone: "Asia/Jakarta",
   }).format(new Date(`${value}T12:00:00+07:00`));
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
+function getEventDateParts(value: string) {
+  const date = new Date(`${value}T12:00:00+07:00`);
+  const rawWeekday = new Intl.DateTimeFormat("id-ID", {
+    weekday: "long",
+    timeZone: "Asia/Jakarta",
+  }).format(date);
+  const day = new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    timeZone: "Asia/Jakarta",
+  }).format(date);
+  const monthYear = new Intl.DateTimeFormat("id-ID", {
+    month: "long",
+    year: "numeric",
+    timeZone: "Asia/Jakarta",
+  }).format(date);
+  return {
+    weekday: rawWeekday.charAt(0).toUpperCase() + rawWeekday.slice(1),
+    day,
+    monthYear,
+  };
+}
+
+function resolveInstagram(handle?: string | null) {
+  if (!handle || !handle.trim()) {
+    return { href: "https://instagram.com", label: "Instagram" };
+  }
+  const clean = handle.trim().replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@/, "").replace(/\/+$/, "");
+  if (!clean) return { href: "https://instagram.com", label: "Instagram" };
+  return { href: `https://instagram.com/${clean}`, label: `@${clean}` };
 }
 
 function formatRelativeTime(dateString: string) {
@@ -92,6 +124,74 @@ export function JavaVibesClientApp({
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const displayGuestName = guestName || "Tamu Undangan";
+
+  const overrides = invitation.theme_overrides ?? {};
+  const openingMark =
+    typeof overrides.opening_mark === "string"
+      ? overrides.opening_mark
+      : "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم";
+  const openingGreeting =
+    typeof overrides.opening_greeting === "string" && overrides.opening_greeting.trim()
+      ? overrides.opening_greeting.trim()
+      : "Assalamu'alaikum Wr. Wb.";
+  const ceremonyLabel =
+    typeof overrides.ceremony_label === "string" && overrides.ceremony_label.trim()
+      ? overrides.ceremony_label.trim()
+      : "Akad Nikah";
+  const receptionLabel =
+    typeof overrides.reception_label === "string" && overrides.reception_label.trim()
+      ? overrides.reception_label.trim()
+      : "Resepsi";
+  const ceremonyDateParts = getEventDateParts(invitation.event_date);
+  const receptionDateParts = getEventDateParts(
+    typeof overrides.reception_date === "string" && overrides.reception_date.trim()
+      ? overrides.reception_date.trim()
+      : invitation.event_date,
+  );
+  const ceremonyVenueName = invitation.venue_name;
+  const ceremonyVenueAddress =
+    invitation.venue_address &&
+    invitation.venue_address.trim().toLowerCase() !== ceremonyVenueName.trim().toLowerCase()
+      ? invitation.venue_address
+      : "";
+  const ceremonyMapsUrl = invitation.maps_url || null;
+
+  const receptionVenueName =
+    typeof overrides.reception_venue_name === "string" && overrides.reception_venue_name.trim()
+      ? overrides.reception_venue_name.trim()
+      : invitation.venue_name;
+  const rawReceptionAddress =
+    typeof overrides.reception_venue_address === "string"
+      ? overrides.reception_venue_address
+      : overrides.reception_venue_name
+        ? ""
+        : invitation.venue_address;
+  const receptionVenueAddress =
+    rawReceptionAddress &&
+    rawReceptionAddress.trim().toLowerCase() !== receptionVenueName.trim().toLowerCase()
+      ? rawReceptionAddress
+      : "";
+  const receptionMapsUrl =
+    "reception_maps_url" in overrides
+      ? overrides.reception_maps_url || null
+      : overrides.reception_venue_name
+        ? null
+        : invitation.maps_url || null;
+
+  const brideIg = resolveInstagram(typeof overrides.bride_instagram === "string" ? overrides.bride_instagram : null);
+  const groomIg = resolveInstagram(typeof overrides.groom_instagram === "string" ? overrides.groom_instagram : null);
+
+  const showStory = overrides.hide_story !== true && overrides.hide_story !== "true";
+  const hasBankAccount = Boolean(invitation.gift_info?.account_number?.trim());
+  const hasGiftAddress = Boolean(invitation.gift_info?.shipping_address?.trim());
+  const showGift =
+    overrides.hide_gift !== true &&
+    overrides.hide_gift !== "true" &&
+    (hasBankAccount || hasGiftAddress || !("hide_gift" in overrides));
+  const saveDatePhotoPath =
+    typeof overrides.save_date_photo === "string" && overrides.save_date_photo.trim()
+      ? resolveMediaUrl(overrides.save_date_photo)
+      : galleryPaths?.[2] || profilePath;
 
   // Watch video playback time to reveal content at 4 seconds, and auto-play on opened
   useEffect(() => {
@@ -339,19 +439,9 @@ export function JavaVibesClientApp({
 
   async function handleSubmitRsvp(e: FormEvent) {
     e.preventDefault();
-    if (!rsvpName.trim()) return;
+    if (!rsvpName.trim() || submitting) return;
     setSubmitting(true);
     setStatusMessage(null);
-
-    const newGreeting: Greeting = {
-      id: "greeting-" + Date.now(),
-      guest_name: rsvpName.trim(),
-      attendance: rsvpAttendance,
-      message:
-        rsvpMessage.trim() ||
-        `Selamat menempuh hidup baru ${coupleNames}, semoga sakinah mawaddah warahmah!`,
-      created_at: new Date().toISOString(),
-    };
 
     try {
       const res = await fetch("/api/guest-response", {
@@ -361,14 +451,22 @@ export function JavaVibesClientApp({
           invitationId: invitation.id,
           guestName: rsvpName.trim(),
           attendance: rsvpAttendance,
-          guestCount: rsvpGuestCount,
+          guestCount: rsvpAttendance === "not_attending" ? 1 : rsvpGuestCount,
           message: rsvpMessage.trim(),
         }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        const greetingToAdd: Greeting = data.greeting || newGreeting;
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        setStatusMessage({
+          type: "error",
+          text: data?.message || "Ucapan belum berhasil dikirim. Silakan coba lagi.",
+        });
+        return;
+      }
+
+      if (data?.greeting) {
+        const greetingToAdd: Greeting = data.greeting;
         setGreetings((prev) => {
           const next = [greetingToAdd, ...prev.filter((g) => g.id !== greetingToAdd.id)];
           try {
@@ -379,43 +477,20 @@ export function JavaVibesClientApp({
           } catch {}
           return next;
         });
-        setStatusMessage({
-          type: "success",
-          text: "Matur nuwun, doa restu & konfirmasi kehadiran panjenengan sampun katampi.",
-        });
-      } else {
-        setGreetings((prev) => {
-          const next = [newGreeting, ...prev.filter((g) => g.id !== newGreeting.id)];
-          try {
-            localStorage.setItem(
-              `java_vibes_wishes_${invitation.id}`,
-              JSON.stringify(next.slice(0, 50))
-            );
-          } catch {}
-          return next;
-        });
-        setStatusMessage({
-          type: "success",
-          text: "Doa restu Anda berhasil dikirim.",
-        });
       }
-      setRsvpMessage("");
-    } catch {
-      setGreetings((prev) => {
-        const next = [newGreeting, ...prev.filter((g) => g.id !== newGreeting.id)];
-        try {
-          localStorage.setItem(
-            `java_vibes_wishes_${invitation.id}`,
-            JSON.stringify(next.slice(0, 50))
-          );
-        } catch {}
-        return next;
-      });
+
       setStatusMessage({
         type: "success",
-        text: "Doa restu Anda berhasil dikirim.",
+        text: data?.message || "Matur nuwun, doa restu & konfirmasi kehadiran panjenengan sampun katampi.",
       });
-      setRsvpMessage("");
+      if (res.status !== 207) {
+        setRsvpMessage("");
+      }
+    } catch {
+      setStatusMessage({
+        type: "error",
+        text: "Koneksi terputus. Silakan coba kirim ulang beberapa saat lagi.",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -524,7 +599,7 @@ export function JavaVibesClientApp({
                   alt={coupleNames}
                   fill
                   priority
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "cover", objectPosition: "center 20%" }}
                   sizes="220px"
                 />
               </div>
@@ -641,15 +716,17 @@ export function JavaVibesClientApp({
 
           <div className={`${styles.archCard} jv-reveal jv-reveal-zoom`}>
             <div className={styles.archCardTopImage}>
-              <Image src={profilePath} alt={coupleNames} fill style={{ objectFit: "cover" }} sizes="400px" />
+              <Image src={profilePath} alt={coupleNames} fill style={{ objectFit: "cover", objectPosition: "center 22%" }} sizes="400px" />
             </div>
             <div className={styles.archCardBody}>
               <div className={`${styles.cursiveCoupleName} jv-reveal jv-reveal-up`}>
                 {invitation.bride_short_name} &amp; {invitation.groom_short_name}
               </div>
-              <div className={`${styles.arabicBismillah} jv-reveal jv-reveal-up`}>
-                بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم
-              </div>
+              {openingMark.trim().length > 0 && (
+                <div className={`${styles.arabicBismillah} jv-reveal jv-reveal-up`}>
+                  {openingMark}
+                </div>
+              )}
               <p className={`${styles.quoteText} jv-reveal jv-reveal-up`}>
                 &ldquo;{invitation.quote_text}&rdquo;
               </p>
@@ -672,12 +749,12 @@ export function JavaVibesClientApp({
             </div>
 
             <div className={`${styles.sectionTitleCursive} jv-reveal jv-reveal-down`}>Bride &amp; Groom</div>
-            <div className={`${styles.salamText} jv-reveal jv-reveal-up`}>Assalamu&apos;alaikum Wr. Wb.</div>
+            <div className={`${styles.salamText} jv-reveal jv-reveal-up`}>{openingGreeting}</div>
             <p className={`${styles.introDesc} jv-reveal jv-reveal-up`}>
               {invitation.opening_text}
             </p>
 
-            {/* THE BRIDE (Dita Maharani Putri) */}
+            {/* THE BRIDE */}
             <div className={`${styles.personBlock} jv-reveal jv-reveal-left`}>
               <div className={styles.photoFrameMelati}>
                 {/* Waving Ronce Melati Left */}
@@ -689,21 +766,21 @@ export function JavaVibesClientApp({
                   <Image src="/media/java-vibes/decor/melati-sway-right.webp" alt="" width={105} height={145} style={{ width: "100%", height: "auto" }} />
                 </div>
                 <div className={styles.photoArchInner}>
-                  <Image src={bridePhotoPath} alt={invitation.bride_name} fill style={{ objectFit: "cover" }} sizes="220px" />
+                  <Image src={bridePhotoPath} alt={invitation.bride_name} fill style={{ objectFit: "cover", objectPosition: "center 18%" }} sizes="220px" />
                 </div>
               </div>
               <div className={styles.personShortName}>{invitation.bride_short_name}</div>
               <div className={styles.personFullName}>{invitation.bride_name}</div>
               <div className={styles.personParents}>{invitation.bride_parents}</div>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.instagramPill}>
+              <a href={brideIg.href} target="_blank" rel="noopener noreferrer" className={styles.instagramPill}>
                 <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                Instagram
+                {brideIg.label}
               </a>
             </div>
 
             <div className={`${styles.coupleAmpersand} jv-reveal jv-reveal-zoom`}>&amp;</div>
 
-            {/* THE GROOM (Fajar Sidik) */}
+            {/* THE GROOM */}
             <div className={`${styles.personBlock} jv-reveal jv-reveal-right`}>
               <div className={styles.photoFrameMelati}>
                 <div className={styles.melatiSwayLeft}>
@@ -713,21 +790,21 @@ export function JavaVibesClientApp({
                   <Image src="/media/java-vibes/decor/melati-sway-right.webp" alt="" width={105} height={145} style={{ width: "100%", height: "auto" }} />
                 </div>
                 <div className={styles.photoArchInner}>
-                  <Image src={groomPhotoPath} alt={invitation.groom_name} fill style={{ objectFit: "cover" }} sizes="220px" />
+                  <Image src={groomPhotoPath} alt={invitation.groom_name} fill style={{ objectFit: "cover", objectPosition: "center 18%" }} sizes="220px" />
                 </div>
               </div>
               <div className={styles.personShortName}>{invitation.groom_short_name}</div>
               <div className={styles.personFullName}>{invitation.groom_name}</div>
               <div className={styles.personParents}>{invitation.groom_parents}</div>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className={styles.instagramPill}>
+              <a href={groomIg.href} target="_blank" rel="noopener noreferrer" className={styles.instagramPill}>
                 <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                Instagram
+                {groomIg.label}
               </a>
             </div>
           </div>
         </section>
 
-        {/* SLIDE 3: SAVE THE DATE & ACARA (AKAD & RESEPSI) */}
+        {/* SLIDE 3: SAVE THE DATE & ACARA */}
         <section id="acara" className={styles.sectionSaveTheDate}>
           <div className={styles.saveDateBackdrop} />
 
@@ -736,10 +813,10 @@ export function JavaVibesClientApp({
             <div className={`${styles.saveDateArchContainer} jv-reveal jv-reveal-down`}>
               <div className={styles.saveDatePhotoFrame}>
                 <Image
-                  src={galleryPaths?.[2] || profilePath}
+                  src={saveDatePhotoPath}
                   alt={coupleNames}
                   fill
-                  style={{ objectFit: "cover", objectPosition: "center 25%" }}
+                  style={{ objectFit: "cover", objectPosition: "center 22%" }}
                   sizes="260px"
                   priority
                 />
@@ -788,47 +865,56 @@ export function JavaVibesClientApp({
               <Image src="/media/java-vibes/decor/gold-divider.webp" alt="" width={240} height={40} style={{ width: "100%", height: "auto" }} />
             </div>
 
-            {/* AKAD NIKAH CARD */}
+            {/* CEREMONY CARD (AKAD / PEMBERKATAN) */}
             <div className={`${styles.eventCard} jv-reveal jv-reveal-left`}>
-              <div className={styles.eventTitle}>Akad Nikah</div>
-              <div className={styles.eventDay}>Sabtu</div>
-              <div className={styles.eventBigDate}>12</div>
-              <div className={styles.eventMonthYear}>Desember 2026</div>
+              <div className={styles.eventTitle}>{ceremonyLabel}</div>
+              <div className={styles.eventDay}>{ceremonyDateParts.weekday}</div>
+              <div className={styles.eventBigDate}>{ceremonyDateParts.day}</div>
+              <div className={styles.eventMonthYear}>{ceremonyDateParts.monthYear}</div>
               <div className={styles.eventTime}>{invitation.ceremony_time}</div>
 
               <div className={styles.eventLocationPin}>
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               </div>
-              <div className={styles.eventVenueName}>{invitation.venue_name}</div>
-              <div className={styles.eventVenueAddress}>{invitation.venue_address}</div>
+              <div className={styles.eventVenueName}>{ceremonyVenueName}</div>
+              {ceremonyVenueAddress && (
+                <div className={styles.eventVenueAddress}>{ceremonyVenueAddress}</div>
+              )}
 
-              <a href={invitation.maps_url || "#"} target="_blank" rel="noopener noreferrer" className={styles.btnLocation}>
-                Petunjuk ke Lokasi
-              </a>
+              {ceremonyMapsUrl && (
+                <a href={ceremonyMapsUrl} target="_blank" rel="noopener noreferrer" className={styles.btnLocation}>
+                  Petunjuk ke Lokasi
+                </a>
+              )}
             </div>
 
             {/* RESEPSI CARD */}
             <div className={`${styles.eventCard} jv-reveal jv-reveal-right`}>
-              <div className={styles.eventTitle}>Resepsi</div>
-              <div className={styles.eventDay}>Sabtu</div>
-              <div className={styles.eventBigDate}>12</div>
-              <div className={styles.eventMonthYear}>Desember 2026</div>
+              <div className={styles.eventTitle}>{receptionLabel}</div>
+              <div className={styles.eventDay}>{receptionDateParts.weekday}</div>
+              <div className={styles.eventBigDate}>{receptionDateParts.day}</div>
+              <div className={styles.eventMonthYear}>{receptionDateParts.monthYear}</div>
               <div className={styles.eventTime}>{invitation.reception_time}</div>
 
               <div className={styles.eventLocationPin}>
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               </div>
-              <div className={styles.eventVenueName}>{invitation.venue_name}</div>
-              <div className={styles.eventVenueAddress}>{invitation.venue_address}</div>
+              <div className={styles.eventVenueName}>{receptionVenueName}</div>
+              {receptionVenueAddress && (
+                <div className={styles.eventVenueAddress}>{receptionVenueAddress}</div>
+              )}
 
-              <a href={invitation.maps_url || "#"} target="_blank" rel="noopener noreferrer" className={styles.btnLocation}>
-                Petunjuk ke Lokasi
-              </a>
+              {receptionMapsUrl && (
+                <a href={receptionMapsUrl} target="_blank" rel="noopener noreferrer" className={styles.btnLocation}>
+                  Petunjuk ke Lokasi
+                </a>
+              )}
             </div>
           </div>
         </section>
 
         {/* SLIDE 4: KISAH CINTA (OUR LOVE STORY) */}
+        {showStory && (
         <section id="kisah" className={styles.sectionBlock}>
           <div className={`${styles.storyCard} jv-reveal jv-reveal-up`}>
             <div className={`${styles.sectionTitleCursive} jv-reveal jv-reveal-down`}>Our Love Story</div>
@@ -869,6 +955,7 @@ export function JavaVibesClientApp({
             </div>
           </div>
         </section>
+        )}
 
         {/* SLIDE 5: GALERI (OUR MOMENTS) */}
         <section id="galeri" className={styles.sectionBlock}>
@@ -878,7 +965,7 @@ export function JavaVibesClientApp({
               Potret kebersamaan yang terpatri dalam kenangan indah menuju ikatan suci.
             </p>
 
-            <div className={styles.galleryGrid}>
+            <div className={`${styles.galleryGrid} ${galleryPaths.length % 2 === 0 ? styles.galleryGridEven : ""}`}>
               {galleryPaths.map((path, idx) => (
                 <div
                   key={idx}
@@ -886,7 +973,7 @@ export function JavaVibesClientApp({
                   style={{ transitionDelay: `${idx * 100}ms` }}
                   onClick={() => setLightboxIndex(idx)}
                 >
-                  <Image src={path} alt={`Galeri ${idx + 1}`} fill style={{ objectFit: "cover" }} sizes="(max-width: 480px) 50vw, 240px" />
+                  <Image src={path} alt={`Galeri ${idx + 1}`} fill style={{ objectFit: "cover", objectPosition: "center 18%" }} sizes="(max-width: 480px) 50vw, 240px" />
                 </div>
               ))}
             </div>
@@ -894,6 +981,7 @@ export function JavaVibesClientApp({
         </section>
 
         {/* SLIDE 6: TANDA KASIH (WEDDING GIFT) */}
+        {showGift && (
         <section id="hadiah" className={styles.sectionBlock}>
           <div className={`${styles.giftCard} jv-reveal jv-reveal-up`}>
             <div className={`${styles.sectionTitleCursive} jv-reveal jv-reveal-down`}>Tanda Kasih</div>
@@ -902,28 +990,35 @@ export function JavaVibesClientApp({
             </p>
 
             {/* Bank Card */}
+            {hasBankAccount && (
             <div className={`${styles.bankBox} jv-reveal jv-reveal-zoom`}>
               <div className={styles.bankLogo}>{invitation.gift_info.bank || "BCA"}</div>
-              <div className={styles.bankAccountNo}>{invitation.gift_info.account_number || "7125091428"}</div>
-              <div className={styles.bankHolder}>a.n. {invitation.gift_info.account_name || "Fajar Sidik"}</div>
+              <div className={styles.bankAccountNo}>{invitation.gift_info.account_number}</div>
+              <div className={styles.bankHolder}>a.n. {invitation.gift_info.account_name}</div>
               <button
                 type="button"
-                onClick={() => copyToClipboard(invitation.gift_info.account_number || "7125091428", "rekening")}
+                onClick={() => copyToClipboard(invitation.gift_info.account_number || "", "rekening")}
                 className={styles.btnCopy}
               >
                 {copiedKey === "rekening" ? "Tersalin!" : "Salin No. Rekening"}
               </button>
             </div>
+            )}
 
             {/* Kado Fisik / Alamat */}
             <div className={`${styles.addressBox} jv-reveal jv-reveal-zoom`}>
               <div className={styles.addressTitle}>Kirim Kado</div>
               <div className={styles.addressText}>
-                {invitation.venue_name}, {invitation.venue_address}
+                {invitation.gift_info.shipping_address || `${invitation.venue_name}, ${invitation.venue_address}`}
               </div>
               <button
                 type="button"
-                onClick={() => copyToClipboard(`${invitation.venue_name}, ${invitation.venue_address}`, "alamat")}
+                onClick={() =>
+                  copyToClipboard(
+                    invitation.gift_info.shipping_address || `${invitation.venue_name}, ${invitation.venue_address}`,
+                    "alamat",
+                  )
+                }
                 className={styles.btnCopy}
               >
                 {copiedKey === "alamat" ? "Tersalin!" : "Salin Alamat"}
@@ -931,6 +1026,7 @@ export function JavaVibesClientApp({
             </div>
           </div>
         </section>
+        )}
 
         {/* SLIDE 7: DOA RESTU & RSVP (CONNECTED TO SUPABASE) */}
         <section id="ucapan" className={styles.sectionBlock}>
@@ -991,7 +1087,7 @@ export function JavaVibesClientApp({
               </div>
 
               {statusMessage && (
-                <div className={styles.formStatusSuccess}>
+                <div className={statusMessage.type === "error" ? styles.formStatusError : styles.formStatusSuccess}>
                   {statusMessage.text}
                 </div>
               )}
@@ -1088,6 +1184,7 @@ export function JavaVibesClientApp({
           >
             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
           </button>
+          {showStory && (
           <button
             type="button"
             onClick={() => scrollToSection("kisah")}
@@ -1096,6 +1193,7 @@ export function JavaVibesClientApp({
           >
             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
           </button>
+          )}
           <button
             type="button"
             onClick={() => scrollToSection("galeri")}
@@ -1104,6 +1202,7 @@ export function JavaVibesClientApp({
           >
             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
           </button>
+          {showGift && (
           <button
             type="button"
             onClick={() => scrollToSection("hadiah")}
@@ -1112,6 +1211,7 @@ export function JavaVibesClientApp({
           >
             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
           </button>
+          )}
           <button
             type="button"
             onClick={() => scrollToSection("ucapan")}

@@ -1135,6 +1135,11 @@
   aspect-ratio: 16/10;
 }
 
+.galleryGridEven .galleryThumb:first-child {
+  grid-column: span 1;
+  aspect-ratio: 4/5;
+}
+
 .galleryThumb:hover {
   transform: scale(1.02);
   box-shadow: 0 10px 24px rgba(85, 11, 24, 0.25);
@@ -1366,6 +1371,17 @@
   background: rgba(46, 125, 50, 0.12);
   border: 1px solid #2e7d32;
   color: #1b5e20;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.formStatusError {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: rgba(183, 28, 28, 0.12);
+  border: 1px solid #c62828;
+  color: #b71c1c;
   font-size: 0.78rem;
   font-weight: 600;
   text-align: center;
