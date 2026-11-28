@@ -270,10 +270,9 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
         </div>
       </div>
 
-      {/* Caption matching the user's reference screenshot */}
+      {/* Caption & Scroll Cue */}
       <div className={styles.captionSection}>
         <span className={styles.templateTag}>{activeTemplate.name}</span>
-        <h3 className={styles.captionHeading}>Detail yang bercerita.</h3>
         {activeTemplate.preview_path ? (
           <a
             href={activeTemplate.preview_path}
@@ -282,7 +281,7 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
             className={styles.previewAction}
           >
             <span>Sentuh desain untuk melihat undangannya</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
               <polyline points="15 3 21 3 21 9" />
               <line x1="10" y1="14" x2="21" y2="3" />
@@ -291,6 +290,16 @@ export function CoverflowShowcase({ templates, initialSlug = "sunda-vibes" }: Co
         ) : (
           <p className={styles.captionSub}>Sentuh desain untuk melihat undangannya.</p>
         )}
+
+        <a href="#templates" className={styles.scrollCatalogPrompt}>
+          <span>Scroll untuk melihat katalog</span>
+          <span className={styles.scrollArrowLoop} aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 4v14" />
+              <path d="m18 13-6 6-6-6" />
+            </svg>
+          </span>
+        </a>
       </div>
     </div>
   );

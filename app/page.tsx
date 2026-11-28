@@ -265,7 +265,7 @@ export default async function HomePage() {
               </p>
               <div className={styles.heroActions}>
                 <a className={styles.primaryAction} href="#templates">
-                  Temukan undangan kalian
+                  Lihat Katalog Harga
                 </a>
                 <a
                   className={styles.customActionCard}
