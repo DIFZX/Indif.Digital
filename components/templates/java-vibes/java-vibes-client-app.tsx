@@ -86,6 +86,22 @@ function formatRelativeTime(dateString: string) {
   }
 }
 
+const GREETINGS_PER_PAGE = 5;
+
+function getPaginationItems(current: number, total: number): Array<number | "ellipsis"> {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const items: Array<number | "ellipsis"> = [1];
+  if (current > 3) items.push("ellipsis");
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  for (let p = start; p <= end; p++) items.push(p);
+  if (current < total - 2) items.push("ellipsis");
+  items.push(total);
+  return items;
+}
+
 export function JavaVibesClientApp({
   invitation,
   greetings: initialGreetings,
@@ -115,6 +131,7 @@ export function JavaVibesClientApp({
 
   // Greetings & RSVP state
   const [greetings, setGreetings] = useState<Greeting[]>(initialGreetings);
+  const [greetingsPage, setGreetingsPage] = useState(1);
   const [rsvpName, setRsvpName] = useState(guestName || "");
   const [rsvpAttendance, setRsvpAttendance] = useState<"attending" | "not_attending">("attending");
   const [rsvpGuestCount, setRsvpGuestCount] = useState(1);
@@ -301,30 +318,20 @@ export function JavaVibesClientApp({
     }
   }
 
-  // Restore wishes saved locally across page refreshes
+  // Clear any legacy localStorage wish cache so Supabase remains the single source of truth
   useEffect(() => {
-    const restoreTimer = window.setTimeout(() => {
     try {
-      const stored = localStorage.getItem(`java_vibes_wishes_${invitation.id}`);
-      if (stored) {
-        const parsed = JSON.parse(stored) as Greeting[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setGreetings((prev) => {
-            const map = new Map<string, Greeting>();
-            prev.forEach((g) => map.set(g.id || g.message, g));
-            parsed.forEach((g) => {
-              if (!map.has(g.id || g.message)) {
-                map.set(g.id || g.message, g);
-              }
-            });
-            return Array.from(map.values());
-          });
-        }
-      }
+      localStorage.removeItem(`java_vibes_wishes_${invitation.id}`);
     } catch {}
-    }, 0);
-    return () => window.clearTimeout(restoreTimer);
   }, [invitation.id]);
+
+  const totalGreetingPages = Math.max(1, Math.ceil(greetings.length / GREETINGS_PER_PAGE));
+  const currentGreetingsPage = Math.min(greetingsPage, totalGreetingPages);
+  const paginatedGreetings = greetings.slice(
+    (currentGreetingsPage - 1) * GREETINGS_PER_PAGE,
+    currentGreetingsPage * GREETINGS_PER_PAGE,
+  );
+  const paginationItems = getPaginationItems(currentGreetingsPage, totalGreetingPages);
 
   // Live countdown timer
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -524,16 +531,8 @@ export function JavaVibesClientApp({
 
       if (data?.greeting) {
         const greetingToAdd: Greeting = data.greeting;
-        setGreetings((prev) => {
-          const next = [greetingToAdd, ...prev.filter((g) => g.id !== greetingToAdd.id)];
-          try {
-            localStorage.setItem(
-              `java_vibes_wishes_${invitation.id}`,
-              JSON.stringify(next.slice(0, 50))
-            );
-          } catch {}
-          return next;
-        });
+        setGreetings((prev) => [greetingToAdd, ...prev.filter((g) => g.id !== greetingToAdd.id)]);
+        setGreetingsPage(1);
       }
 
       setStatusMessage({
@@ -1154,9 +1153,9 @@ export function JavaVibesClientApp({
               </button>
             </form>
 
-            {/* LIVE SUPABASE GREETINGS FEED */}
+            {/* LIVE SUPABASE GREETINGS FEED (5 PER PAGE) */}
             <div className={styles.greetingsFeed}>
-              {greetings.map((g) => (
+              {paginatedGreetings.map((g) => (
                 <div key={g.id || g.message} className={styles.greetingItem}>
                   <div className={styles.greetingHeader}>
                     <span className={styles.greetingAuthor}>{g.guest_name}</span>
@@ -1173,6 +1172,51 @@ export function JavaVibesClientApp({
                 </div>
               ))}
             </div>
+
+            {totalGreetingPages > 1 && (
+              <nav className={styles.greetingsPagination} aria-label="Navigasi halaman ucapan">
+                <div className={styles.paginationRow}>
+                  <button
+                    type="button"
+                    className={styles.pageBtn}
+                    onClick={() => setGreetingsPage(Math.max(1, currentGreetingsPage - 1))}
+                    disabled={currentGreetingsPage <= 1}
+                    aria-label="Halaman sebelumnya"
+                  >
+                    &lsaquo;
+                  </button>
+                  {paginationItems.map((item, idx) =>
+                    item === "ellipsis" ? (
+                      <span key={`ellipsis-${idx}`} className={styles.pageEllipsis} aria-hidden="true">
+                        &hellip;
+                      </span>
+                    ) : (
+                      <button
+                        key={item}
+                        type="button"
+                        className={`${styles.pageBtn} ${item === currentGreetingsPage ? styles.pageBtnActive : ""}`}
+                        onClick={() => setGreetingsPage(item)}
+                        aria-current={item === currentGreetingsPage ? "page" : undefined}
+                      >
+                        {item}
+                      </button>
+                    ),
+                  )}
+                  <button
+                    type="button"
+                    className={styles.pageBtn}
+                    onClick={() => setGreetingsPage(Math.min(totalGreetingPages, currentGreetingsPage + 1))}
+                    disabled={currentGreetingsPage >= totalGreetingPages}
+                    aria-label="Halaman berikutnya"
+                  >
+                    &rsaquo;
+                  </button>
+                </div>
+                <div className={styles.paginationInfo}>
+                  Halaman {currentGreetingsPage} dari {totalGreetingPages} &bull; {greetings.length} ucapan
+                </div>
+              </nav>
+            )}
           </div>
         </section>
 

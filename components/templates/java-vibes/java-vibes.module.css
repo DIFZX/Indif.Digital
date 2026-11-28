@@ -1390,13 +1390,73 @@
 /* Greetings List */
 .greetingsFeed {
   width: 100%;
-  max-height: 380px;
-  overflow-y: auto;
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  padding-right: 0.3rem;
+}
+
+.greetingsPagination {
+  width: 100%;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.paginationRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.pageBtn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(85, 11, 24, 0.35);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--jv-maroon);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--jv-gold);
+  background: rgba(212, 175, 55, 0.14);
+}
+
+.pageBtn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.pageBtnActive {
+  background: linear-gradient(135deg, var(--jv-maroon) 0%, #7d1829 100%);
+  color: #ffffff;
+  border-color: var(--jv-gold);
+  box-shadow: 0 4px 12px rgba(85, 11, 24, 0.28);
+}
+
+.pageEllipsis {
+  color: #8c6a54;
+  font-size: 0.85rem;
+  padding: 0 0.2rem;
+}
+
+.paginationInfo {
+  font-size: 0.72rem;
+  color: #6b4628;
+  font-weight: 500;
 }
 
 .greetingItem {
