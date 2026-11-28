@@ -1,0 +1,74 @@
+{
+  "slug": "putri-dan-al",
+  "bride_name": "Putri Maharani Febriyansyah",
+  "bride_short_name": "Putri",
+  "bride_parents": "Putri pertama dari 3 bersaudara, Bapak Rizal Febriyansyah & Ibu Meta Agustina",
+  "bride_photo_path": "/media/invitations/putri-dan-al/mempelai-wanita.webp",
+  "groom_name": "Hikmah Al Amanah",
+  "groom_short_name": "AL",
+  "groom_parents": "Putra ketiga dari 8 bersaudara, Alm. Bapak Rosidin & Ibu Neng Wartikah",
+  "groom_photo_path": "/media/invitations/putri-dan-al/mempelai-pria.webp",
+  "event_date": "2026-12-13",
+  "ceremony_time": "10:00 - 17:00 WIB",
+  "reception_time": "",
+  "venue_name": "Kediaman Mempelai Wanita",
+  "venue_address": "Jl. Nasional 1, Sukamandijaya, Kec. Ciasem, Kabupaten Subang, Jawa Barat",
+  "maps_url": "https://maps.app.goo.gl/afZtNsE6XgPahNq2A",
+  "opening_text": "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan acara akad nikah putra-putri kami:",
+  "quote_text": "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan-pasangan dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang.",
+  "quote_source": "QS. Ar-Rum: 21",
+  "story": [
+    {
+      "year": "2021",
+      "title": "Pertemuan Pertama",
+      "text": "Pada tahun 2021 kami bertemu di sebuah pasar pagi tanpa disengaja, dan pertemuan sederhana itu terjadi bermula saat saya membeli kue di toko dia. Dari kejadian itu kita mempunyai rasa nyaman satu sama lain."
+    },
+    {
+      "year": "26 Januari 2025",
+      "title": "Lamaran",
+      "text": "Dengan niat yang tulus dan restu keluarga, pada tanggal 26 Januari 2025 kami memutuskan untuk melangkah ke tahap yang lebih serius. Momen lamaran menjadi awal dari perjalanan baru yang penuh harapan dan doa-doa baik."
+    }
+  ],
+  "story_image_path": "/media/invitations/putri-dan-al/galeri-07-kisah.webp",
+  "cover_path": "/media/invitations/putri-dan-al/galeri-01-sampul.webp",
+  "profile_path": "/media/invitations/putri-dan-al/galeri-01-sampul.webp",
+  "gallery_paths": [
+    "/media/invitations/putri-dan-al/galeri-01-sampul.webp",
+    "/media/invitations/putri-dan-al/galeri-02.webp",
+    "/media/invitations/putri-dan-al/galeri-03.webp",
+    "/media/invitations/putri-dan-al/galeri-04.webp",
+    "/media/invitations/putri-dan-al/galeri-05.webp",
+    "/media/invitations/putri-dan-al/galeri-06.webp",
+    "/media/invitations/putri-dan-al/galeri-07-kisah.webp"
+  ],
+  "music_path": "/media/invitations/putri-dan-al/musik-lagu-pernikahan-kita.mp3",
+  "gift_info": {
+    "bank": "SeaBank",
+    "account_number": "901756344078",
+    "account_name": "Putri Maharani",
+    "accounts": [
+      {
+        "bank": "SeaBank",
+        "account_number": "901756344078",
+        "account_name": "Putri Maharani"
+      },
+      {
+        "bank": "SeaBank",
+        "account_number": "901218517200",
+        "account_name": "Hikmah Al Amanah"
+      }
+    ]
+  },
+  "theme_overrides": {
+    "bride_instagram": "@putrimaharani744",
+    "groom_instagram": "@all_amanahh",
+    "ceremony_label": "Akad Nikah",
+    "ceremony_starts_at": "2026-12-13T10:00:00+07:00",
+    "ceremony_ends_at": "2026-12-13T17:00:00+07:00",
+    "cover_photo_position": "center 24%",
+    "story_photo_position": "center 55%",
+    "featured_gallery_position": "center 25%"
+  },
+  "closing_text": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai. Atas kehadiran dan doa restunya, kami ucapkan terima kasih.",
+  "closing_greeting": "Kami yang berbahagia,"
+}

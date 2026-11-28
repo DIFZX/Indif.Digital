@@ -87,6 +87,32 @@ function formatGreetingTime(value: string) {
   }
 }
 
+const GREETINGS_PER_PAGE = 5;
+
+function getPaginationItems(current: number, total: number): Array<number | "ellipsis"> {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const items: Array<number | "ellipsis"> = [1];
+  if (current > 3) items.push("ellipsis");
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  for (let p = start; p <= end; p++) items.push(p);
+  if (current < total - 2) items.push("ellipsis");
+  items.push(total);
+  return items;
+}
+
+function normalizeInstagram(handle: unknown): { label: string; url: string } | null {
+  if (typeof handle !== "string") return null;
+  const cleaned = handle.trim().replace(/^@+/, "");
+  if (!cleaned) return null;
+  return {
+    label: `@${cleaned}`,
+    url: `https://instagram.com/${encodeURIComponent(cleaned)}`,
+  };
+}
+
 export function BlueGardenV2ClientApp({
   invitation,
   greetings: initialGreetings,
@@ -109,11 +135,12 @@ export function BlueGardenV2ClientApp({
   const [autoScrolling, setAutoScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("pembuka");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [copiedAccount, setCopiedAccount] = useState(false);
+  const [copiedAccountKey, setCopiedAccountKey] = useState<string | null>(null);
   const [countdown, setCountdown] = useState([0, 0, 0, 0]);
 
   // RSVP & Guestbook state
   const [greetings, setGreetings] = useState<Greeting[]>(initialGreetings);
+  const [greetingsPage, setGreetingsPage] = useState(1);
   const [rsvpName, setRsvpName] = useState(guestName || "");
   const [rsvpAttendance, setRsvpAttendance] = useState<"attending" | "not_attending">("attending");
   const [rsvpGuestCount, setRsvpGuestCount] = useState(1);
@@ -379,14 +406,16 @@ export function BlueGardenV2ClientApp({
     }
   }
 
-  async function handleCopyAccount() {
-    if (!invitation.gift_info?.account_number) return;
+  async function handleCopyAccount(accountKey: string, accountNumber: string) {
+    if (!accountNumber) return;
     try {
-      await navigator.clipboard.writeText(invitation.gift_info.account_number);
-      setCopiedAccount(true);
-      window.setTimeout(() => setCopiedAccount(false), 2400);
+      await navigator.clipboard.writeText(accountNumber);
+      setCopiedAccountKey(accountKey);
+      window.setTimeout(() => {
+        setCopiedAccountKey((prev) => (prev === accountKey ? null : prev));
+      }, 2400);
     } catch {
-      setCopiedAccount(false);
+      setCopiedAccountKey(null);
     }
   }
 
@@ -416,7 +445,8 @@ export function BlueGardenV2ClientApp({
         throw new Error(data.message || "Ucapan belum berhasil dikirim. Silakan coba lagi.");
       }
       if (data.greeting) {
-        setGreetings((current) => [data.greeting, ...current]);
+        setGreetings((current) => [data.greeting, ...current.filter((item) => item.id !== data.greeting.id)]);
+        setGreetingsPage(1);
       }
       setStatusMessage({ type: "success", text: data.message });
       if (response.status !== 207) {
@@ -437,10 +467,73 @@ export function BlueGardenV2ClientApp({
     }
   }
 
+  const ceremonyLabel =
+    typeof invitation.theme_overrides?.ceremony_label === "string" &&
+    invitation.theme_overrides.ceremony_label.trim()
+      ? invitation.theme_overrides.ceremony_label.trim()
+      : "Akad Nikah";
+  const receptionLabel =
+    typeof invitation.theme_overrides?.reception_label === "string" &&
+    invitation.theme_overrides.reception_label.trim()
+      ? invitation.theme_overrides.reception_label.trim()
+      : "Resepsi Pernikahan";
+
   const events = [
-    { label: "Akad Nikah", time: invitation.ceremony_time },
-    { label: "Resepsi Pernikahan", time: invitation.reception_time },
-  ];
+    invitation.ceremony_time?.trim()
+      ? { label: ceremonyLabel, time: invitation.ceremony_time.trim() }
+      : null,
+    invitation.reception_time?.trim()
+      ? { label: receptionLabel, time: invitation.reception_time.trim() }
+      : null,
+  ].filter((ev): ev is { label: string; time: string } => ev !== null);
+
+  const giftAccounts = (() => {
+    const rawAccounts = invitation.gift_info?.accounts;
+    if (Array.isArray(rawAccounts) && rawAccounts.length > 0) {
+      return rawAccounts
+        .filter((acc) => acc?.account_number)
+        .map((acc, index) => ({
+          key: `${acc.bank || "bank"}-${acc.account_number}-${index}`,
+          bank: acc.bank || "Transfer Bank",
+          account_number: acc.account_number || "",
+          account_name: acc.account_name || "",
+        }));
+    }
+    if (invitation.gift_info?.account_number) {
+      return [
+        {
+          key: `${invitation.gift_info.bank || "bank"}-${invitation.gift_info.account_number}-0`,
+          bank: invitation.gift_info.bank || "Transfer Bank",
+          account_number: invitation.gift_info.account_number,
+          account_name: invitation.gift_info.account_name || "",
+        },
+      ];
+    }
+    return [];
+  })();
+
+  const brideInstagram = normalizeInstagram(invitation.theme_overrides?.bride_instagram);
+  const groomInstagram = normalizeInstagram(invitation.theme_overrides?.groom_instagram);
+  const coverPhotoPosition =
+    typeof invitation.theme_overrides?.cover_photo_position === "string"
+      ? invitation.theme_overrides.cover_photo_position
+      : undefined;
+  const storyPhotoPosition =
+    typeof invitation.theme_overrides?.story_photo_position === "string"
+      ? invitation.theme_overrides.story_photo_position
+      : undefined;
+  const featuredGalleryPosition =
+    typeof invitation.theme_overrides?.featured_gallery_position === "string"
+      ? invitation.theme_overrides.featured_gallery_position
+      : undefined;
+
+  const totalGreetingPages = Math.max(1, Math.ceil(greetings.length / GREETINGS_PER_PAGE));
+  const currentGreetingsPage = Math.min(greetingsPage, totalGreetingPages);
+  const paginatedGreetings = greetings.slice(
+    (currentGreetingsPage - 1) * GREETINGS_PER_PAGE,
+    currentGreetingsPage * GREETINGS_PER_PAGE,
+  );
+  const paginationItems = getPaginationItems(currentGreetingsPage, totalGreetingPages);
 
   const storyItems =
     invitation.story && invitation.story.length > 0
@@ -559,6 +652,7 @@ export function BlueGardenV2ClientApp({
                   fill
                   sizes="120px"
                   className={styles.coverCameoImg}
+                  style={coverPhotoPosition ? { objectPosition: coverPhotoPosition } : undefined}
                   priority
                 />
               </div>
@@ -722,6 +816,16 @@ export function BlueGardenV2ClientApp({
                 <span className={styles.personRole}>Mempelai Wanita</span>
                 <h3 className={styles.personName}>{invitation.bride_name}</h3>
                 <p className={styles.personParents}>{invitation.bride_parents}</p>
+                {brideInstagram && (
+                  <a
+                    href={brideInstagram.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.personInstagram}
+                  >
+                    {brideInstagram.label}
+                  </a>
+                )}
               </article>
             </Reveal>
 
@@ -743,6 +847,16 @@ export function BlueGardenV2ClientApp({
                 <span className={styles.personRole}>Mempelai Pria</span>
                 <h3 className={styles.personName}>{invitation.groom_name}</h3>
                 <p className={styles.personParents}>{invitation.groom_parents}</p>
+                {groomInstagram && (
+                  <a
+                    href={groomInstagram.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.personInstagram}
+                  >
+                    {groomInstagram.label}
+                  </a>
+                )}
               </article>
             </Reveal>
           </div>
@@ -830,6 +944,7 @@ export function BlueGardenV2ClientApp({
                   fill
                   sizes="(max-width: 480px) 92vw, 390px"
                   className={styles.storyPhotoImg}
+                  style={storyPhotoPosition ? { objectPosition: storyPhotoPosition } : undefined}
                 />
               </div>
               <span className={styles.storyPhotoGoldRim} aria-hidden="true" />
@@ -882,6 +997,11 @@ export function BlueGardenV2ClientApp({
                       fill
                       sizes={index === 0 ? "(max-width: 480px) 92vw, 390px" : "(max-width: 480px) 45vw, 190px"}
                       className={styles.galleryImg}
+                      style={
+                        index === 0 && featuredGalleryPosition
+                          ? { objectPosition: featuredGalleryPosition }
+                          : undefined
+                      }
                     />
                   </span>
                   <span className={styles.galleryGoldOverlay} aria-hidden="true" />
@@ -892,7 +1012,7 @@ export function BlueGardenV2ClientApp({
         </section>
 
         {/* 7. WEDDING GIFT SECTION (STRICTLY ZERO FLOWERS ON GIFT CARD) */}
-        {invitation.gift_info && (
+        {giftAccounts.length > 0 && (
           <section id="hadiah" className={`${styles.section} ${styles.giftSection}`}>
             <Reveal>
               <header className={styles.sectionHeader}>
@@ -906,26 +1026,33 @@ export function BlueGardenV2ClientApp({
               </header>
             </Reveal>
 
-            <Reveal delay={100}>
-              <BlueGardenOrnateFrame variant="porcelain-blue" className={styles.giftCard}>
-                <div className={styles.giftTopRow}>
-                  <span className={styles.giftChipIcon}>
-                    <BlueGardenIcon name="chip" size={24} />
-                  </span>
-                  <span className={styles.giftBankName}>{invitation.gift_info.bank}</span>
-                </div>
-                <p className={styles.giftAccountNumber}>{invitation.gift_info.account_number}</p>
-                <p className={styles.giftAccountOwner}>a.n. {invitation.gift_info.account_name}</p>
-                <button
-                  type="button"
-                  className={styles.giftCopyBtn}
-                  onClick={handleCopyAccount}
-                >
-                  <BlueGardenIcon name={copiedAccount ? "check" : "copy"} size={15} />
-                  <span>{copiedAccount ? "Nomor Rekening Disalin" : "Salin Nomor Rekening"}</span>
-                </button>
-              </BlueGardenOrnateFrame>
-            </Reveal>
+            <div className={styles.giftStack}>
+              {giftAccounts.map((account, idx) => {
+                const isCopied = copiedAccountKey === account.key;
+                return (
+                  <Reveal key={account.key} delay={idx * 90}>
+                    <BlueGardenOrnateFrame variant="porcelain-blue" className={styles.giftCard}>
+                      <div className={styles.giftTopRow}>
+                        <span className={styles.giftChipIcon}>
+                          <BlueGardenIcon name="chip" size={24} />
+                        </span>
+                        <span className={styles.giftBankName}>{account.bank}</span>
+                      </div>
+                      <p className={styles.giftAccountNumber}>{account.account_number}</p>
+                      <p className={styles.giftAccountOwner}>a.n. {account.account_name}</p>
+                      <button
+                        type="button"
+                        className={styles.giftCopyBtn}
+                        onClick={() => handleCopyAccount(account.key, account.account_number)}
+                      >
+                        <BlueGardenIcon name={isCopied ? "check" : "copy"} size={15} />
+                        <span>{isCopied ? "Nomor Rekening Disalin" : "Salin Nomor Rekening"}</span>
+                      </button>
+                    </BlueGardenOrnateFrame>
+                  </Reveal>
+                );
+              })}
+            </div>
           </section>
         )}
 
@@ -1042,7 +1169,7 @@ export function BlueGardenV2ClientApp({
               <div className={styles.wishesContainer}>
                 <p className={styles.wishesCountLabel}>{greetings.length} Ucapan &amp; Doa</p>
                 <div className={styles.wishesList}>
-                  {greetings.map((item) => (
+                  {paginatedGreetings.map((item) => (
                     <article key={item.id} className={styles.wishItem}>
                       <div className={styles.wishHeader}>
                         <strong className={styles.wishName}>{item.guest_name}</strong>
@@ -1061,6 +1188,51 @@ export function BlueGardenV2ClientApp({
                     </article>
                   ))}
                 </div>
+
+                {totalGreetingPages > 1 && (
+                  <nav className={styles.wishesPagination} aria-label="Navigasi halaman ucapan">
+                    <div className={styles.paginationRow}>
+                      <button
+                        type="button"
+                        className={styles.pageBtn}
+                        onClick={() => setGreetingsPage(Math.max(1, currentGreetingsPage - 1))}
+                        disabled={currentGreetingsPage <= 1}
+                        aria-label="Halaman sebelumnya"
+                      >
+                        &lsaquo;
+                      </button>
+                      {paginationItems.map((item, idx) =>
+                        item === "ellipsis" ? (
+                          <span key={`ellipsis-${idx}`} className={styles.pageEllipsis} aria-hidden="true">
+                            &hellip;
+                          </span>
+                        ) : (
+                          <button
+                            key={item}
+                            type="button"
+                            className={`${styles.pageBtn} ${item === currentGreetingsPage ? styles.pageBtnActive : ""}`}
+                            onClick={() => setGreetingsPage(item)}
+                            aria-current={item === currentGreetingsPage ? "page" : undefined}
+                          >
+                            {item}
+                          </button>
+                        ),
+                      )}
+                      <button
+                        type="button"
+                        className={styles.pageBtn}
+                        onClick={() => setGreetingsPage(Math.min(totalGreetingPages, currentGreetingsPage + 1))}
+                        disabled={currentGreetingsPage >= totalGreetingPages}
+                        aria-label="Halaman berikutnya"
+                      >
+                        &rsaquo;
+                      </button>
+                    </div>
+                    <div className={styles.paginationInfo}>
+                      Halaman {currentGreetingsPage} dari {totalGreetingPages} &bull; {greetings.length} ucapan
+                    </div>
+                  </nav>
+                )}
               </div>
             </Reveal>
           )}

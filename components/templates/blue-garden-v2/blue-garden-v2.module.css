@@ -810,6 +810,27 @@
   color: var(--bgv2-ink-soft);
 }
 
+.personInstagram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+  padding: 0.28rem 0.82rem;
+  border-radius: 999px;
+  border: 1px solid rgba(190, 155, 84, 0.58);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--bgv2-navy);
+  font-size: 0.72rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.personInstagram:hover {
+  transform: translateY(-1px);
+  background: rgba(249, 243, 228, 0.96);
+}
+
 .coupleDivider {
   width: 100%;
   max-width: 220px;
@@ -1179,6 +1200,12 @@
   background: linear-gradient(180deg, rgba(251, 249, 244, 0.96) 0%, rgba(235, 243, 250, 0.94) 100%);
 }
 
+.giftStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
 .giftCard {
   text-align: center;
 }
@@ -1386,9 +1413,69 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-height: 360px;
-  overflow-y: auto;
-  padding-right: 2px;
+}
+
+.wishesPagination {
+  margin-top: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.48rem;
+}
+
+.paginationRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+}
+
+.pageBtn {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(69, 104, 142, 0.32);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--bgv2-navy);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms ease;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--bgv2-gold);
+  background: rgba(249, 243, 228, 0.95);
+}
+
+.pageBtn:disabled {
+  opacity: 0.36;
+  cursor: not-allowed;
+}
+
+.pageBtnActive {
+  background: linear-gradient(135deg, #2d4c6e 0%, #1d334c 100%);
+  color: #ffffff;
+  border-color: var(--bgv2-gold-bright);
+  box-shadow: 0 6px 14px -6px rgba(30, 53, 78, 0.45);
+}
+
+.pageEllipsis {
+  color: var(--bgv2-primary);
+  font-size: 0.82rem;
+  padding: 0 0.2rem;
+}
+
+.paginationInfo {
+  font-size: 0.7rem;
+  color: var(--bgv2-primary);
+  font-weight: 600;
 }
 
 .wishItem {

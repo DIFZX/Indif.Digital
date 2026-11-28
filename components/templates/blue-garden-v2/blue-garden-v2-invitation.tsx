@@ -16,10 +16,18 @@ function calendarUrl(invitation: Invitation) {
   const endDate = new Date(`${invitation.event_date || "2026-12-12"}T12:00:00Z`);
   endDate.setUTCDate(endDate.getUTCDate() + 1);
   const end = endDate.toISOString().slice(0, 10).replaceAll("-", "");
+  const startsAt = typeof invitation.theme_overrides?.ceremony_starts_at === "string"
+    ? invitation.theme_overrides.ceremony_starts_at
+    : null;
+  const endsAt = typeof invitation.theme_overrides?.ceremony_ends_at === "string"
+    ? invitation.theme_overrides.ceremony_ends_at
+    : null;
+  const formatStamp = (iso: string) => new Date(iso).toISOString().replace(/[-:]|\.\d+/g, "");
+  const dates = startsAt && endsAt ? `${formatStamp(startsAt)}/${formatStamp(endsAt)}` : `${start}/${end}`;
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: `Pernikahan ${invitation.bride_short_name} & ${invitation.groom_short_name}`,
-    dates: `${start}/${end}`,
+    dates,
     details: invitation.opening_text || "Undangan Pernikahan Digital",
     location: `${invitation.venue_name}, ${invitation.venue_address}`,
   });
