@@ -518,6 +518,7 @@ export function BlueGardenV2ClientApp({
     typeof invitation.theme_overrides?.cover_photo_position === "string"
       ? invitation.theme_overrides.cover_photo_position
       : undefined;
+  const hideCoverPhoto = Boolean(invitation.theme_overrides?.hide_cover_photo);
   const storyPhotoPosition =
     typeof invitation.theme_overrides?.story_photo_position === "string"
       ? invitation.theme_overrides.story_photo_position
@@ -642,20 +643,22 @@ export function BlueGardenV2ClientApp({
               priority
               aria-hidden="true"
             />
-            <div className={styles.coverFrameInner}>
-              <BlueGardenCrest compact />
+            <div className={`${styles.coverFrameInner} ${hideCoverPhoto ? styles.coverFrameInnerNoPhoto : ""}`}>
+              <BlueGardenCrest compact={!hideCoverPhoto} />
 
-              <div className={styles.coverCameoFrame}>
-                <Image
-                  src={coverPath}
-                  alt={`Foto prewedding ${coupleNames}`}
-                  fill
-                  sizes="120px"
-                  className={styles.coverCameoImg}
-                  style={coverPhotoPosition ? { objectPosition: coverPhotoPosition } : undefined}
-                  priority
-                />
-              </div>
+              {!hideCoverPhoto && (
+                <div className={styles.coverCameoFrame}>
+                  <Image
+                    src={coverPath}
+                    alt={`Foto prewedding ${coupleNames}`}
+                    fill
+                    sizes="120px"
+                    className={styles.coverCameoImg}
+                    style={coverPhotoPosition ? { objectPosition: coverPhotoPosition } : undefined}
+                    priority
+                  />
+                </div>
+              )}
 
               <p className={styles.coverKicker}>The Wedding Of</p>
               <h1 className={styles.coverNames}>

@@ -208,6 +208,24 @@
   padding: 0.5rem 0.25rem;
 }
 
+.coverFrameInnerNoPhoto {
+  gap: 0.35rem;
+  padding: 1rem 0.25rem;
+}
+
+.coverFrameInnerNoPhoto .coverKicker {
+  margin-top: 0.4rem;
+}
+
+.coverFrameInnerNoPhoto .coverNames {
+  font-size: clamp(2.25rem, 8.6vw, 2.75rem);
+  margin: 0.25rem 0 0.2rem;
+}
+
+.coverFrameInnerNoPhoto .coverDate {
+  margin-bottom: 0.85rem;
+}
+
 .coverCameoFrame {
   position: relative;
   width: 84px;

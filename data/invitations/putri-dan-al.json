@@ -21,12 +21,17 @@
     {
       "year": "2021",
       "title": "Pertemuan Pertama",
-      "text": "Pada tahun 2021 kami bertemu di sebuah pasar pagi tanpa disengaja, dan pertemuan sederhana itu terjadi bermula saat saya membeli kue di toko dia. Dari kejadian itu kita mempunyai rasa nyaman satu sama lain."
+      "text": "Tahun 2021 mempertemukan kami secara tak terduga di sebuah pasar pagi. Semua berawal dari momen sederhana saat membeli kue di tokonya. Dari pertemuan singkat hari itu, tumbuh rasa nyaman yang perlahan mendekatkan langkah kami."
     },
     {
       "year": "26 Januari 2025",
       "title": "Lamaran",
-      "text": "Dengan niat yang tulus dan restu keluarga, pada tanggal 26 Januari 2025 kami memutuskan untuk melangkah ke tahap yang lebih serius. Momen lamaran menjadi awal dari perjalanan baru yang penuh harapan dan doa-doa baik."
+      "text": "Dengan niat yang tulus dan restu kedua keluarga, pada 26 Januari 2025 kami mantap melangkah ke jenjang yang lebih serius. Momen lamaran menjadi awal babak baru yang kami sambut dengan penuh syukur, harapan, dan doa-doa terbaik."
+    },
+    {
+      "year": "2026",
+      "title": "Menuju Halal",
+      "text": "Kini, seluruh doa dan penantian itu bermuara pada satu ikrar suci. Dengan memohon ridho Allah SWT, kami siap menyatukan langkah dalam ikatan pernikahan untuk membangun rumah tangga yang sakinah, mawaddah, warahmah, bersama hingga menua."
     }
   ],
   "story_image_path": "/media/invitations/putri-dan-al/galeri-07-kisah.webp",
@@ -65,6 +70,7 @@
     "ceremony_label": "Akad Nikah",
     "ceremony_starts_at": "2026-12-13T10:00:00+07:00",
     "ceremony_ends_at": "2026-12-13T17:00:00+07:00",
+    "hide_cover_photo": true,
     "cover_photo_position": "center 24%",
     "story_photo_position": "center 55%",
     "featured_gallery_position": "center 25%"
