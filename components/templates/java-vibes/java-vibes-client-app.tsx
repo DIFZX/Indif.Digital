@@ -193,23 +193,38 @@ export function JavaVibesClientApp({
       ? resolveMediaUrl(overrides.save_date_photo)
       : galleryPaths?.[2] || profilePath;
 
-  // Watch video playback time to reveal content at 4 seconds, and auto-play on opened
+  // Enforce iOS / WhatsApp inline muted attributes on mount without interrupting buffering
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "true");
+  }, []);
+
+  // Watch video playback time to reveal content at 4 seconds, auto-resume when buffered, and guarantee fallback reveal
   useEffect(() => {
     const video = heroVideoRef.current;
     if (!video) return;
 
     if (!opened) {
-      video.pause();
-      video.currentTime = 0;
+      if (!video.paused) video.pause();
+      if (video.readyState >= 1 && video.currentTime > 0.05) {
+        video.currentTime = 0;
+      }
       const resetTimer = window.setTimeout(() => setHeroContentVisible(false), 0);
       return () => window.clearTimeout(resetTimer);
     }
 
     let videoFrameId: number | null = null;
+    const reveal = () => setHeroContentVisible(true);
 
     const watchPlaybackTime = () => {
       if (video.currentTime >= 4) {
-        setHeroContentVisible(true);
+        reveal();
         return;
       }
       scheduleWatch();
@@ -225,15 +240,32 @@ export function JavaVibesClientApp({
       }
     };
 
+    const resumeWhenBuffered = () => {
+      if (video.paused && !video.ended) {
+        video.muted = true;
+        video.play().catch(() => {});
+      }
+    };
+
+    video.addEventListener("canplay", resumeWhenBuffered);
+    video.addEventListener("loadeddata", resumeWhenBuffered);
     scheduleWatch();
 
-    // Start video playback
-    video.play().catch(() => {
-      // If autoplay is blocked by browser, reveal content immediately
-      setHeroContentVisible(true);
-    });
+    // Safety fallback so slow 3G / iOS Low Power Mode never hides the couple title
+    const fallbackTimer = window.setTimeout(reveal, 6500);
+
+    // Only trigger play if not already started by openInvitation click gesture
+    if (video.paused && !video.ended) {
+      video.muted = true;
+      video.play().catch(() => {
+        reveal();
+      });
+    }
 
     return () => {
+      window.clearTimeout(fallbackTimer);
+      video.removeEventListener("canplay", resumeWhenBuffered);
+      video.removeEventListener("loadeddata", resumeWhenBuffered);
       if (videoFrameId !== null && "cancelVideoFrameCallback" in video) {
         (
           video as HTMLVideoElement & {
@@ -370,15 +402,22 @@ export function JavaVibesClientApp({
   }, [opened]);
 
   async function openInvitation() {
-    // 1. Immediately start video playback on click gesture to eliminate any delay
-    if (heroVideoRef.current) {
-      heroVideoRef.current.currentTime = 0;
-      heroVideoRef.current.play().catch(() => {});
+    // 1. Start video playback immediately on click gesture without resetting an in-flight buffer
+    const video = heroVideoRef.current;
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      if (video.readyState >= 1 && video.currentTime > 0.05) {
+        video.currentTime = 0;
+      }
+      video.play().catch(() => {});
     }
 
-    // 2. Start background music immediately
+    // 2. Start background music immediately on user gesture (preload="none" kept initial bandwidth free for video)
     if (audioRef.current) {
-      audioRef.current.currentTime = 0;
+      if (audioRef.current.readyState >= 1 && audioRef.current.currentTime > 0.05) {
+        audioRef.current.currentTime = 0;
+      }
       audioRef.current.play().catch(() => {});
       setPlaying(true);
     }
@@ -505,8 +544,8 @@ export function JavaVibesClientApp({
 
   return (
     <div className={`${styles.experience} ${themeClassName}`}>
-      {/* Background Audio Player */}
-      <audio ref={audioRef} src={musicPath} loop preload="auto" />
+      {/* Background Audio Player — preload="none" keeps initial mobile bandwidth free for the opening video */}
+      <audio ref={audioRef} src={musicPath} loop preload="none" />
 
       {/* ----------------------------------------------------
           COVER SCREEN MODAL (BEFORE OPENING)
@@ -649,6 +688,7 @@ export function JavaVibesClientApp({
           <video
             ref={heroVideoRef}
             className={styles.heroVideo}
+            poster="/media/java-vibes/decor/opening-poster.webp"
             muted
             playsInline
             preload="auto"
@@ -818,7 +858,6 @@ export function JavaVibesClientApp({
                   fill
                   style={{ objectFit: "cover", objectPosition: "center 22%" }}
                   sizes="260px"
-                  priority
                 />
               </div>
               <div className={styles.saveDateArchCanopy}>
@@ -828,7 +867,6 @@ export function JavaVibesClientApp({
                   fill
                   style={{ objectFit: "contain", pointerEvents: "none" }}
                   sizes="320px"
-                  priority
                 />
               </div>
             </div>

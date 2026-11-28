@@ -74,10 +74,10 @@
       "updatedAt": "2026-11-28T10:07:34.315Z"
     },
     "public/media/java-vibes/decor/vidio-opening.mp4": {
-      "sha256": "feb7aea1256bc6332126d0432a595903ad15a7e6eac40e8c309483a7d4ff66b7",
+      "sha256": "3b8a76e2badf50d30722d1d68925c5030c94be705e3bfb37ea440778d2e2ffff",
       "type": "video",
-      "sizeBytes": 1810688,
-      "updatedAt": "2026-11-28T10:07:40.598Z"
+      "sizeBytes": 980125,
+      "updatedAt": "2026-11-28T11:12:49.245Z"
     },
     "public/media/java-vibes/gending-jawa.mp3": {
       "sha256": "7a5dfe2f19ae20b096b715e8d0e6b53e500614f9817f04c5c327825a8cb5e28f",
@@ -234,6 +234,12 @@
       "type": "image",
       "sizeBytes": 130264,
       "updatedAt": "2026-11-28T10:08:51.045Z"
+    },
+    "public/media/java-vibes/decor/opening-poster.webp": {
+      "sha256": "744a6c53026cb7dcfd7e411790f6dc85b39d648048e3a172b659a66620f1a432",
+      "type": "image",
+      "sizeBytes": 125438,
+      "updatedAt": "2026-11-28T11:12:49.261Z"
     }
   }
 }
