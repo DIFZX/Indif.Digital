@@ -57,7 +57,7 @@ export function TerracottaWarmthInvitationView({
     <PreweddingClientApp
       themeClass={styles.themeTerracottaWarmth}
       dividerIcon="☼"
-      flowerPath="/media/prewedding/terracotta-warmth/terracotta-flower.png"
+      flowerPath="/media/prewedding/terracotta-warmth/terracotta-flower.webp"
       invitation={invitation}
       greetings={greetings}
       guestName={guestName}

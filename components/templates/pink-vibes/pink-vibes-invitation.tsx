@@ -12,9 +12,9 @@ import { PinkOpeningHero } from "./pink-opening-hero";
 import styles from "./pink-vibes.module.css";
 
 const OPENING_VIDEO_PATH = "/media/pink-vibes/decor/Video-Opening.mp4";
-const FLORAL_SPRAY_PATH = "/media/pink-vibes/decor/floral-spray-blush-v1.png";
-const FLORAL_CRESCENT_PATH = "/media/pink-vibes/decor/floral-crescent-blush-v1.png";
-const PROFILE_ORNAMENT_PATH = "/media/pink-vibes/decor/swan-floral-profile-v1.png";
+const FLORAL_SPRAY_PATH = "/media/pink-vibes/decor/floral-spray-blush-v1.webp";
+const FLORAL_CRESCENT_PATH = "/media/pink-vibes/decor/floral-crescent-blush-v1.webp";
+const PROFILE_ORNAMENT_PATH = "/media/pink-vibes/decor/swan-floral-profile-v1.webp";
 
 type PinkVibesInvitationProps = {
   invitation: Invitation;

@@ -8,6 +8,8 @@
     "create-invitation": "node scripts/create-invitation.mjs",
     "create-admin": "node scripts/create-admin.mjs",
     "check:cms": "node scripts/check-sales-cms.mjs",
+    "check:media": "node scripts/check-media-budget.mjs",
+    "hooks:install": "git config core.hooksPath .githooks",
     "test:cms": "node --test tests/sales-cms.test.mjs",
     "start": "next start",
     "lint": "eslint .",

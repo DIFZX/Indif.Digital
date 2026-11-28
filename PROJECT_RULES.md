@@ -221,6 +221,7 @@ Pada sesi terminal baru, perintah `npm run build` atau `npx next dev` akan berhe
      npm run optimize:media -- --scope public/media/<folder-baru> --apply --convert-webp --strip-audio --backup-dir "../Undangan-Digital-Media-Backup"
      ```
    - Untuk folder undangan pelanggan baru di `public/media/invitations/<slug-baru>`, tambahkan flag `--allow-client` dan hanya arahkan ke folder pelanggan baru tersebut.
+   - Pastikan validasi otomatis pre-commit & pre-push aktif (`npm run hooks:install` → `git config core.hooksPath .githooks`) yang menjalankan `scripts/check-media-budget.mjs` untuk memblokir video non-faststart/non-yuv420p/>8MB, gambar mentah >2MB/>2560px, PNG baru >600KB, audio >160kbps/cover art, serta file cache/backup.
 2. **Standar Teknis Media**:
    - **Video**: MP4 H.264 (`libx264`), pixel format `yuv420p` (kompatibel iPhone/Safari/WhatsApp), `-movflags +faststart`, CRF 23–26 (`preset slow`), resolusi 720p untuk opening/background (1080p hanya jika diperlukan detail), 24–30 FPS, hapus audio (`-an`) jika `<video muted>`. Target opening pendek 1–5 MB, background pendek 2–8 MB (prioritaskan kualitas visual).
    - **Gambar**: Gunakan WebP bila lebih efisien & kompatibel (pertahankan alpha transparansi penuh untuk ornamen bunga/dekorasi), batasi sisi terpanjang <=1920px, jangan ubah warna kulit/wajah foto pelanggan, jangan konversi gambar animasi menjadi statis.

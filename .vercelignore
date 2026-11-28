@@ -19,6 +19,7 @@ npm-debug.log*
 /tests/
 /supabase/
 /scripts/
+/.githooks/
 
 # Untracked local raw client source folders (production uses public/media/invitations/*)
 /public/media/client/Andi & Fransiska/

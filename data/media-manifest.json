@@ -42,6 +42,198 @@
       "type": "video",
       "sizeBytes": 1409804,
       "updatedAt": "2026-11-28T09:35:46.131Z"
+    },
+    "public/media/pink-vibes/decor/floral-crescent-blush-v1.webp": {
+      "sha256": "4b952a5b365993ba9179c4b97189950f7aa55e016d13d56379f9498421bdfe09",
+      "type": "image",
+      "sizeBytes": 238460,
+      "updatedAt": "2026-11-28T10:07:24.201Z"
+    },
+    "public/media/pink-vibes/decor/floral-spray-blush-v1.webp": {
+      "sha256": "a266aab74216e8467020708275d8cf6c4741d51e83dff091d860d9e87bcc3484",
+      "type": "image",
+      "sizeBytes": 224100,
+      "updatedAt": "2026-11-28T10:07:24.730Z"
+    },
+    "public/media/pink-vibes/decor/swan-floral-ornament-v1.webp": {
+      "sha256": "b55096fd1109bb4d139513c5d4c1cbca96d6388cf10bf47238ef3f36447023e9",
+      "type": "image",
+      "sizeBytes": 188224,
+      "updatedAt": "2026-11-28T10:07:25.056Z"
+    },
+    "public/media/pink-vibes/decor/swan-floral-profile-v1.webp": {
+      "sha256": "42e593f0ee7f0cc83d8d493a5ed660cf146be6a37c78efe6d7f31b48cf63391c",
+      "type": "image",
+      "sizeBytes": 127968,
+      "updatedAt": "2026-11-28T10:07:25.374Z"
+    },
+    "public/media/pink-vibes/decor/Video-Opening.mp4": {
+      "sha256": "21a38e6197129da3f3eb441bb8c8b51d4876f47f73a01bf5bc817ae9de5244fd",
+      "type": "video",
+      "sizeBytes": 2116908,
+      "updatedAt": "2026-11-28T10:07:34.315Z"
+    },
+    "public/media/java-vibes/decor/vidio-opening.mp4": {
+      "sha256": "feb7aea1256bc6332126d0432a595903ad15a7e6eac40e8c309483a7d4ff66b7",
+      "type": "video",
+      "sizeBytes": 1810688,
+      "updatedAt": "2026-11-28T10:07:40.598Z"
+    },
+    "public/media/java-vibes/gending-jawa.mp3": {
+      "sha256": "7a5dfe2f19ae20b096b715e8d0e6b53e500614f9817f04c5c327825a8cb5e28f",
+      "type": "audio",
+      "sizeBytes": 2997256,
+      "updatedAt": "2026-11-28T10:07:47.794Z"
+    },
+    "public/media/royal-maroon/Royal Maroon - Web 720p Compressed.mp4": {
+      "sha256": "0b428a508f0a5ad315e338a6676c60b16f83b85fe06a5803efadd0a8315a705e",
+      "type": "video",
+      "sizeBytes": 3944278,
+      "updatedAt": "2026-11-28T10:07:49.194Z"
+    },
+    "public/media/royal-maroon/closing.webp": {
+      "sha256": "663a147153bb504c6d6430e0dc18f4b2f97257f3a7244e51d94d66ddc90f7c65",
+      "type": "image",
+      "sizeBytes": 474408,
+      "updatedAt": "2026-11-28T10:07:50.546Z"
+    },
+    "public/media/royal-maroon/couple.webp": {
+      "sha256": "c319ed5313d28e5a43535a83011e70700d199f65695530ec30dbba7699669f2d",
+      "type": "image",
+      "sizeBytes": 358632,
+      "updatedAt": "2026-11-28T10:07:51.289Z"
+    },
+    "public/media/royal-maroon/cover-desktop.webp": {
+      "sha256": "053320d1960a51bb8a2d367082559fdb03e5901be9ce9318d8415d2f312dc462",
+      "type": "image",
+      "sizeBytes": 144936,
+      "updatedAt": "2026-11-28T10:07:51.295Z"
+    },
+    "public/media/royal-maroon/cover.webp": {
+      "sha256": "00e0acd0955bd38aa6dd02032c9b367bf01ff111c246151c1b036b86d62458c7",
+      "type": "image",
+      "sizeBytes": 351786,
+      "updatedAt": "2026-11-28T10:07:52.031Z"
+    },
+    "public/media/royal-maroon/events.webp": {
+      "sha256": "997ab38a464a2817fba0a6b15d2db78041e3e84ee49bbea3b1ebafecd436799e",
+      "type": "image",
+      "sizeBytes": 244296,
+      "updatedAt": "2026-11-28T10:07:52.035Z"
+    },
+    "public/media/royal-maroon/floral.webp": {
+      "sha256": "d8e234dcca38d4118cdbb4aa86fb2330810836a444fa4e51c1d35752b3f93076",
+      "type": "image",
+      "sizeBytes": 74152,
+      "updatedAt": "2026-11-28T10:07:52.039Z"
+    },
+    "public/media/royal-maroon/hero.webp": {
+      "sha256": "56c6a4c9beb7dcf076b8efe8709e727c2c3981535a8de0ac7f52f51bd44a5448",
+      "type": "image",
+      "sizeBytes": 358788,
+      "updatedAt": "2026-11-28T10:07:52.777Z"
+    },
+    "public/media/royal-maroon/maroon.webp": {
+      "sha256": "02c7cde0edd59948a33e61838b4408bd935df91b9f793b630257e7450e23af40",
+      "type": "image",
+      "sizeBytes": 57034,
+      "updatedAt": "2026-11-28T10:07:53.131Z"
+    },
+    "public/media/prewedding/champagne-ivory/champagne-flower.webp": {
+      "sha256": "dedd3f41d159544b484413475881bc1c639cb60c5c339549f04fa55f0b13e981",
+      "type": "image",
+      "sizeBytes": 31370,
+      "updatedAt": "2026-11-28T10:07:53.717Z"
+    },
+    "public/media/prewedding/dusty-rose/dusty-rose-flower-v2.webp": {
+      "sha256": "258c36c2ddd06bad31a2fe0c517c01afae077da24f37369ce86f7004669e2613",
+      "type": "image",
+      "sizeBytes": 209154,
+      "updatedAt": "2026-11-28T10:07:54.191Z"
+    },
+    "public/media/prewedding/sage-botanical/sage-flower-v2.webp": {
+      "sha256": "2bf2dfa385eafc29971e380a8436511d4007406ce828ef7ce24e4697118418a7",
+      "type": "image",
+      "sizeBytes": 129194,
+      "updatedAt": "2026-11-28T10:07:54.494Z"
+    },
+    "public/media/prewedding/terracotta-warmth/terracotta-flower.webp": {
+      "sha256": "5b142ef81f0ef6711ed3231fd7db4ae3e065349eb80557c1a665ef39664dec15",
+      "type": "image",
+      "sizeBytes": 165382,
+      "updatedAt": "2026-11-28T10:07:54.897Z"
+    },
+    "public/media/elegant/gallery-couple-v2.png": {
+      "sha256": "3e7ac087f02cb269f3064f2e57bacccbcbd873daa3888698ac67caaebc0f346c",
+      "type": "image",
+      "sizeBytes": 804002,
+      "updatedAt": "2026-11-28T10:07:55.840Z"
+    },
+    "public/media/elegant/decor/flower-bride-right-v1.webp": {
+      "sha256": "0c42e92eb68bfbac6245169fa4ffcca0797305af3d39729476dcd2450d865c52",
+      "type": "image",
+      "sizeBytes": 168516,
+      "updatedAt": "2026-11-28T10:07:57.645Z"
+    },
+    "public/media/elegant/decor/flower-groom-left-v1.webp": {
+      "sha256": "3efd03c88f3842db2e6333121bf65076fd8775b1062a48da74d5ffd783e80146",
+      "type": "image",
+      "sizeBytes": 145786,
+      "updatedAt": "2026-11-28T10:07:57.997Z"
+    },
+    "public/media/elegant/decor/ornament-gold-v1.png": {
+      "sha256": "890d1071405a465f264bbf00ee8a6639ef5ab41acacb2f7bb2149a259d429014",
+      "type": "image",
+      "sizeBytes": 30050,
+      "updatedAt": "2026-11-28T10:07:58.135Z"
+    },
+    "public/media/sunda-vibes/audio.mp3": {
+      "sha256": "4c0be7b57fea8159814123ebf1c4e533c9aebd812349237ddd45f294b2a76295",
+      "type": "audio",
+      "sizeBytes": 1979109,
+      "updatedAt": "2026-11-28T10:08:02.640Z"
+    },
+    "public/media/adventure-wedding-pixel/gasmask-love.mp3": {
+      "sha256": "cc4dd1020afac2492c06415fef498c73f75d5730fdcd685363e1ad287f3318af",
+      "type": "audio",
+      "sizeBytes": 1601787,
+      "updatedAt": "2026-11-28T10:08:05.821Z"
+    },
+    "public/media/majestic-minang/opening-web-720p.mp4": {
+      "sha256": "b8383d84bf64ef0893dd620387c002ea7adf2d54ad2517fe280bc487aeedbb2d",
+      "type": "video",
+      "sizeBytes": 4114129,
+      "updatedAt": "2026-11-28T10:08:06.361Z"
+    },
+    "public/media/majestic-minang/minang-baralek-gadang.mp3": {
+      "sha256": "ec77a4d4b48c17c7fc10af18523349c66dfe6fadb129727fded2d575fce73d59",
+      "type": "audio",
+      "sizeBytes": 4045844,
+      "updatedAt": "2026-11-28T10:08:06.793Z"
+    },
+    "public/media/blue-garden-v2/opening-web-720p.mp4": {
+      "sha256": "e9e137ba06e60d0146e83b96177e6b503612a9febf561d964d566e3328bfc9e9",
+      "type": "video",
+      "sizeBytes": 3339546,
+      "updatedAt": "2026-11-28T10:08:07.325Z"
+    },
+    "public/media/jade-pavilion/opening-web-720p.mp4": {
+      "sha256": "0ab120dc195c1a3f0f1a410310421cc2c5429ba0d2b2fe080805194969fdee75",
+      "type": "video",
+      "sizeBytes": 3205987,
+      "updatedAt": "2026-11-28T10:08:07.840Z"
+    },
+    "public/media/sunda-vibes/Opening Sunda Vibes v4.1 - Web 720p.mp4": {
+      "sha256": "31af58a6bee138ca0f1956b58f2bc22add6df5c9b6dfbae415eb7e32b45100eb",
+      "type": "video",
+      "sizeBytes": 3016771,
+      "updatedAt": "2026-11-28T10:08:08.412Z"
+    },
+    "public/media/elegant/backgrounds/couple-profile-forest-floral-v1.webp": {
+      "sha256": "80ac0f03d2164623eb714eb891e46cc4dd3b75316de501ab686cc7c50f410b06",
+      "type": "image",
+      "sizeBytes": 130264,
+      "updatedAt": "2026-11-28T10:08:51.045Z"
     }
   }
 }

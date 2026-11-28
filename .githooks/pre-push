@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -e
+echo "[pre-push] Menjalankan validasi budget & standar media sebelum push..."
+node scripts/check-media-budget.mjs --push
