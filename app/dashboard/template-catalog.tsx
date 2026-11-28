@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getCatalogPriceInfo, getTemplateThumbnail, isTemplateCategory, TEMPLATE_CATEGORY_IDS, TEMPLATE_CATEGORY_LABELS, type TemplateCategory } from "@/lib/catalog-settings";
@@ -20,9 +20,21 @@ export type CatalogTemplate = {
   price: number;
   promo_price: number | null;
   catalog_status?: TemplateStatus;
+  sort_order?: number | null;
+  created_at?: string | null;
 };
 
 export type CategoryFilter = "all" | TemplateCategory;
+
+export type CatalogSortOption =
+  | "default"
+  | "newest"
+  | "cheapest"
+  | "most_expensive"
+  | "biggest_discount"
+  | "name_asc";
+
+export type CatalogAvailabilityFilter = "all" | "available" | "promo";
 
 const whatsappUrl = "https://wa.me/6281776396965";
 
@@ -36,8 +48,100 @@ const CATEGORIES: { id: CategoryFilter; label: string }[] = [
   ...TEMPLATE_CATEGORY_IDS.map(id => ({ id, label: TEMPLATE_CATEGORY_LABELS[id] })),
 ];
 
+const SORT_OPTIONS: { id: CatalogSortOption; label: string }[] = [
+  { id: "default", label: "Rekomendasi" },
+  { id: "newest", label: "Terbaru" },
+  { id: "cheapest", label: "Termurah" },
+  { id: "most_expensive", label: "Termahal" },
+  { id: "biggest_discount", label: "Diskon Terbesar" },
+  { id: "name_asc", label: "Nama A - Z" },
+];
+
+const AVAILABILITY_OPTIONS: { id: CatalogAvailabilityFilter; label: string }[] = [
+  { id: "all", label: "Semua Status" },
+  { id: "available", label: "Siap Dipesan" },
+  { id: "promo", label: "Sedang Promo" },
+];
+
+function getEffectivePrice(template: CatalogTemplate) {
+  return template.promo_price !== null && template.promo_price < template.price
+    ? template.promo_price
+    : template.price;
+}
+
+function getDiscountRatio(template: CatalogTemplate) {
+  if (template.promo_price === null || template.promo_price >= template.price || template.price <= 0) {
+    return 0;
+  }
+  return (template.price - template.promo_price) / template.price;
+}
+
+function parseTimestamp(value?: string | null) {
+  if (!value) return null;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function isAvailableStatus(template: CatalogTemplate) {
+  return (template.catalog_status ?? "available") === "available";
+}
+
+function compareTemplatesBySort(
+  a: CatalogTemplate,
+  b: CatalogTemplate,
+  aIdx: number,
+  bIdx: number,
+  sortBy: CatalogSortOption,
+) {
+  if (sortBy === "default") return aIdx - bIdx;
+
+  if (sortBy === "newest") {
+    const timeA = parseTimestamp(a.created_at);
+    const timeB = parseTimestamp(b.created_at);
+    if (timeA !== null && timeB !== null && timeB !== timeA) {
+      return timeB - timeA;
+    }
+    const orderDiff = (b.sort_order ?? 0) - (a.sort_order ?? 0);
+    if (orderDiff !== 0) return orderDiff;
+    return bIdx - aIdx;
+  }
+
+  if (sortBy === "name_asc") {
+    const nameDiff = a.name.localeCompare(b.name, "id");
+    return nameDiff !== 0 ? nameDiff : aIdx - bIdx;
+  }
+
+  // Price & discount sorts keep purchasable items ahead of unavailable items that hide pricing
+  const availDiff = Number(isAvailableStatus(b)) - Number(isAvailableStatus(a));
+  if (availDiff !== 0) return availDiff;
+
+  if (sortBy === "cheapest") {
+    const priceDiff = getEffectivePrice(a) - getEffectivePrice(b);
+    return priceDiff !== 0 ? priceDiff : aIdx - bIdx;
+  }
+
+  if (sortBy === "most_expensive") {
+    const priceDiff = getEffectivePrice(b) - getEffectivePrice(a);
+    return priceDiff !== 0 ? priceDiff : aIdx - bIdx;
+  }
+
+  // biggest_discount
+  const ratioDiff = getDiscountRatio(b) - getDiscountRatio(a);
+  if (ratioDiff !== 0) return ratioDiff;
+  const nominalSavingB = b.price - getEffectivePrice(b);
+  const nominalSavingA = a.price - getEffectivePrice(a);
+  if (nominalSavingB !== nominalSavingA) return nominalSavingB - nominalSavingA;
+  return aIdx - bIdx;
+}
+
 export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] }) {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("all");
+  const [sortBy, setSortBy] = useState<CatalogSortOption>("default");
+  const [availabilityFilter, setAvailabilityFilter] = useState<CatalogAvailabilityFilter>("all");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const filterWrapperRef = useRef<HTMLDivElement>(null);
+  const filterMenuId = useId();
 
   useEffect(() => {
     const handleHash = () => {
@@ -54,20 +158,60 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
     return () => window.removeEventListener("hashchange", handleHash);
   }, []);
 
+  useEffect(() => {
+    if (!isFilterOpen) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (filterWrapperRef.current && !filterWrapperRef.current.contains(event.target as Node)) {
+        setIsFilterOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsFilterOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isFilterOpen]);
+
+  const availabilityFilteredTemplates = useMemo(() => {
+    if (availabilityFilter === "all") return templates;
+    if (availabilityFilter === "available") {
+      return templates.filter((t) => isAvailableStatus(t));
+    }
+    return templates.filter((t) => isAvailableStatus(t) && getDiscountRatio(t) > 0);
+  }, [templates, availabilityFilter]);
+
   const counts = useMemo(() => {
     return {
-      all: templates.length,
-      animasi: templates.filter((t) => t.category === "animasi").length,
-      spesial: templates.filter((t) => t.category === "spesial").length,
-      minimalis: templates.filter((t) => t.category === "minimalis").length,
-      interactive: templates.filter((t) => t.category === "interactive").length,
+      all: availabilityFilteredTemplates.length,
+      animasi: availabilityFilteredTemplates.filter((t) => t.category === "animasi").length,
+      spesial: availabilityFilteredTemplates.filter((t) => t.category === "spesial").length,
+      minimalis: availabilityFilteredTemplates.filter((t) => t.category === "minimalis").length,
+      interactive: availabilityFilteredTemplates.filter((t) => t.category === "interactive").length,
     };
-  }, [templates]);
+  }, [availabilityFilteredTemplates]);
 
   const filteredTemplates = useMemo(() => {
-    if (activeCategory === "all") return templates;
-    return templates.filter((t) => t.category === activeCategory);
-  }, [templates, activeCategory]);
+    const categoryFiltered =
+      activeCategory === "all"
+        ? availabilityFilteredTemplates
+        : availabilityFilteredTemplates.filter((t) => t.category === activeCategory);
+
+    if (sortBy === "default") return categoryFiltered;
+
+    return categoryFiltered
+      .map((item, idx) => ({ item, idx }))
+      .sort((left, right) => compareTemplatesBySort(left.item, right.item, left.idx, right.idx, sortBy))
+      .map((entry) => entry.item);
+  }, [availabilityFilteredTemplates, activeCategory, sortBy]);
 
   const selectCategory = (catId: CategoryFilter) => {
     setActiveCategory(catId);
@@ -77,6 +221,27 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
       window.history.replaceState(null, "", `#${catId}`);
     }
   };
+
+  const resetSortAndAvailability = () => {
+    setSortBy("default");
+    setAvailabilityFilter("all");
+    setIsFilterOpen(false);
+  };
+
+  const hasActiveFilter = sortBy !== "default" || availabilityFilter !== "all";
+  const activeSortLabel = SORT_OPTIONS.find((opt) => opt.id === sortBy)?.label;
+  const activeAvailLabel = AVAILABILITY_OPTIONS.find((opt) => opt.id === availabilityFilter)?.label;
+  const activeFilterBadgeLabel = !hasActiveFilter
+    ? null
+    : sortBy !== "default" && availabilityFilter !== "all"
+      ? `${activeSortLabel} +1`
+      : sortBy !== "default"
+        ? activeSortLabel
+        : activeAvailLabel;
+
+  const filterButtonAriaLabel = hasActiveFilter
+    ? `Filter dan urutkan katalog (${activeFilterBadgeLabel})`
+    : "Filter dan urutkan katalog";
 
   const activeCategoryTitle = useMemo(() => {
     switch (activeCategory) {
@@ -106,25 +271,147 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
         <h2>{activeCategoryTitle}</h2>
       </div>
 
-      {/* Category Pills Filter Tabs */}
-      <div className={styles.categoryMenuWrapper}>
-        <div className={styles.categoryMenu} role="tablist" aria-label="Kategori template">
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory === cat.id;
-            const count = counts[cat.id];
-            return (
-              <button
-                key={cat.id}
-                role="tab"
-                aria-selected={isActive}
-                className={`${styles.categoryButton} ${isActive ? styles.categoryButtonActive : ""}`}
-                onClick={() => selectCategory(cat.id)}
-              >
-                <span>{cat.label}</span>
-                <span className={styles.categoryCount}>{count}</span>
-              </button>
-            );
-          })}
+      {/* Filter Trigger (left of Semua Template) + Category Pills Tabs */}
+      <div className={styles.catalogControlsBar}>
+        <div className={styles.filterControlWrapper} ref={filterWrapperRef}>
+          <button
+            type="button"
+            className={`${styles.filterTriggerButton} ${hasActiveFilter ? styles.filterTriggerButtonActive : ""}`}
+            onClick={() => setIsFilterOpen((prev) => !prev)}
+            aria-expanded={isFilterOpen}
+            aria-haspopup="dialog"
+            aria-controls={filterMenuId}
+            aria-label={filterButtonAriaLabel}
+            title="Filter & urutkan katalog"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="4" y1="6" x2="20" y2="6" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="18" x2="20" y2="18" />
+              <circle cx="9" cy="6" r="2.1" fill="currentColor" />
+              <circle cx="15" cy="12" r="2.1" fill="currentColor" />
+              <circle cx="10" cy="18" r="2.1" fill="currentColor" />
+            </svg>
+            {activeFilterBadgeLabel && (
+              <span className={styles.filterActiveLabel}>{activeFilterBadgeLabel}</span>
+            )}
+          </button>
+
+          {isFilterOpen && (
+            <div
+              id={filterMenuId}
+              className={styles.filterPopover}
+              role="dialog"
+              aria-label="Filter dan urutkan katalog"
+            >
+              <div className={styles.filterPopoverHeader}>
+                <span>Filter &amp; Urutkan</span>
+                {hasActiveFilter && (
+                  <button
+                    type="button"
+                    className={styles.filterResetLink}
+                    onClick={resetSortAndAvailability}
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+
+              <div className={styles.filterGroup}>
+                <span className={styles.filterGroupTitle}>Urutkan Katalog</span>
+                <div className={styles.filterOptionsList}>
+                  {SORT_OPTIONS.map((opt) => {
+                    const isSelected = sortBy === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        className={`${styles.filterOptionBtn} ${isSelected ? styles.filterOptionBtnActive : ""}`}
+                        onClick={() => {
+                          setSortBy(opt.id);
+                          setIsFilterOpen(false);
+                        }}
+                        aria-pressed={isSelected}
+                      >
+                        <span>{opt.label}</span>
+                        {isSelected && (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className={styles.filterGroupDivider} />
+
+              <div className={styles.filterGroup}>
+                <span className={styles.filterGroupTitle}>Status Katalog</span>
+                <div className={styles.filterChipRow}>
+                  {AVAILABILITY_OPTIONS.map((opt) => {
+                    const isSelected = availabilityFilter === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        className={`${styles.filterChipBtn} ${isSelected ? styles.filterChipBtnActive : ""}`}
+                        onClick={() => {
+                          setAvailabilityFilter(opt.id);
+                          setIsFilterOpen(false);
+                        }}
+                        aria-pressed={isSelected}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className={styles.categoryMenuWrapper}>
+          <div className={styles.categoryMenu} role="tablist" aria-label="Kategori template">
+            {CATEGORIES.map((cat) => {
+              const isActive = activeCategory === cat.id;
+              const count = counts[cat.id];
+              return (
+                <button
+                  key={cat.id}
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`${styles.categoryButton} ${isActive ? styles.categoryButtonActive : ""}`}
+                  onClick={() => selectCategory(cat.id)}
+                >
+                  <span>{cat.label}</span>
+                  <span className={styles.categoryCount}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -212,13 +499,16 @@ export function TemplateCatalog({ templates }: { templates: CatalogTemplate[] })
 
         {filteredTemplates.length === 0 && (
           <div className={styles.emptyTemplates}>
-            <p>Tidak ada template yang ditemukan pada kategori ini.</p>
+            <p>Tidak ada template yang sesuai dengan filter atau kategori ini.</p>
             <button
-              className={styles.primaryAction}
-              onClick={() => selectCategory("all")}
-              style={{ marginTop: "1rem" }}
+              type="button"
+              className={styles.emptyResetBtn}
+              onClick={() => {
+                selectCategory("all");
+                resetSortAndAvailability();
+              }}
             >
-              Lihat semua template
+              Reset Filter &amp; Tampilkan Semua
             </button>
           </div>
         )}

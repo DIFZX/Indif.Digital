@@ -35,6 +35,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "interactive",
     price: 120000,
     promo_price: 80000,
+    sort_order: 10,
   },
   {
     id: "00000000-0000-0000-0000-000000000001",
@@ -46,6 +47,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 1,
   },
   {
     id: "00000000-0000-0000-0000-000000000002",
@@ -57,6 +59,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "animasi",
     price: 100000,
     promo_price: 50000,
+    sort_order: 2,
   },
   {
     id: "00000000-0000-0000-0000-000000000003",
@@ -68,6 +71,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "animasi",
     price: 100000,
     promo_price: 50000,
+    sort_order: 3,
   },
   {
     id: "00000000-0000-0000-0000-000000000004",
@@ -79,6 +83,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "spesial",
     price: 120000,
     promo_price: 80000,
+    sort_order: 4,
   },
   {
     id: "00000000-0000-0000-0000-000000000005",
@@ -90,6 +95,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 5,
   },
   {
     id: "00000000-0000-0000-0000-000000000006",
@@ -101,6 +107,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "spesial",
     price: 120000,
     promo_price: 80000,
+    sort_order: 6,
   },
   {
     id: "00000000-0000-0000-0000-000000000007",
@@ -112,6 +119,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "spesial",
     price: 120000,
     promo_price: 80000,
+    sort_order: 7,
   },
   {
     id: "00000000-0000-0000-0000-000000000008",
@@ -124,6 +132,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 8,
   },
   {
     id: "00000000-0000-0000-0000-000000000009",
@@ -135,6 +144,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 9,
   },
   {
     id: "00000000-0000-0000-0000-000000000011",
@@ -146,6 +156,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 11,
   },
   {
     id: "00000000-0000-0000-0000-000000000012",
@@ -157,6 +168,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 12,
   },
   {
     id: "00000000-0000-0000-0000-000000000013",
@@ -168,6 +180,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 13,
   },
   {
     id: "00000000-0000-0000-0000-000000000014",
@@ -179,6 +192,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "minimalis",
     price: 70000,
     promo_price: 35000,
+    sort_order: 14,
   },
   {
     id: "00000000-0000-0000-0000-000000000015",
@@ -190,6 +204,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "spesial",
     price: 120000,
     promo_price: 80000,
+    sort_order: 15,
   },
   {
     id: "00000000-0000-0000-0000-000000000016",
@@ -201,6 +216,7 @@ const fallbackTemplates: CatalogTemplate[] = [
     category: "spesial",
     price: 120000,
     promo_price: 80000,
+    sort_order: 16,
   },
 ];
 
@@ -217,7 +233,7 @@ async function getCatalogTemplates(): Promise<CatalogTemplate[]> {
 
   const { data, error } = await supabase
     .from("templates")
-    .select("id, slug, name, description, thumbnail_path, preview_path, catalog_status, category, price, promo_price")
+    .select("id, slug, name, description, thumbnail_path, preview_path, catalog_status, category, price, promo_price, sort_order, created_at")
     .eq("is_active", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
