@@ -11,6 +11,7 @@
     "test:cms": "node --test tests/sales-cms.test.mjs",
     "start": "next start",
     "lint": "eslint .",
+    "optimize:media": "node scripts/optimize-media.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

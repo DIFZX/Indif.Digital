@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "files": {
+    "public/media/blue-garden/backgrounds/blue-garden-paper-v1.png": {
+      "sha256": "153d59a72a61d951e5b1b39e1b5b31388c31dff47868ec05ab62f4c3ad7a2c92",
+      "type": "image",
+      "sizeBytes": 825605,
+      "updatedAt": "2026-11-28T09:35:37.981Z"
+    },
+    "public/media/blue-garden/decor/blue-hydrangea-ivory-v1.webp": {
+      "sha256": "4dd5b828021ed3bf551755f7ebd85365aa8f57dcab5ae82fd8d164cdaf4c3234",
+      "type": "image",
+      "sizeBytes": 307838,
+      "updatedAt": "2026-11-28T09:35:38.958Z"
+    },
+    "public/media/blue-garden/decor/blue-ivory-bouquet-v1.webp": {
+      "sha256": "ba48cb99d733ab6d049e2997108baeddc57c643fba63bc298e1380002719d6ea",
+      "type": "image",
+      "sizeBytes": 217796,
+      "updatedAt": "2026-11-28T09:35:39.299Z"
+    },
+    "public/media/blue-garden/decor/blue-orchid-gold-v1.webp": {
+      "sha256": "e0bc808c763cab3a36423e3a5c5a25962edcee60cfb69b60aaa6cb70ccc44077",
+      "type": "image",
+      "sizeBytes": 199896,
+      "updatedAt": "2026-11-28T09:35:39.662Z"
+    },
+    "public/media/blue-garden/decor/blue-rose-orchid-v1.webp": {
+      "sha256": "d68682632215291c3e8db542f575311b5ed1dead99513872d4265c93866d9514",
+      "type": "image",
+      "sizeBytes": 271708,
+      "updatedAt": "2026-11-28T09:35:40.321Z"
+    },
+    "public/media/blue-garden/decor/ivory-peony-blue-v1.webp": {
+      "sha256": "962fae15700420ca84ac31489527a5d3c5cba2d91601e9124d375804ca654722",
+      "type": "image",
+      "sizeBytes": 207884,
+      "updatedAt": "2026-11-28T09:35:40.650Z"
+    },
+    "public/media/blue-garden/decor/Video-Opening.mp4": {
+      "sha256": "245fe8d526438e88267bc07e9589a53835b99dec5682a6e908cca6365d2cb90e",
+      "type": "video",
+      "sizeBytes": 1409804,
+      "updatedAt": "2026-11-28T09:35:46.131Z"
+    }
+  }
+}

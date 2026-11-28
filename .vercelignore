@@ -1,0 +1,24 @@
+# Build caches, dependencies, and local development artifacts
+/.next/
+/node_modules/
+/.npm-cache/
+/.tools/
+/.dev-logs/
+/.vscode/
+/scratch/
+/Contoh Website/
+/media/
+*.tsbuildinfo
+.next-test-*.log
+npm-debug.log*
+.env*.local
+
+# Non-runtime documentation, tests, migrations, and reference captures (anchored to repo root so lib/supabase/ stays included!)
+/replica/
+/docs/
+/tests/
+/supabase/
+/scripts/
+
+# Untracked local raw client source folders (production uses public/media/invitations/*)
+/public/media/client/Andi & Fransiska/

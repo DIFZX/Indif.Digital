@@ -45,3 +45,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
    - Jika memang terpaksa harus mengubah file di folder client, **WAJIB tanya dan minta izin user terlebih dahulu**.
    - Pastikan pembaruan template demo katalog tidak pernah menimpa data/foto undangan customer.
 
+6. **Wajib Optimasi Media Sebelum Commit/Push (Template & Undangan Baru)**:
+   - Setiap pembuatan template baru atau undangan pelanggan baru **WAJIB** mengoptimalkan seluruh video, foto, dan audio terlebih dahulu menggunakan `node scripts/optimize-media.mjs --scope <folder-baru>` (`--dry-run` dulu, lalu `--apply` dengan backup eksternal di luar repo).
+   - **Standar Video**: MP4 H.264 (`libx264`), `yuv420p` (kompatibel Apple/iOS), `-movflags +faststart`, CRF 23–26 (`slow`), 720p untuk opening/background (pertahankan 1080p hanya jika perlu detail desain), hapus audio jika `<video muted>`, target 1–5 MB (opening) / 2–8 MB (background).
+   - **Standar Gambar**: WebP untuk dekorasi & foto baru (pertahankan transparansi alpha, maks 1920px, jangan ubah tampilan wajah/warna kulit pelanggan, jangan ubah gambar animasi menjadi statis).
+   - **Standar Audio**: MP3 96–128 kbps tanpa embedded cover art besar.
+   - **Larangan**: JANGAN pernah commit file mentah/raw kamera atau video uncompressed ke `public/`, JANGAN simpan backup di dalam folder repo yang ikut ter-deploy ke Vercel, dan JANGAN melakukan kompresi massal terhadap undangan lama setiap kali membuat undangan baru.
+
+
