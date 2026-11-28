@@ -152,6 +152,7 @@ Setiap kali melakukan pembaruan visual pada sebuah template:
 | 14 | `adventure-wedding-pixel` | Adventure Wedding Pixel | Interaktif | `components/templates/adventure-wedding-pixel/` |
 | 15 | `jade-pavilion` | Jade Pavilion | Spesial | `components/templates/jade-pavilion/` |
 | 16 | `majestic-minang` | Majestic Minang | Spesial | `components/templates/majestic-minang/` |
+| 17 | `blue-garden-v2` | Blue Garden V2 | Spesial | `components/templates/blue-garden-v2/` |
 
 > Empat tema prewedding modern (*Champagne Ivory*, *Dusty Rose*, *Sage Botanical*, dan *Terracotta Warmth*) berbagi arsitektur bersama di `components/templates/prewedding/prewedding-client-app.tsx` dan `prewedding.module.css`.
 

@@ -218,6 +218,18 @@ const fallbackTemplates: CatalogTemplate[] = [
     promo_price: 80000,
     sort_order: 16,
   },
+  {
+    id: "00000000-0000-0000-0000-000000000017",
+    slug: "blue-garden-v2",
+    name: "Blue Garden V2",
+    description: "Versi upgrade HD Blue Garden bernuansa taman konservatori biru pastel & bingkai barok emas dengan video opening sinematik, wisteria, burung bluebird, dan fitur RSVP lengkap.",
+    thumbnail_path: "/media/mockups/mockup-blue-garden-v2.webp",
+    preview_path: "/blue-garden-v2?to=Tamu%20Undangan",
+    category: "spesial",
+    price: 120000,
+    promo_price: 80000,
+    sort_order: 17,
+  },
 ];
 
 const whatsappUrl = "https://wa.me/6281776396965";

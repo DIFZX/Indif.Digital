@@ -22,6 +22,7 @@ import { SageBotanicalInvitationView } from "@/components/templates/sage-botanic
 import { TerracottaWarmthInvitationView } from "@/components/templates/terracotta-warmth/terracotta-warmth-invitation";
 import { JadePavilionInvitationView } from "@/components/templates/jade-pavilion/jade-pavilion-invitation";
 import { MajesticMinangInvitationView } from "@/components/templates/majestic-minang/majestic-minang-invitation";
+import { BlueGardenV2InvitationView } from "@/components/templates/blue-garden-v2/blue-garden-v2-invitation";
 import { BRAND } from "@/lib/brand";
 import { formatCoupleNames, getInvitationEvents } from "@/lib/invitation-display";
 import { resolveMediaUrl } from "@/lib/media";
@@ -402,6 +403,10 @@ export function InvitationView(props: InvitationViewProps) {
 
   if (props.invitation.template.slug === "majestic-minang") {
     return <MajesticMinangInvitationView {...props} />;
+  }
+
+  if (props.invitation.template.slug === "blue-garden-v2") {
+    return <BlueGardenV2InvitationView {...props} />;
   }
 
   return <GreenyInvitationView {...props} />;

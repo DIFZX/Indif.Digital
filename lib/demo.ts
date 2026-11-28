@@ -517,6 +517,20 @@ export const majesticMinangDemoInvitation: Invitation = {
   },
 };
 
+export const blueGardenV2DemoInvitation: Invitation = {
+  ...mustardBlackDemoInvitation,
+  id: "00000000-0000-0000-0000-000000000117",
+  slug: "blue-garden-v2",
+  music_path: "/media/elegant/Bergema Selamanya.mp4",
+  theme_overrides: {},
+  template: {
+    id: "00000000-0000-0000-0000-000000000017",
+    slug: "blue-garden-v2",
+    name: "Blue Garden V2",
+    theme: { primary: "#44688E", accent: "#BE9B54", background: "#F4F7FA", deep: "#253D58" },
+  },
+};
+
 export const legacyIntanDifaDemoInvitation: Invitation = {
   ...demoInvitation,
   slug: "intan-dan-difa",
@@ -544,6 +558,7 @@ export const demoInvitations = [
   terracottaWarmthDemoInvitation,
   jadePavilionDemoInvitation,
   majesticMinangDemoInvitation,
+  blueGardenV2DemoInvitation,
   legacyIntanDifaDemoInvitation,
   ditaDanFajarDemoInvitation,
 ];

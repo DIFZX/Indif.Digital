@@ -63,6 +63,7 @@ export function getTemplateThumbnail(slug: string, fallbackPath: string | null) 
     "greeny-flowers": "/media/mockups/mockup-greeny-flowers.webp",
     "jade-pavilion": "/media/mockups/mockup-jade-pavilion.webp",
     "majestic-minang": "/media/mockups/mockup-majestic-minang.webp",
+    "blue-garden-v2": "/media/mockups/mockup-blue-garden-v2.webp",
   };
   return mockups[slug] || resolveMediaUrl(fallbackPath) || "/media/elegant/gallery-couple-v2.png";
 }
