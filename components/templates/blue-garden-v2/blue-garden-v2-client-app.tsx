@@ -132,7 +132,6 @@ export function BlueGardenV2ClientApp({
   const [opened, setOpened] = useState(initiallyOpened);
   const [heroRevealed, setHeroRevealed] = useState(initiallyOpened);
   const [playing, setPlaying] = useState(false);
-  const [autoScrolling, setAutoScrolling] = useState(false);
   const [activeSection, setActiveSection] = useState("pembuka");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [copiedAccountKey, setCopiedAccountKey] = useState<string | null>(null);
@@ -311,47 +310,6 @@ export function BlueGardenV2ClientApp({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [lightboxIndex, galleryPaths.length]);
-
-  // Smooth downward auto-scroll (pauses automatically on user wheel/touch or bottom of page)
-  useEffect(() => {
-    if (!autoScrolling || !ready) return;
-
-    let rafId = 0;
-    let lastTime = performance.now();
-    let carry = 0;
-    const speedPxPerSec = 44;
-
-    const stopAutoScroll = () => setAutoScrolling(false);
-
-    const step = (now: number) => {
-      const dt = Math.min((now - lastTime) / 1000, 0.1);
-      lastTime = now;
-      carry += speedPxPerSec * dt;
-      const wholePx = Math.floor(carry);
-      if (wholePx >= 1) {
-        carry -= wholePx;
-        window.scrollBy(0, wholePx);
-      }
-
-      const reachedBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-      if (reachedBottom) {
-        setAutoScrolling(false);
-        return;
-      }
-      rafId = window.requestAnimationFrame(step);
-    };
-
-    rafId = window.requestAnimationFrame(step);
-    window.addEventListener("wheel", stopAutoScroll, { passive: true });
-    window.addEventListener("touchstart", stopAutoScroll, { passive: true });
-
-    return () => {
-      window.cancelAnimationFrame(rafId);
-      window.removeEventListener("wheel", stopAutoScroll);
-      window.removeEventListener("touchstart", stopAutoScroll);
-    };
-  }, [autoScrolling, ready]);
 
   async function handleOpenInvitation() {
     if (opened) return;
@@ -1299,32 +1257,19 @@ export function BlueGardenV2ClientApp({
         </footer>
       </div>
 
-      {/* ─── FLOATING AUTO SCROLL & MUSIC CONTROLS ─── */}
-      {ready && (
+      {/* ─── FLOATING MUSIC CONTROL ─── */}
+      {ready && musicPath && (
         <div className={styles.floatingControlStack}>
           <button
             type="button"
-            className={`${styles.floatingPillBtn} ${autoScrolling ? styles.floatingPillActive : ""}`}
-            onClick={() => setAutoScrolling((prev) => !prev)}
-            aria-pressed={autoScrolling}
-            aria-label={autoScrolling ? "Hentikan auto scroll" : "Aktifkan auto scroll"}
+            className={`${styles.floatingPillBtn} ${playing ? styles.floatingPillActive : ""}`}
+            onClick={toggleMusic}
+            aria-pressed={playing}
+            aria-label={playing ? "Matikan musik latar" : "Putar musik latar"}
           >
-            <BlueGardenIcon name={autoScrolling ? "pause" : "arrowDown"} size={14} />
-            <span>{autoScrolling ? "Berhenti" : "Auto Scroll"}</span>
+            <BlueGardenIcon name={playing ? "music" : "muted"} size={14} />
+            <span>{playing ? "Musik On" : "Musik Off"}</span>
           </button>
-
-          {musicPath && (
-            <button
-              type="button"
-              className={`${styles.floatingPillBtn} ${playing ? styles.floatingPillActive : ""}`}
-              onClick={toggleMusic}
-              aria-pressed={playing}
-              aria-label={playing ? "Matikan musik latar" : "Putar musik latar"}
-            >
-              <BlueGardenIcon name={playing ? "music" : "muted"} size={14} />
-              <span>{playing ? "Musik On" : "Musik Off"}</span>
-            </button>
-          )}
         </div>
       )}
 
@@ -1338,7 +1283,6 @@ export function BlueGardenV2ClientApp({
                 key={item.id}
                 href={`#${item.id}`}
                 className={`${styles.dockItem} ${isActive ? styles.dockItemActive : ""}`}
-                onClick={() => setAutoScrolling(false)}
               >
                 <BlueGardenIcon name={item.icon} size={16} />
                 <span>{item.label}</span>
