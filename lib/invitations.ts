@@ -105,19 +105,28 @@ export async function getGreetings(invitationId: string): Promise<Greeting[]> {
     return isDemo ? demoGreetings : [];
   }
 
-  const { data } = await supabase
-    .from("greetings")
-    .select("id, guest_name, message, attendance, created_at")
-    .eq("invitation_id", invitationId)
-    .eq("is_approved", true)
-    .order("created_at", { ascending: false })
-    .limit(50);
+  const PAGE_SIZE = 1000;
+  const allGreetings: Greeting[] = [];
 
-  if ((!data || data.length === 0) && isJavaVibes) {
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from("greetings")
+      .select("id, guest_name, message, attendance, created_at")
+      .eq("invitation_id", invitationId)
+      .eq("is_approved", true)
+      .order("created_at", { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (error || !data || data.length === 0) break;
+    allGreetings.push(...(data as Greeting[]));
+    if (data.length < PAGE_SIZE) break;
+  }
+
+  if (allGreetings.length === 0 && isJavaVibes) {
     return javaVibesDemoGreetings;
   }
 
-  return (data ?? []) as Greeting[];
+  return allGreetings;
 }
 
 
