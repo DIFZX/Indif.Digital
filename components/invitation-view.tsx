@@ -35,11 +35,11 @@ type InvitationViewProps = {
   initiallyOpened?: boolean;
 };
 
-const BRIDE_FLOWER_PATH = "/media/elegant/decor/flower-bride-right-v1.png";
-const GROOM_FLOWER_PATH = "/media/elegant/decor/flower-groom-left-v1.png";
+const BRIDE_FLOWER_PATH = "/media/elegant/decor/flower-bride-right-v1.webp";
+const GROOM_FLOWER_PATH = "/media/elegant/decor/flower-groom-left-v1.webp";
 const ORNAMENT_PATH = "/media/elegant/decor/ornament-gold-v1.png";
 const MAP_PIN_PATH = "/media/elegant/icons/map-pin-gold-v1.png";
-const INTRO_BACKGROUND_PATH = "/media/elegant/backgrounds/couple-profile-forest-floral-v1.png";
+const INTRO_BACKGROUND_PATH = "/media/elegant/backgrounds/couple-profile-forest-floral-v1.webp";
 
 function formatEventDate(value: string) {
   return new Intl.DateTimeFormat("id-ID", {

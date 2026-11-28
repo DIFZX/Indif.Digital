@@ -36,11 +36,11 @@ const sans = Montserrat({
 });
 
 const PAPER_BACKGROUND_PATH = "/media/blue-garden/backgrounds/blue-garden-paper-v1.png";
-const ORCHID_DECOR_PATH = "/media/blue-garden/decor/blue-orchid-gold-v1.png";
-const HYDRANGEA_DECOR_PATH = "/media/blue-garden/decor/blue-hydrangea-ivory-v1.png";
-const BLUE_IVORY_DECOR_PATH = "/media/blue-garden/decor/blue-ivory-bouquet-v1.png";
-const IVORY_PEONY_DECOR_PATH = "/media/blue-garden/decor/ivory-peony-blue-v1.png";
-const BLUE_ROSE_DECOR_PATH = "/media/blue-garden/decor/blue-rose-orchid-v1.png";
+const ORCHID_DECOR_PATH = "/media/blue-garden/decor/blue-orchid-gold-v1.webp";
+const HYDRANGEA_DECOR_PATH = "/media/blue-garden/decor/blue-hydrangea-ivory-v1.webp";
+const BLUE_IVORY_DECOR_PATH = "/media/blue-garden/decor/blue-ivory-bouquet-v1.webp";
+const IVORY_PEONY_DECOR_PATH = "/media/blue-garden/decor/ivory-peony-blue-v1.webp";
+const BLUE_ROSE_DECOR_PATH = "/media/blue-garden/decor/blue-rose-orchid-v1.webp";
 const MAP_PIN_PATH = "/media/elegant/icons/map-pin-gold-v1.png";
 const OPENING_VIDEO_PATH = "/media/blue-garden/decor/Video-Opening.mp4";
 const LIVE_STREAM_URL = "https://www.youtube.com/";
