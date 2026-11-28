@@ -57,7 +57,7 @@ export function DustyRoseInvitationView({
     <PreweddingClientApp
       themeClass={styles.themeDustyRose}
       dividerIcon="❀"
-      flowerPath="/media/prewedding/dusty-rose/dusty-rose-flower-v2.png"
+      flowerPath="/media/prewedding/dusty-rose/dusty-rose-flower-v2.webp"
       invitation={invitation}
       greetings={greetings}
       guestName={guestName}

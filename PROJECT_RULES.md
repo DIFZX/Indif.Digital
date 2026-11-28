@@ -205,4 +205,30 @@ Pada sesi terminal baru, perintah `npm run build` atau `npx next dev` akan berhe
    - Pastikan pembaruan pada template demo katalog (data Dita & Fajar) tidak pernah menimpa atau memengaruhi undangan production milik customer (seperti yang dijaga pada `lib/invitations.ts`).
 
 ---
+
+## 10. Standar Wajib Optimasi Media Sebelum Commit / Push
+
+> [!IMPORTANT]
+> Setiap AI Assistant / Developer yang menambahkan **template baru** atau **undangan pelanggan baru** **WAJIB** mengoptimalkan seluruh aset video, foto, dan audio sebelum melakukan `git commit` atau `git push`.
+
+1. **Gunakan Script Resmi (`scripts/optimize-media.mjs`)**:
+   - Jalankan dry-run terlebih dahulu hanya pada folder baru:
+     ```bash
+     npm run optimize:media -- --scope public/media/<folder-baru>
+     ```
+   - Terapkan optimasi dengan backup eksternal di luar repo (jangan pernah menyimpan backup di dalam folder repo yang ter-deploy ke Vercel):
+     ```bash
+     npm run optimize:media -- --scope public/media/<folder-baru> --apply --convert-webp --strip-audio --backup-dir "../Undangan-Digital-Media-Backup"
+     ```
+   - Untuk folder undangan pelanggan baru di `public/media/invitations/<slug-baru>`, tambahkan flag `--allow-client` dan hanya arahkan ke folder pelanggan baru tersebut.
+   - Pastikan validasi otomatis pre-commit & pre-push aktif (`npm run hooks:install` → `git config core.hooksPath .githooks`) yang menjalankan `scripts/check-media-budget.mjs` untuk memblokir video non-faststart/non-yuv420p/>8MB, gambar mentah >2MB/>2560px, PNG baru >600KB, audio >160kbps/cover art, serta file cache/backup.
+2. **Standar Teknis Media**:
+   - **Video**: MP4 H.264 (`libx264`), pixel format `yuv420p` (kompatibel iPhone/Safari/WhatsApp), `-movflags +faststart`, CRF 23–26 (`preset slow`), resolusi 720p untuk opening/background (1080p hanya jika diperlukan detail), 24–30 FPS, hapus audio (`-an`) jika `<video muted>`. Target opening pendek 1–5 MB, background pendek 2–8 MB (prioritaskan kualitas visual).
+   - **Gambar**: Gunakan WebP bila lebih efisien & kompatibel (pertahankan alpha transparansi penuh untuk ornamen bunga/dekorasi), batasi sisi terpanjang <=1920px, jangan ubah warna kulit/wajah foto pelanggan, jangan konversi gambar animasi menjadi statis.
+   - **Audio**: MP3 96–128 kbps 44.1 kHz tanpa embedded PNG/JPG cover art, tanpa mengubah durasi/tempo/karakter musik.
+3. **Larangan Mutlak**:
+   - **JANGAN** commit file mentah (video 20+ MB, foto DSLR 20+ MB, atau duplikat PNG raw saat versi `.webp` sudah dipakai) ke dalam `public/`.
+   - **JANGAN** melakukan kompresi massal terhadap undangan lama setiap kali membuat undangan baru (manifest SHA-256 di `data/media-manifest.json` dan pembatasan `--scope` wajib digunakan).
+
+---
 *Dokumen ini dibuat dan diperbarui untuk menjaga konsistensi kualitas desain InDif Digital.*

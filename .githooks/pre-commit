@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -e
+echo "[pre-commit] Menjalankan validasi budget & standar media..."
+node scripts/check-media-budget.mjs --staged

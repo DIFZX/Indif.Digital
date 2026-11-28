@@ -57,7 +57,7 @@ export function ChampagneIvoryInvitationView({
     <PreweddingClientApp
       themeClass={styles.themeChampagneIvory}
       dividerIcon="✦"
-      flowerPath="/media/prewedding/champagne-ivory/champagne-flower.png"
+      flowerPath="/media/prewedding/champagne-ivory/champagne-flower.webp"
       invitation={invitation}
       greetings={greetings}
       guestName={guestName}

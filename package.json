@@ -8,27 +8,30 @@
     "create-invitation": "node scripts/create-invitation.mjs",
     "create-admin": "node scripts/create-admin.mjs",
     "check:cms": "node scripts/check-sales-cms.mjs",
+    "check:media": "node scripts/check-media-budget.mjs",
+    "hooks:install": "git config core.hooksPath .githooks",
     "test:cms": "node --test tests/sales-cms.test.mjs",
     "start": "next start",
     "lint": "eslint .",
+    "optimize:media": "node scripts/optimize-media.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "2.112.3",
-    "next": "16.4.2",
+    "next": "16.4.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "zod": "4.6.7"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.14",
-    "@next/env": "16.4.2",
+    "@next/env": "16.4.6",
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "eslint": "9.39.5",
-    "eslint-config-next": "16.4.2",
+    "eslint-config-next": "16.4.6",
     "typescript": "5.9.3"
   },
   "overrides": {
